@@ -21,7 +21,9 @@ jobs:
           node-version: 22
 
       - name: Parse JSON Schema
-        run: node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-proof-passport.schema.json', 'utf8')); console.log('PASS: schema JSON parses')"
+        run: |
+          node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-proof-passport.schema.json', 'utf8')); console.log('PASS: schema JSON parses')"
 
       - name: Validate steel cabinet example
-        run: node tools/verify-passport.mjs examples/steel-cabinet-passport.json
+        run: |
+          node tools/verify-passport.mjs examples/steel-cabinet-passport.json
