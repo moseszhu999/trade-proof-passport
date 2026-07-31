@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Respond to a Trade Proof Passport</title>
+  <meta name="description" content="Review a Trade Proof Passport public summary and generate an unsigned standard response locally in your browser.">
+  <meta property="og:title" content="Respond to a Trade Proof Passport">
+  <meta property="og:description" content="Confirm, reject, or request a change using a portable Trade Proof Response.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/respond.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/respond.html">
+  <style>
+    :root{color-scheme:dark;--bg:#09111f;--panel:#111c2f;--line:#26354f;--muted:#9fb0c8;--text:#f5f8ff;--green:#43d89e;--amber:#f6bf63;--blue:#7cb7ff;--red:#ff8796}
+    *{box-sizing:border-box}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#14233d 0,var(--bg) 46%);color:var(--text)}a{color:inherit}.wrap{width:min(980px,calc(100% - 32px));margin:auto;padding:42px 0 72px}.back{color:var(--muted);text-decoration:none}
+    h1{margin:18px 0 8px;font-size:clamp(36px,7vw,64px);line-height:1.04;letter-spacing:-.04em}.lead{max-width:760px;color:var(--muted);font-size:18px}.notice,.error{margin:22px 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(17,28,47,.84)}.notice{border-left:3px solid var(--green)}.error{display:none;border-left:3px solid var(--red);color:#ffd7dc}.error.show{display:block}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px;margin-top:22px}.card{grid-column:span 12;padding:21px;border:1px solid var(--line);border-radius:17px;background:rgba(17,28,47,.88)}.metric{grid-column:span 4}.metric strong{display:block;font-size:32px}.metric span,.muted{color:var(--muted)}h2{margin:0 0 14px;font-size:20px}.facts{display:grid}.fact{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 0;border-top:1px solid var(--line)}.fact:first-child{border-top:0;padding-top:0}.fact p{margin:4px 0 0;color:var(--muted)}.tag{align-self:start;padding:4px 8px;border-radius:999px;background:#172743;color:var(--blue);font-size:12px}.roles{display:flex;flex-wrap:wrap;gap:8px}.role{padding:8px 10px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+    form{display:grid;gap:16px}.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.choice{position:relative}.choice input{position:absolute;opacity:0}.choice span{display:block;height:100%;padding:13px;border:1px solid var(--line);border-radius:12px;background:#0d1728;cursor:pointer}.choice input:checked+span{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}label.field{display:grid;gap:7px;font-weight:650}select,textarea,input[type=text]{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;background:#0d1728;color:var(--text);font:inherit}textarea{min-height:100px;resize:vertical}.consent{display:flex;gap:10px;align-items:flex-start;color:var(--muted)}
+    .actions{display:flex;flex-wrap:wrap;gap:10px}.button,button{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}.primary{background:var(--text);color:#09111f;border-color:var(--text)}button:disabled{opacity:.45;cursor:not-allowed}.output{display:none}.output.show{display:grid;gap:12px}.response{display:none;border-left:3px solid var(--amber)}.response.show{display:block}.decision{font-size:30px;text-transform:capitalize}.boundary{border-left:3px solid var(--amber)}code{color:#c9ddff;overflow-wrap:anywhere}@media(max-width:700px){.metric{grid-column:span 12}.fact{grid-template-columns:1fr}.tag{justify-self:start}.choices{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="./">← Trade Proof Passport</a>
+    <h1>Review and respond</h1>
+    <p class="lead">Inspect the public summary, then return a portable confirm, reject, or change-request response.</p>
+    <div class="notice"><strong>Browser-local:</strong> no response is sent automatically. The response is unsigned and self-declared until a future identity or signature profile is attached.</div>
+    <div class="error" id="error" role="alert"></div>
+
+    <section id="content" hidden>
+      <section class="grid">
+        <article class="card"><h2>Trade case</h2><p><strong id="goodsTitle"></strong></p><p class="muted" id="caseSummary"></p><p class="muted">Passport ID: <code id="passportId"></code></p></article>
+        <article class="card metric"><strong id="factCount">0</strong><span>trade facts</span></article>
+        <article class="card metric"><strong id="evidenceCount">0</strong><span>evidence records</span></article>
+        <article class="card metric"><strong id="confirmationCount">0</strong><span>prior confirmations</span></article>
+        <article class="card"><h2>Current facts</h2><div class="facts" id="facts"></div></article>
+        <article class="card"><h2>Participating roles</h2><div class="roles" id="roles"></div></article>
+
+        <article class="card" id="responseFormCard">
+          <h2>Create standard response</h2>
+          <form id="responseForm">
+            <div class="choices" role="radiogroup" aria-label="Response decision">
+              <label class="choice"><input type="radio" name="decision" value="confirm" required><span><strong>Confirm</strong><br><small class="muted">I accept this public summary as presented.</small></span></label>
+              <label class="choice"><input type="radio" name="decision" value="reject" required><span><strong>Reject</strong><br><small class="muted">I do not accept this public summary.</small></span></label>
+              <label class="choice"><input type="radio" name="decision" value="request_change" required><span><strong>Request change</strong><br><small class="muted">The sender should revise or clarify it.</small></span></label>
+            </div>
+            <label class="field">Responder role
+              <select name="responderRole" required>
+                <option value="">Select a role</option>
+                <option value="exporter">Exporter</option><option value="buyer">Buyer</option><option value="supplier">Supplier</option><option value="manufacturer">Manufacturer</option><option value="inspection">Inspection</option><option value="logistics">Logistics</option><option value="warehouse">Warehouse</option><option value="customs">Customs</option><option value="insurance">Insurance</option><option value="legal">Legal</option><option value="funder">Funder</option><option value="other">Other</option>
+              </select>
+            </label>
+            <label class="field">Public comment <small class="muted">Optional, maximum 600 characters. Do not include confidential information.</small>
+              <textarea name="comment" maxlength="600" placeholder="Please clarify the pickup date."></textarea>
+            </label>
+            <label class="consent"><input id="responseConsent" type="checkbox"> <span>I understand this response is public to anyone with the link and does not verify my identity, authority, or signature.</span></label>
+            <div class="actions"><button class="primary" id="generateResponse" type="submit" disabled>Generate response JSON and link</button></div>
+          </form>
+        </article>
+
+        <article class="card output" id="responseOutput">
+          <h2>Response generated</h2>
+          <p class="muted">The JSON file was downloaded locally. Send the link below back to the Passport sender.</p>
+          <input id="responseUrl" type="text" readonly>
+          <div class="actions"><button class="primary" id="copyResponse" type="button">Copy response link</button><button id="shareResponse" type="button">Share</button></div>
+        </article>
+
+        <article class="card response" id="receivedResponse">
+          <h2>Received Trade Proof Response</h2>
+          <p class="decision" id="receivedDecision"></p>
+          <p id="receivedComment"></p>
+          <p class="muted">Responder role: <strong id="receivedRole"></strong> · Created: <span id="receivedAt"></span></p>
+          <p class="muted">Assurance: unsigned, self-declared browser response. This is not verified identity, authority, signature, or legal acceptance.</p>
+          <div class="actions"><button id="downloadReceived" type="button">Download response JSON</button><button id="newResponse" type="button">Create another response</button></div>
+        </article>
+
+        <article class="card boundary"><h2>What this response does not prove</h2><p class="muted">It does not prove responder identity, organizational authority, legal acceptance, contract amendment, evidence validity, customs status, insurance, financing, payment, settlement, ownership, title, or the truth of the Passport facts.</p></article>
+      </section>
+    </section>
+  </main>
+
+  <script type="module">
+    import { decodePublicSummary } from './passport-share.mjs';
+    import { buildResponse, buildResponseUrl, decodeResponse, validateResponse } from './passport-response.mjs';
+
+    const byId = (id) => document.getElementById(id);
+    const elements = Object.fromEntries([
+      'error','content','goodsTitle','caseSummary','passportId','factCount','evidenceCount','confirmationCount','facts','roles','responseFormCard','responseForm','responseConsent','generateResponse','responseOutput','responseUrl','copyResponse','shareResponse','receivedResponse','receivedDecision','receivedComment','receivedRole','receivedAt','downloadReceived','newResponse'
+    ].map((id) => [id, byId(id)]));
+
+    let summary = null;
+    let received = null;
+
+    function showError(message) {
+      elements.error.textContent = message;
+      elements.error.classList.add('show');
+    }
+
+    function appendText(parent, tag, text, className) {
+      const element = document.createElement(tag);
+      element.textContent = text;
+      if (className) element.className = className;
+      parent.appendChild(element);
+      return element;
+    }
+
+    function downloadJson(value, filename) {
+      const blob = new Blob([JSON.stringify(value, null, 2) + '\n'], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function renderSummary(data) {
+      const tradeCase = data.tradeCase || {};
+      const facts = Array.isArray(data.facts) ? data.facts : [];
+      elements.goodsTitle.textContent = tradeCase.goodsDescription || 'Trade Proof Passport';
+      const quantity = tradeCase.quantity !== undefined ? `${tradeCase.quantity} ${tradeCase.unit || ''}`.trim() : '';
+      elements.caseSummary.textContent = [tradeCase.caseReference, quantity, tradeCase.batchReference].filter(Boolean).join(' · ');
+      elements.passportId.textContent = data.passportId || 'unknown';
+      elements.factCount.textContent = String(facts.length);
+      elements.evidenceCount.textContent = String(data.counts?.evidence ?? 0);
+      elements.confirmationCount.textContent = String(data.counts?.confirmations ?? 0);
+
+      elements.facts.replaceChildren();
+      for (const fact of facts) {
+        const row = document.createElement('div');
+        row.className = 'fact';
+        const body = document.createElement('div');
+        appendText(body, 'strong', fact.type || 'trade_fact');
+        appendText(body, 'p', fact.statement || 'No statement supplied.');
+        row.appendChild(body);
+        appendText(row, 'span', fact.status || 'unknown', 'tag');
+        elements.facts.appendChild(row);
+      }
+
+      elements.roles.replaceChildren();
+      for (const role of data.roles || []) appendText(elements.roles, 'span', role, 'role');
+      elements.content.hidden = false;
+    }
+
+    function renderReceived(response) {
+      received = response;
+      elements.responseFormCard.hidden = true;
+      elements.responseOutput.classList.remove('show');
+      elements.receivedDecision.textContent = response.decision.status.replaceAll('_', ' ');
+      elements.receivedComment.textContent = response.decision.comment || 'No public comment was provided.';
+      elements.receivedRole.textContent = response.responder.role;
+      elements.receivedAt.textContent = new Date(response.createdAt).toLocaleString();
+      elements.receivedResponse.classList.add('show');
+    }
+
+    elements.responseConsent.addEventListener('change', () => {
+      elements.generateResponse.disabled = !elements.responseConsent.checked;
+    });
+
+    elements.responseForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      try {
+        const form = new FormData(event.currentTarget);
+        const response = buildResponse(summary, {
+          decision: form.get('decision'),
+          responderRole: form.get('responderRole'),
+          comment: form.get('comment')
+        });
+        const responseUrl = buildResponseUrl(response, location.href);
+        downloadJson(response, `${summary.tradeCase.caseReference}-trade-proof-response.json`);
+        elements.responseUrl.value = responseUrl;
+        elements.responseOutput.classList.add('show');
+      } catch (error) {
+        showError(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    elements.copyResponse.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(elements.responseUrl.value);
+      elements.copyResponse.textContent = 'Copied';
+    });
+
+    elements.shareResponse.addEventListener('click', async () => {
+      if (navigator.share) {
+        await navigator.share({ title: 'Trade Proof Response', url: elements.responseUrl.value });
+      } else {
+        await navigator.clipboard.writeText(elements.responseUrl.value);
+        elements.shareResponse.textContent = 'Link copied';
+      }
+    });
+
+    elements.downloadReceived.addEventListener('click', () => {
+      downloadJson(received, `${received.passportReference.caseReference}-trade-proof-response.json`);
+    });
+
+    elements.newResponse.addEventListener('click', () => {
+      const url = new URL(location.href);
+      const hash = new URLSearchParams(url.hash.slice(1));
+      hash.delete('r');
+      url.hash = hash.toString();
+      location.href = url.toString();
+    });
+
+    try {
+      const hash = new URLSearchParams(location.hash.slice(1));
+      const passportPayload = hash.get('p');
+      if (!passportPayload) throw new Error('This response page is missing its Trade Proof Passport public summary.');
+      summary = decodePublicSummary(passportPayload);
+      renderSummary(summary);
+
+      const responsePayload = hash.get('r');
+      if (responsePayload) {
+        const response = decodeResponse(responsePayload);
+        const errors = validateResponse(response, summary);
+        if (errors.length > 0) throw new Error(errors.join(' '));
+        renderReceived(response);
+      }
+    } catch (error) {
+      showError(error instanceof Error ? error.message : String(error));
+    }
+  </script>
+</body>
+</html>
