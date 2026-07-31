@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>View and Share a Trade Proof Passport</title>
+  <meta name="description" content="Import a Trade Proof Passport locally, inspect it, and create a privacy-bounded public summary link.">
+  <meta property="og:title" content="View and Share a Trade Proof Passport">
+  <meta property="og:description" content="Inspect a portable trade proof package without uploading the source JSON.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/view.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/view.html">
+  <style>
+    :root{color-scheme:dark;--bg:#09111f;--panel:#111c2f;--line:#26354f;--muted:#9fb0c8;--text:#f5f8ff;--green:#43d89e;--amber:#f6bf63;--blue:#7cb7ff;--red:#ff8796}
+    *{box-sizing:border-box}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,#14233d 0,var(--bg) 46%);color:var(--text)}a{color:inherit}.wrap{width:min(1020px,calc(100% - 32px));margin:auto;padding:42px 0 72px}.back{color:var(--muted);text-decoration:none}
+    h1{margin:18px 0 8px;font-size:clamp(36px,7vw,66px);line-height:1.04;letter-spacing:-.04em}.lead{max-width:760px;color:var(--muted);font-size:18px}.notice,.error{margin:22px 0;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(17,28,47,.84)}.notice{border-left:3px solid var(--green)}.error{display:none;border-left:3px solid var(--red);color:#ffd7dc}.error.show{display:block}
+    .import{display:grid;gap:14px;margin:26px 0;padding:22px;border:1px solid var(--line);border-radius:18px;background:rgba(17,28,47,.84)}input[type=file],input[type=text]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0d1728;color:var(--text);font:inherit}.button,button{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--text);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}.primary{background:var(--text);color:#09111f;border-color:var(--text)}button:disabled{opacity:.45;cursor:not-allowed}.actions{display:flex;flex-wrap:wrap;gap:10px}.viewer{display:none}.viewer.show{display:block}.eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 11px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:13px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:15px;margin-top:22px}.card{grid-column:span 12;padding:21px;border:1px solid var(--line);border-radius:17px;background:rgba(17,28,47,.88)}.metric{grid-column:span 4}.metric strong{display:block;font-size:32px}.metric span,.muted{color:var(--muted)}h2{margin:0 0 14px;font-size:20px}.facts{display:grid}.fact{display:grid;grid-template-columns:1fr auto;gap:12px;padding:14px 0;border-top:1px solid var(--line)}.fact:first-child{border-top:0;padding-top:0}.fact p{margin:4px 0 0;color:var(--muted)}.tag{align-self:start;padding:4px 8px;border-radius:999px;background:#172743;color:var(--blue);font-size:12px}.roles{display:flex;flex-wrap:wrap;gap:8px}.role{padding:8px 10px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}.share{margin-top:18px;border-left:3px solid var(--amber)}.share label{display:flex;gap:10px;align-items:flex-start;color:var(--muted)}.share-output{display:none;margin-top:14px}.share-output.show{display:grid;gap:10px}.boundary{border-left:3px solid var(--amber)}code{color:#c9ddff;overflow-wrap:anywhere}footer{margin-top:24px;color:var(--muted);font-size:14px}@media(max-width:700px){.metric{grid-column:span 12}.fact{grid-template-columns:1fr}.tag{justify-self:start}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <a class="back" href="./">← Trade Proof Passport example</a>
+    <h1>Import, inspect, and share</h1>
+    <p class="lead">Open a Passport JSON file locally, review its facts, and optionally create a public-summary link.</p>
+    <div class="notice"><strong>No file is uploaded.</strong> Local imports stay in this browser. A public summary link stores only selected summary fields in the URL fragment.</div>
+    <section class="import" id="importPanel">
+      <label for="passportFile"><strong>Import a Passport JSON</strong></label>
+      <input id="passportFile" type="file" accept=".json,application/json">
+      <div class="actions"><a class="button" href="./create.html">Create a new draft</a></div>
+    </section>
+    <div class="error" id="error" role="alert"></div>
+
+    <section class="viewer" id="viewer">
+      <div class="eyebrow"><span class="dot"></span><span id="viewMode">Local preview</span></div>
+      <h1 id="goodsTitle">Trade Proof Passport</h1>
+      <p class="lead" id="caseSummary"></p>
+
+      <section class="grid">
+        <article class="card metric"><strong id="factCount">0</strong><span>trade facts</span></article>
+        <article class="card metric"><strong id="evidenceCount">0</strong><span>evidence records</span></article>
+        <article class="card metric"><strong id="confirmationCount">0</strong><span>confirmations</span></article>
+
+        <article class="card"><h2>Current facts</h2><div class="facts" id="facts"></div></article>
+        <article class="card"><h2>Participating roles</h2><div class="roles" id="roles"></div></article>
+        <article class="card"><h2>Lifecycle</h2><p><strong id="lifecycleStatus"></strong></p><p class="muted">Passport ID: <code id="passportId"></code></p></article>
+
+        <article class="card share" id="shareCard">
+          <h2>Create public summary link</h2>
+          <p class="muted">The link excludes evidence URIs, evidence digests, party identifiers, and organization names. It still contains the displayed goods description and fact statements.</p>
+          <label><input id="shareConsent" type="checkbox"> <span>I reviewed the displayed summary and understand that anyone with the link can read it.</span></label>
+          <div class="actions" style="margin-top:14px"><button id="createShare" type="button" disabled>Create public summary link</button></div>
+          <div class="share-output" id="shareOutput"><input id="shareUrl" type="text" readonly><div class="actions"><button class="primary" id="copyShare" type="button">Copy link</button><button id="nativeShare" type="button">Share</button></div></div>
+        </article>
+
+        <article class="card boundary"><h2>What this page does not prove</h2><p class="muted">Rendering or sharing a Passport does not verify identity, authority, evidence, signatures, legal validity, customs status, financing, payment, settlement, ownership, or the truth of an assertion.</p></article>
+      </section>
+      <footer><button class="button" id="importAnother" type="button">Import another Passport</button></footer>
+    </section>
+  </main>
+
+  <script type="module">
+    import { buildPublicSummaryUrl, decodePublicSummary, validatePassport } from './passport-share.mjs';
+
+    const elements = Object.fromEntries([
+      'importPanel','passportFile','error','viewer','viewMode','goodsTitle','caseSummary','factCount','evidenceCount','confirmationCount','facts','roles','lifecycleStatus','passportId','shareCard','shareConsent','createShare','shareOutput','shareUrl','copyShare','nativeShare','importAnother'
+    ].map((id) => [id, document.getElementById(id)]));
+
+    let currentPassport = null;
+
+    function showError(message) {
+      elements.error.textContent = message;
+      elements.error.classList.add('show');
+    }
+
+    function clearError() {
+      elements.error.textContent = '';
+      elements.error.classList.remove('show');
+    }
+
+    function appendText(parent, tag, text, className) {
+      const element = document.createElement(tag);
+      element.textContent = text;
+      if (className) element.className = className;
+      parent.appendChild(element);
+      return element;
+    }
+
+    function render(data, publicSummary = false) {
+      clearError();
+      currentPassport = publicSummary ? null : data;
+      const tradeCase = data.tradeCase || {};
+      const facts = Array.isArray(data.facts) ? data.facts : [];
+      const counts = publicSummary ? data.counts : {
+        parties: data.parties.length,
+        evidence: data.evidence.length,
+        confirmations: data.confirmations.length
+      };
+      const roles = publicSummary ? data.roles : [...new Set(data.parties.map((party) => party.role).filter(Boolean))];
+
+      elements.viewMode.textContent = publicSummary ? 'Public summary link' : 'Local full Passport preview';
+      elements.goodsTitle.textContent = tradeCase.goodsDescription || 'Trade Proof Passport';
+      const quantity = tradeCase.quantity !== undefined ? `${tradeCase.quantity} ${tradeCase.unit || ''}`.trim() : '';
+      elements.caseSummary.textContent = [tradeCase.caseReference, quantity, tradeCase.batchReference].filter(Boolean).join(' · ');
+      elements.factCount.textContent = String(facts.length);
+      elements.evidenceCount.textContent = String(counts?.evidence ?? 0);
+      elements.confirmationCount.textContent = String(counts?.confirmations ?? 0);
+      elements.lifecycleStatus.textContent = data.lifecycle?.status || 'unknown';
+      elements.passportId.textContent = data.passportId || 'unknown';
+
+      elements.facts.replaceChildren();
+      for (const fact of facts) {
+        const row = document.createElement('div');
+        row.className = 'fact';
+        const body = document.createElement('div');
+        appendText(body, 'strong', fact.type || 'trade_fact');
+        appendText(body, 'p', fact.statement || 'No statement supplied.');
+        row.appendChild(body);
+        appendText(row, 'span', fact.status || 'unknown', 'tag');
+        elements.facts.appendChild(row);
+      }
+      if (facts.length === 0) appendText(elements.facts, 'p', 'No facts are present.', 'muted');
+
+      elements.roles.replaceChildren();
+      for (const role of roles || []) appendText(elements.roles, 'span', role, 'role');
+      if (!roles || roles.length === 0) appendText(elements.roles, 'p', 'No roles are present.', 'muted');
+
+      elements.shareCard.hidden = publicSummary;
+      elements.importPanel.hidden = publicSummary;
+      elements.viewer.classList.add('show');
+      elements.shareConsent.checked = false;
+      elements.createShare.disabled = true;
+      elements.shareOutput.classList.remove('show');
+      elements.shareUrl.value = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function loadFile(file) {
+      if (!file) return;
+      if (file.size > 1_000_000) throw new Error('The JSON file is larger than the 1 MB local preview limit.');
+      const passport = JSON.parse(await file.text());
+      const errors = validatePassport(passport);
+      if (errors.length > 0) throw new Error(errors.join(' '));
+      render(passport, false);
+    }
+
+    elements.passportFile.addEventListener('change', async (event) => {
+      try {
+        await loadFile(event.target.files?.[0]);
+      } catch (error) {
+        showError(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    elements.shareConsent.addEventListener('change', () => {
+      elements.createShare.disabled = !elements.shareConsent.checked;
+    });
+
+    elements.createShare.addEventListener('click', () => {
+      try {
+        const url = buildPublicSummaryUrl(currentPassport, location.href);
+        elements.shareUrl.value = url;
+        elements.shareOutput.classList.add('show');
+      } catch (error) {
+        showError(error instanceof Error ? error.message : String(error));
+      }
+    });
+
+    elements.copyShare.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(elements.shareUrl.value);
+      elements.copyShare.textContent = 'Copied';
+    });
+
+    elements.nativeShare.addEventListener('click', async () => {
+      if (navigator.share) {
+        await navigator.share({ title: 'Trade Proof Passport public summary', url: elements.shareUrl.value });
+      } else {
+        await navigator.clipboard.writeText(elements.shareUrl.value);
+        elements.nativeShare.textContent = 'Link copied';
+      }
+    });
+
+    elements.importAnother.addEventListener('click', () => {
+      history.replaceState(null, '', location.pathname);
+      currentPassport = null;
+      elements.viewer.classList.remove('show');
+      elements.importPanel.hidden = false;
+      elements.passportFile.value = '';
+      clearError();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    try {
+      const payload = new URLSearchParams(location.hash.slice(1)).get('p');
+      if (payload) {
+        render(decodePublicSummary(payload), true);
+      } else if (new URLSearchParams(location.search).get('source') === 'draft') {
+        const stored = sessionStorage.getItem('tradeProofPassportDraft');
+        if (!stored) throw new Error('No locally generated draft was found in this browser session.');
+        const passport = JSON.parse(stored);
+        const errors = validatePassport(passport);
+        if (errors.length > 0) throw new Error(errors.join(' '));
+        render(passport, false);
+      }
+    } catch (error) {
+      showError(error instanceof Error ? error.message : String(error));
+    }
+  </script>
+</body>
+</html>
