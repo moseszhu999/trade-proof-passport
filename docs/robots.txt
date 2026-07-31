@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://moseszhu999.github.io/trade-proof-passport/sitemap.xml

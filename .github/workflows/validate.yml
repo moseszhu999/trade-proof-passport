@@ -28,20 +28,45 @@ jobs:
         run: |
           node tools/verify-passport.mjs examples/steel-cabinet-passport.json
 
-      - name: Validate shareable passport view
+      - name: Validate public Pages content
         run: |
           node - <<'NODE'
           const { readFileSync } = require('node:fs');
-          const html = readFileSync('docs/index.html', 'utf8');
-          const required = [
+          const example = readFileSync('docs/index.html', 'utf8');
+          const builder = readFileSync('docs/create.html', 'utf8');
+          const sitemap = readFileSync('docs/sitemap.xml', 'utf8');
+          const robots = readFileSync('docs/robots.txt', 'utf8');
+
+          for (const value of [
             'Steel Cabinet Trade Proof Passport',
             'tpp:example:steel-cabinet:001',
             'Synthetic demonstration',
             'What this page does not prove',
-            'https://github.com/moseszhu999/trade-proof-passport'
-          ];
-          for (const value of required) {
-            if (!html.includes(value)) throw new Error(`Missing required passport view content: ${value}`);
+            './create.html'
+          ]) {
+            if (!example.includes(value)) throw new Error(`Missing example page content: ${value}`);
           }
-          console.log('PASS: shareable passport view contains required content');
+
+          for (const value of [
+            'Create a draft Passport',
+            'Local-only:',
+            "schemaVersion:'0.1'",
+            "lifecycle:{status:'draft'}",
+            'Generate and download JSON'
+          ]) {
+            if (!builder.includes(value)) throw new Error(`Missing builder content: ${value}`);
+          }
+
+          for (const url of [
+            'https://moseszhu999.github.io/trade-proof-passport/',
+            'https://moseszhu999.github.io/trade-proof-passport/create.html'
+          ]) {
+            if (!sitemap.includes(url)) throw new Error(`Missing sitemap URL: ${url}`);
+          }
+
+          if (!robots.includes('Sitemap: https://moseszhu999.github.io/trade-proof-passport/sitemap.xml')) {
+            throw new Error('robots.txt does not reference the sitemap');
+          }
+
+          console.log('PASS: Pages example, builder, sitemap, and robots are present');
           NODE
