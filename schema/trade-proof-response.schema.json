@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/moseszhu999/trade-proof-passport/schema/trade-proof-response.schema.json",
+  "title": "Trade Proof Response v0.1",
+  "description": "Community draft schema for an unsigned, self-declared response to a Trade Proof Passport public summary.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "responseId",
+    "passportReference",
+    "decision",
+    "responder",
+    "createdAt",
+    "assurance",
+    "disclosure"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "0.1" },
+    "responseId": { "type": "string", "minLength": 3 },
+    "passportReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passportId", "caseReference", "sourceSummaryVersion"],
+      "properties": {
+        "passportId": { "type": "string", "minLength": 3 },
+        "caseReference": { "type": "string", "minLength": 1 },
+        "sourceSummaryVersion": { "const": "0.1" },
+        "sourceUpdatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "scope"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["confirm", "reject", "request_change"]
+        },
+        "scope": { "const": "public_summary" },
+        "comment": { "type": "string", "maxLength": 600 }
+      }
+    },
+    "responder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "exporter",
+            "buyer",
+            "supplier",
+            "manufacturer",
+            "inspection",
+            "logistics",
+            "warehouse",
+            "customs",
+            "insurance",
+            "legal",
+            "funder",
+            "other"
+          ]
+        }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "statement"],
+      "properties": {
+        "type": { "const": "unsigned_self_declared" },
+        "statement": {
+          "const": "This browser-generated response does not verify the responder's identity, authority, or signature."
+        }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile"],
+      "properties": {
+        "profile": { "const": "public_response" }
+      }
+    }
+  }
+}
