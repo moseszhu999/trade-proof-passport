@@ -1,5 +1,7 @@
 # Trade Proof Passport
 
+[![Validate Trade Proof Passport](https://github.com/moseszhu999/trade-proof-passport/actions/workflows/validate.yml/badge.svg)](https://github.com/moseszhu999/trade-proof-passport/actions/workflows/validate.yml)
+
 A portable, machine-readable proof package for real-world trade.
 
 Trade Proof Passport is an early community draft for packaging selected trade facts, evidence references, confirmations, versions, and lifecycle status into one portable JSON object.
@@ -7,6 +9,23 @@ Trade Proof Passport is an early community draft for packaging selected trade fa
 The goal is practical:
 
 > Send one reviewable proof package instead of repeatedly forwarding disconnected files and explanations.
+
+## Try it in 30 seconds
+
+```bash
+git clone https://github.com/moseszhu999/trade-proof-passport.git
+cd trade-proof-passport
+node tools/verify-passport.mjs examples/steel-cabinet-passport.json
+```
+
+Expected result:
+
+```text
+PASS: tpp:example:steel-cabinet:001
+Facts: 3
+Evidence records: 4
+Confirmations: 3
+```
 
 ## Why this exists
 

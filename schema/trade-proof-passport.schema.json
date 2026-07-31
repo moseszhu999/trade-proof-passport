@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/moseszhu999/trade-proof-passport/schema/trade-proof-passport.schema.json",
+  "title": "Trade Proof Passport v0.1",
+  "description": "Community draft schema for a portable package of trade facts, evidence references, confirmations, and lifecycle status.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "passportId",
+    "createdAt",
+    "updatedAt",
+    "tradeCase",
+    "parties",
+    "facts",
+    "evidence",
+    "confirmations",
+    "lifecycle",
+    "disclosure"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "0.1"
+    },
+    "passportId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tradeCase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["caseReference", "goodsDescription"],
+      "properties": {
+        "caseReference": { "type": "string", "minLength": 1 },
+        "goodsDescription": { "type": "string", "minLength": 1 },
+        "purchaseOrderReference": { "type": "string" },
+        "shipmentReference": { "type": "string" },
+        "batchReference": { "type": "string" },
+        "quantity": { "type": "number", "exclusiveMinimum": 0 },
+        "unit": { "type": "string" }
+      }
+    },
+    "parties": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["partyId", "role", "displayName"],
+        "properties": {
+          "partyId": { "type": "string", "minLength": 1 },
+          "role": {
+            "type": "string",
+            "enum": [
+              "exporter",
+              "buyer",
+              "supplier",
+              "manufacturer",
+              "inspection",
+              "logistics",
+              "warehouse",
+              "customs",
+              "insurance",
+              "legal",
+              "funder",
+              "other"
+            ]
+          },
+          "displayName": { "type": "string", "minLength": 1 },
+          "identifier": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["scheme", "value"],
+            "properties": {
+              "scheme": { "type": "string", "minLength": 1 },
+              "value": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "facts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "factId",
+          "type",
+          "statement",
+          "status",
+          "version",
+          "assertedBy",
+          "assertedAt",
+          "evidenceRefs"
+        ],
+        "properties": {
+          "factId": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
+          "status": {
+            "type": "string",
+            "enum": ["asserted", "confirmed", "disputed", "superseded", "expired", "revoked"]
+          },
+          "version": { "type": "integer", "minimum": 1 },
+          "assertedBy": { "type": "string", "minLength": 1 },
+          "assertedAt": { "type": "string", "format": "date-time" },
+          "evidenceRefs": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "supersedesFactId": { "type": "string", "minLength": 1 },
+          "validFrom": { "type": "string", "format": "date-time" },
+          "validUntil": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidenceId", "type", "title", "digest", "disclosure"],
+        "properties": {
+          "evidenceId": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "uri": { "type": "string", "format": "uri-reference" },
+          "digest": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["algorithm", "value"],
+            "properties": {
+              "algorithm": {
+                "type": "string",
+                "enum": ["sha256", "sha384", "sha512", "keccak256"]
+              },
+              "value": {
+                "type": "string",
+                "pattern": "^[A-Fa-f0-9]+$"
+              }
+            }
+          },
+          "disclosure": {
+            "type": "string",
+            "enum": ["private", "shared", "public_summary"]
+          },
+          "issuedAt": { "type": "string", "format": "date-time" },
+          "issuedBy": { "type": "string" }
+        }
+      }
+    },
+    "confirmations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "confirmationId",
+          "factId",
+          "factVersion",
+          "partyId",
+          "decision",
+          "decidedAt"
+        ],
+        "properties": {
+          "confirmationId": { "type": "string", "minLength": 1 },
+          "factId": { "type": "string", "minLength": 1 },
+          "factVersion": { "type": "integer", "minimum": 1 },
+          "partyId": { "type": "string", "minLength": 1 },
+          "decision": {
+            "type": "string",
+            "enum": ["confirm", "reject", "request_change", "acknowledge"]
+          },
+          "decidedAt": { "type": "string", "format": "date-time" },
+          "note": { "type": "string" },
+          "proof": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string", "minLength": 1 },
+              "created": { "type": "string", "format": "date-time" },
+              "verificationMethod": { "type": "string" },
+              "proofValue": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["draft", "active", "superseded", "expired", "revoked"]
+        },
+        "successorPassportId": { "type": "string" },
+        "revokedAt": { "type": "string", "format": "date-time" },
+        "revocationReason": { "type": "string" }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile"],
+      "properties": {
+        "profile": {
+          "type": "string",
+          "enum": ["private", "shared", "public_summary"]
+        },
+        "permittedAudience": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
