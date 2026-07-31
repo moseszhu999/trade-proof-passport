@@ -20,9 +20,18 @@ jobs:
         with:
           node-version: 22
 
-      - name: Parse JSON Schema
+      - name: Parse JSON Schemas
         run: |
-          node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-proof-passport.schema.json', 'utf8')); console.log('PASS: schema JSON parses')"
+          node - <<'NODE'
+          const { readFileSync } = require('node:fs');
+          for (const file of [
+            'schema/trade-proof-passport.schema.json',
+            'schema/trade-proof-response.schema.json'
+          ]) {
+            JSON.parse(readFileSync(file, 'utf8'));
+          }
+          console.log('PASS: Passport and response schema JSON parse');
+          NODE
 
       - name: Validate steel cabinet example
         run: |
@@ -67,11 +76,69 @@ jobs:
           }
 
           const shareUrl = buildPublicSummaryUrl(passport, 'https://example.com/view.html?source=draft#old');
-          if (!shareUrl.startsWith('https://example.com/view.html#p=')) {
-            throw new Error('Share URL was not normalized to a URL-fragment payload.');
+          if (!shareUrl.startsWith('https://example.com/respond.html#p=')) {
+            throw new Error('New share URLs must open the response-enabled page.');
           }
 
-          console.log('PASS: public summary round trip preserves allowed fields and excludes private references');
+          console.log('PASS: public summary round trip preserves allowed fields and routes to response page');
+          NODE
+
+      - name: Validate standard response helpers
+        run: |
+          node --input-type=module - <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import { buildPublicSummary, encodePublicSummary } from './docs/passport-share.mjs';
+          import {
+            buildResponse,
+            buildResponseUrl,
+            decodeResponse,
+            encodeResponse,
+            validateResponse
+          } from './docs/passport-response.mjs';
+
+          const passport = JSON.parse(readFileSync('examples/steel-cabinet-passport.json', 'utf8'));
+          const summary = buildPublicSummary(passport);
+          const response = buildResponse(summary, {
+            decision: 'request_change',
+            responderRole: 'buyer',
+            comment: 'Please clarify the pickup date.'
+          });
+
+          const errors = validateResponse(response, summary);
+          if (errors.length > 0) throw new Error(errors.join(' '));
+          if (response.decision.status !== 'request_change' || response.responder.role !== 'buyer') {
+            throw new Error('Response decision or role was not preserved.');
+          }
+
+          const serialized = JSON.stringify(response);
+          for (const forbidden of [
+            'Example Exporter Ltd.',
+            'party:exporter:example',
+            'evidence://',
+            '"digest"',
+            '"displayName"',
+            '"partyId"'
+          ]) {
+            if (serialized.includes(forbidden)) throw new Error(`Response leaked forbidden value: ${forbidden}`);
+          }
+
+          const payload = encodeResponse(response);
+          const decoded = decodeResponse(payload);
+          if (decoded.responseId !== response.responseId || decoded.passportReference.passportId !== passport.passportId) {
+            throw new Error('Response did not survive encode/decode round trip.');
+          }
+
+          const p = encodePublicSummary(summary);
+          const responseUrl = buildResponseUrl(response, `https://example.com/respond.html#p=${p}`);
+          const params = new URLSearchParams(new URL(responseUrl).hash.slice(1));
+          if (!params.get('p') || !params.get('r')) throw new Error('Response URL must carry both Passport and response payloads.');
+
+          for (const decision of ['confirm', 'reject', 'request_change']) {
+            const candidate = buildResponse(summary, { decision, responderRole: 'inspection', comment: '' });
+            if (candidate.decision.status !== decision) throw new Error(`Decision was not supported: ${decision}`);
+          }
+
+          console.log('PASS: response round trip preserves bounded decisions and excludes private references');
           NODE
 
       - name: Validate public Pages content
@@ -81,7 +148,10 @@ jobs:
           const example = readFileSync('docs/index.html', 'utf8');
           const builder = readFileSync('docs/create.html', 'utf8');
           const viewer = readFileSync('docs/view.html', 'utf8');
+          const responder = readFileSync('docs/respond.html', 'utf8');
           const shareModule = readFileSync('docs/passport-share.mjs', 'utf8');
+          const responseModule = readFileSync('docs/passport-response.mjs', 'utf8');
+          const responseStandard = readFileSync('standard/trade-proof-response-v0.1.md', 'utf8');
           const sitemap = readFileSync('docs/sitemap.xml', 'utf8');
           const robots = readFileSync('docs/robots.txt', 'utf8');
 
@@ -121,19 +191,55 @@ jobs:
           }
 
           for (const value of [
+            'Review and respond',
+            'Confirm',
+            'Reject',
+            'Request change',
+            'Generate response JSON and link',
+            './passport-response.mjs',
+            'unsigned and self-declared',
+            'What this response does not prove'
+          ]) {
+            if (!responder.includes(value)) throw new Error(`Missing response page content: ${value}`);
+          }
+
+          for (const value of [
             'buildPublicSummary',
             'encodePublicSummary',
             'decodePublicSummary',
             "format: 'trade-proof-passport-public-summary'",
-            "disclosure: { profile: 'public_summary' }"
+            "disclosure: { profile: 'public_summary' }",
+            "'respond.html'"
           ]) {
             if (!shareModule.includes(value)) throw new Error(`Missing share-module contract: ${value}`);
+          }
+
+          for (const value of [
+            'buildResponse',
+            'encodeResponse',
+            'decodeResponse',
+            'buildResponseUrl',
+            "type: 'unsigned_self_declared'",
+            "profile: 'public_response'"
+          ]) {
+            if (!responseModule.includes(value)) throw new Error(`Missing response-module contract: ${value}`);
+          }
+
+          for (const value of [
+            '# Trade Proof Response v0.1',
+            '`confirm`',
+            '`reject`',
+            '`request_change`',
+            'unsigned and self-declared'
+          ]) {
+            if (!responseStandard.includes(value)) throw new Error(`Missing response standard content: ${value}`);
           }
 
           for (const url of [
             'https://moseszhu999.github.io/trade-proof-passport/',
             'https://moseszhu999.github.io/trade-proof-passport/create.html',
-            'https://moseszhu999.github.io/trade-proof-passport/view.html'
+            'https://moseszhu999.github.io/trade-proof-passport/view.html',
+            'https://moseszhu999.github.io/trade-proof-passport/respond.html'
           ]) {
             if (!sitemap.includes(url)) throw new Error(`Missing sitemap URL: ${url}`);
           }
@@ -142,5 +248,5 @@ jobs:
             throw new Error('robots.txt does not reference the sitemap');
           }
 
-          console.log('PASS: Pages example, builder, viewer, share helper, sitemap, and robots are present');
+          console.log('PASS: public Passport creation, sharing, and standard response surfaces are present');
           NODE
