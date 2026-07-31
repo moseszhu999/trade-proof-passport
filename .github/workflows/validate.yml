@@ -27,3 +27,21 @@ jobs:
       - name: Validate steel cabinet example
         run: |
           node tools/verify-passport.mjs examples/steel-cabinet-passport.json
+
+      - name: Validate shareable passport view
+        run: |
+          node - <<'NODE'
+          const { readFileSync } = require('node:fs');
+          const html = readFileSync('docs/index.html', 'utf8');
+          const required = [
+            'Steel Cabinet Trade Proof Passport',
+            'tpp:example:steel-cabinet:001',
+            'Synthetic demonstration',
+            'What this page does not prove',
+            'https://github.com/moseszhu999/trade-proof-passport'
+          ];
+          for (const value of required) {
+            if (!html.includes(value)) throw new Error(`Missing required passport view content: ${value}`);
+          }
+          console.log('PASS: shareable passport view contains required content');
+          NODE
