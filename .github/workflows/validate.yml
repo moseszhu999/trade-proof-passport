@@ -28,12 +28,60 @@ jobs:
         run: |
           node tools/verify-passport.mjs examples/steel-cabinet-passport.json
 
+      - name: Validate privacy-bounded public summary helpers
+        run: |
+          node --input-type=module - <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import {
+            buildPublicSummary,
+            buildPublicSummaryUrl,
+            decodePublicSummary,
+            encodePublicSummary,
+            validatePassport
+          } from './docs/passport-share.mjs';
+
+          const passport = JSON.parse(readFileSync('examples/steel-cabinet-passport.json', 'utf8'));
+          const errors = validatePassport(passport);
+          if (errors.length > 0) throw new Error(errors.join(' '));
+
+          const summary = buildPublicSummary(passport);
+          const serialized = JSON.stringify(summary);
+          for (const forbidden of [
+            'Example Exporter Ltd.',
+            'party:exporter:example',
+            'evidence://',
+            '1111111111111111111111111111111111111111111111111111111111111111',
+            '"digest"'
+          ]) {
+            if (serialized.includes(forbidden)) throw new Error(`Public summary leaked forbidden value: ${forbidden}`);
+          }
+
+          if (summary.counts.evidence !== 4 || summary.counts.confirmations !== 3 || summary.facts.length !== 3) {
+            throw new Error('Public summary counts do not match the source Passport.');
+          }
+
+          const payload = encodePublicSummary(summary);
+          const decoded = decodePublicSummary(payload);
+          if (decoded.passportId !== passport.passportId || decoded.tradeCase.caseReference !== 'SC-EXPORT-001') {
+            throw new Error('Public summary did not survive encode/decode round trip.');
+          }
+
+          const shareUrl = buildPublicSummaryUrl(passport, 'https://example.com/view.html?source=draft#old');
+          if (!shareUrl.startsWith('https://example.com/view.html#p=')) {
+            throw new Error('Share URL was not normalized to a URL-fragment payload.');
+          }
+
+          console.log('PASS: public summary round trip preserves allowed fields and excludes private references');
+          NODE
+
       - name: Validate public Pages content
         run: |
           node - <<'NODE'
           const { readFileSync } = require('node:fs');
           const example = readFileSync('docs/index.html', 'utf8');
           const builder = readFileSync('docs/create.html', 'utf8');
+          const viewer = readFileSync('docs/view.html', 'utf8');
+          const shareModule = readFileSync('docs/passport-share.mjs', 'utf8');
           const sitemap = readFileSync('docs/sitemap.xml', 'utf8');
           const robots = readFileSync('docs/robots.txt', 'utf8');
 
@@ -42,7 +90,8 @@ jobs:
             'tpp:example:steel-cabinet:001',
             'Synthetic demonstration',
             'What this page does not prove',
-            './create.html'
+            './create.html',
+            './view.html'
           ]) {
             if (!example.includes(value)) throw new Error(`Missing example page content: ${value}`);
           }
@@ -52,14 +101,39 @@ jobs:
             'Local-only:',
             "schemaVersion:'0.1'",
             "lifecycle:{status:'draft'}",
-            'Generate and download JSON'
+            'Generate and download JSON',
+            'tradeProofPassportDraft',
+            './view.html?source=draft'
           ]) {
             if (!builder.includes(value)) throw new Error(`Missing builder content: ${value}`);
           }
 
+          for (const value of [
+            'Import a Passport JSON',
+            'Create public summary link',
+            'No file is uploaded.',
+            'URL fragment',
+            './passport-share.mjs',
+            'evidence URIs',
+            'party identifiers'
+          ]) {
+            if (!viewer.includes(value)) throw new Error(`Missing viewer content: ${value}`);
+          }
+
+          for (const value of [
+            'buildPublicSummary',
+            'encodePublicSummary',
+            'decodePublicSummary',
+            "format: 'trade-proof-passport-public-summary'",
+            "disclosure: { profile: 'public_summary' }"
+          ]) {
+            if (!shareModule.includes(value)) throw new Error(`Missing share-module contract: ${value}`);
+          }
+
           for (const url of [
             'https://moseszhu999.github.io/trade-proof-passport/',
-            'https://moseszhu999.github.io/trade-proof-passport/create.html'
+            'https://moseszhu999.github.io/trade-proof-passport/create.html',
+            'https://moseszhu999.github.io/trade-proof-passport/view.html'
           ]) {
             if (!sitemap.includes(url)) throw new Error(`Missing sitemap URL: ${url}`);
           }
@@ -68,5 +142,5 @@ jobs:
             throw new Error('robots.txt does not reference the sitemap');
           }
 
-          console.log('PASS: Pages example, builder, sitemap, and robots are present');
+          console.log('PASS: Pages example, builder, viewer, share helper, sitemap, and robots are present');
           NODE
