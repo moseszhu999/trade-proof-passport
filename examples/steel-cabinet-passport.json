@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "0.1",
+  "passportId": "tpp:example:steel-cabinet:001",
+  "createdAt": "2026-07-31T14:00:00Z",
+  "updatedAt": "2026-07-31T15:30:00Z",
+  "tradeCase": {
+    "caseReference": "SC-EXPORT-001",
+    "goodsDescription": "Knock-down two-door steel storage cabinets",
+    "purchaseOrderReference": "PO-EXAMPLE-240",
+    "shipmentReference": "SHIPMENT-PENDING",
+    "batchReference": "BATCH-SC-001",
+    "quantity": 240,
+    "unit": "piece"
+  },
+  "parties": [
+    {
+      "partyId": "party:exporter:example",
+      "role": "exporter",
+      "displayName": "Example Exporter Ltd."
+    },
+    {
+      "partyId": "party:buyer:example",
+      "role": "buyer",
+      "displayName": "Example Buyer Inc."
+    },
+    {
+      "partyId": "party:manufacturer:example",
+      "role": "manufacturer",
+      "displayName": "Example Cabinet Factory"
+    },
+    {
+      "partyId": "party:inspection:example",
+      "role": "inspection",
+      "displayName": "Example Inspection Service"
+    },
+    {
+      "partyId": "party:logistics:example",
+      "role": "logistics",
+      "displayName": "Example Logistics Provider"
+    }
+  ],
+  "facts": [
+    {
+      "factId": "fact:goods-and-quantity:v1",
+      "type": "goods_and_quantity",
+      "statement": "The purchase order covers 240 knock-down two-door steel storage cabinets.",
+      "status": "confirmed",
+      "version": 1,
+      "assertedBy": "party:exporter:example",
+      "assertedAt": "2026-07-31T14:05:00Z",
+      "evidenceRefs": ["evidence:purchase-order"]
+    },
+    {
+      "factId": "fact:steel-thickness:v1",
+      "type": "product_specification",
+      "statement": "The cabinet body steel thickness requirement is at least 0.60 mm.",
+      "status": "confirmed",
+      "version": 1,
+      "assertedBy": "party:manufacturer:example",
+      "assertedAt": "2026-07-31T14:20:00Z",
+      "evidenceRefs": ["evidence:specification", "evidence:inspection-summary"]
+    },
+    {
+      "factId": "fact:pickup-status:v1",
+      "type": "logistics_status",
+      "statement": "The shipment has not yet been collected by the logistics provider.",
+      "status": "asserted",
+      "version": 1,
+      "assertedBy": "party:logistics:example",
+      "assertedAt": "2026-07-31T15:00:00Z",
+      "evidenceRefs": ["evidence:logistics-status"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidenceId": "evidence:purchase-order",
+      "type": "purchase_order",
+      "title": "Synthetic purchase order PO-EXAMPLE-240",
+      "uri": "evidence://private/purchase-order/PO-EXAMPLE-240",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "disclosure": "shared",
+      "issuedAt": "2026-07-30T09:00:00Z",
+      "issuedBy": "party:buyer:example"
+    },
+    {
+      "evidenceId": "evidence:specification",
+      "type": "product_specification",
+      "title": "Synthetic cabinet specification v1",
+      "uri": "evidence://private/specification/SC-SPEC-V1",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "disclosure": "shared",
+      "issuedAt": "2026-07-30T10:00:00Z",
+      "issuedBy": "party:exporter:example"
+    },
+    {
+      "evidenceId": "evidence:inspection-summary",
+      "type": "inspection_summary",
+      "title": "Synthetic sample inspection summary",
+      "uri": "evidence://private/inspection/SC-INSPECTION-001",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "disclosure": "public_summary",
+      "issuedAt": "2026-07-31T13:00:00Z",
+      "issuedBy": "party:inspection:example"
+    },
+    {
+      "evidenceId": "evidence:logistics-status",
+      "type": "logistics_status_record",
+      "title": "Synthetic pickup status record",
+      "uri": "evidence://private/logistics/SC-PICKUP-001",
+      "digest": {
+        "algorithm": "sha256",
+        "value": "4444444444444444444444444444444444444444444444444444444444444444"
+      },
+      "disclosure": "public_summary",
+      "issuedAt": "2026-07-31T15:00:00Z",
+      "issuedBy": "party:logistics:example"
+    }
+  ],
+  "confirmations": [
+    {
+      "confirmationId": "confirmation:buyer:goods:v1",
+      "factId": "fact:goods-and-quantity:v1",
+      "factVersion": 1,
+      "partyId": "party:buyer:example",
+      "decision": "confirm",
+      "decidedAt": "2026-07-31T14:15:00Z",
+      "note": "Synthetic confirmation for demonstration only."
+    },
+    {
+      "confirmationId": "confirmation:inspection:thickness:v1",
+      "factId": "fact:steel-thickness:v1",
+      "factVersion": 1,
+      "partyId": "party:inspection:example",
+      "decision": "confirm",
+      "decidedAt": "2026-07-31T14:45:00Z",
+      "note": "The synthetic sample inspection summary records a compliant measurement."
+    },
+    {
+      "confirmationId": "confirmation:logistics:pickup:v1",
+      "factId": "fact:pickup-status:v1",
+      "factVersion": 1,
+      "partyId": "party:logistics:example",
+      "decision": "acknowledge",
+      "decidedAt": "2026-07-31T15:10:00Z"
+    }
+  ],
+  "lifecycle": {
+    "status": "active"
+  },
+  "disclosure": {
+    "profile": "public_summary",
+    "permittedAudience": ["public-demo"]
+  }
+}
