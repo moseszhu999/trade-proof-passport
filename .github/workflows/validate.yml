@@ -1,0 +1,27 @@
+name: Validate Trade Proof Passport
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Parse JSON Schema
+        run: node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-proof-passport.schema.json', 'utf8')); console.log('PASS: schema JSON parses')"
+
+      - name: Validate steel cabinet example
+        run: node tools/verify-passport.mjs examples/steel-cabinet-passport.json
