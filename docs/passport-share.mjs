@@ -134,6 +134,9 @@ export function decodePublicSummary(payload) {
 export function buildPublicSummaryUrl(passport, baseUrl) {
   const summary = buildPublicSummary(passport);
   const payload = encodePublicSummary(summary);
-  const cleanBase = baseUrl.split('#')[0].split('?')[0];
-  return `${cleanBase}#p=${payload}`;
+  const url = new URL(baseUrl);
+  url.search = '';
+  url.pathname = url.pathname.replace(/[^/]*$/, 'respond.html');
+  url.hash = new URLSearchParams({ p: payload }).toString();
+  return url.toString();
 }
