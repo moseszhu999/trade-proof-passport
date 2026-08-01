@@ -12,11 +12,20 @@ const rejectValues = (source, values, label) => {
   }
 };
 
+const landing = readFileSync('docs/index.html', 'utf8');
 const page = readFileSync('docs/tokenomics.html', 'utf8');
 const standard = readFileSync('standard/tproof-token-economics-v0.1.md', 'utf8');
 const model = readFileSync('tokenomics/tproof-tokenomics-v0.1.json', 'utf8');
 const readme = readFileSync('README.md', 'utf8');
 const sitemap = readFileSync('docs/sitemap.xml', 'utf8');
+
+requireValues(landing, [
+  './tokenomics.html',
+  'Token Economics v0.1 is now public and machine-verifiable.',
+  'Read Token Economics',
+  'Explore Token Economics',
+  '>Tokenomics<'
+], 'homepage tokenomics discovery');
 
 requireValues(page, [
   'TPROOF Token Economics v0.1',
@@ -39,7 +48,7 @@ requireValues(page, [
   '../tokenomics/tproof-tokenomics-v0.1.json'
 ], 'public tokenomics content');
 
-rejectValues(page, [
+rejectValues(`${landing}\n${page}`, [
   'Buy TPROOF',
   'Buy $TPROOF',
   'Guaranteed return',
@@ -86,6 +95,6 @@ if (!sitemap.includes('https://moseszhu999.github.io/trade-proof-passport/tokeno
   throw new Error('Tokenomics page is missing from sitemap');
 }
 
-console.log('PASS: public TPROOF economics page and canonical links');
+console.log('PASS: homepage and public TPROOF economics page');
 console.log('PASS: Genesis, contribution, anti-Sybil and launch boundaries');
 console.log('PASS: no sale, profit, yield or claim marketing');
