@@ -24,7 +24,9 @@ requireValues(landing, [
   'Token Economics v0.1 is now public and machine-verifiable.',
   'Read Token Economics',
   'Explore Token Economics',
-  '>Tokenomics<'
+  '>Tokenomics<',
+  './genesis.html',
+  'Simulate Genesis Proof'
 ], 'homepage tokenomics discovery');
 
 requireValues(page, [
@@ -45,7 +47,10 @@ requireValues(page, [
   'One billion tokens. No hidden mint.',
   'Token ownership does not validate evidence',
   '../standard/tproof-token-economics-v0.1.md',
-  '../tokenomics/tproof-tokenomics-v0.1.json'
+  '../tokenomics/tproof-tokenomics-v0.1.json',
+  './genesis.html',
+  'Run Genesis simulator',
+  'Simulate the allocation →'
 ], 'public tokenomics content');
 
 rejectValues(`${landing}\n${page}`, [

@@ -20,18 +20,25 @@ jobs:
         with:
           node-version: 22
 
-      - name: Parse JSON Schemas
+      - name: Install Foundry for Solidity ABI cross-checks
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Parse canonical JSON files
         run: |
           node - <<'NODE'
           const { readFileSync } = require('node:fs');
           for (const file of [
             'schema/trade-proof-passport.schema.json',
             'schema/trade-proof-response.schema.json',
-            'tokenomics/tproof-tokenomics-v0.1.json'
+            'tokenomics/tproof-tokenomics-v0.1.json',
+            'examples/genesis-proof-allocation-input.json',
+            'examples/genesis-proof-allocation-output.json'
           ]) {
             JSON.parse(readFileSync(file, 'utf8'));
           }
-          console.log('PASS: Passport, response and tokenomics JSON parse');
+          console.log('PASS: Passport, response, tokenomics and allocation JSON parse');
           NODE
 
       - name: Validate steel cabinet example
@@ -45,3 +52,20 @@ jobs:
 
       - name: Validate TPROOF public economics surface
         run: node tools/validate-tokenomics-page.mjs
+
+      - name: Validate deterministic Genesis allocation compiler
+        run: node tools/verify-season-allocation.mjs
+
+      - name: Cross-check claim leaves and Merkle root with Foundry cast
+        run: node tools/verify-season-allocation-cast.mjs
+
+      - name: Validate Genesis simulator and discovery surfaces
+        run: node tools/validate-genesis-simulator.mjs
+
+      - name: Recompile and compare canonical allocation vector
+        run: |
+          node tools/compile-season-allocation.mjs \
+            examples/genesis-proof-allocation-input.json \
+            /tmp/genesis-proof-allocation-output.json
+          cmp examples/genesis-proof-allocation-output.json /tmp/genesis-proof-allocation-output.json
+          echo "PASS: canonical allocation vector is deterministic"
