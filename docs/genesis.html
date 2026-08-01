@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Genesis Proof Simulator · TradeProof</title>
+  <meta name="description" content="Simulate the public square-root allocation, Merkle root and dataset digest for the draft 10,000,000 TPROOF Genesis Proof pool.">
+  <meta property="og:title" content="TradeProof Genesis Proof Simulator">
+  <meta property="og:description" content="Useful work earns weight—not raw wallet count. Explore the draft square-root contribution economy.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/genesis.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/genesis.html">
+  <style>
+    :root{color-scheme:dark;--bg:#05060a;--panel:#10131d;--line:rgba(255,255,255,.11);--text:#f7f8fc;--muted:#a7afbd;--lime:#bcff4d;--cyan:#66f7ff;--violet:#9d7cff;--pink:#ff6fd8;--amber:#ffc66d;--danger:#ff8799}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 75% 0,rgba(157,124,255,.18),transparent 32%),radial-gradient(circle at 0 45%,rgba(102,247,255,.10),transparent 27%),var(--bg)}a{color:inherit}button,input,textarea{font:inherit}.wrap{width:min(1180px,calc(100% - 28px));margin:auto}.nav{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);background:rgba(5,6,10,.82);backdrop-filter:blur(18px)}.navin{height:68px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:950;letter-spacing:-.04em}.mark{width:29px;height:29px;border-radius:9px;background:conic-gradient(from 210deg,var(--lime),var(--cyan),var(--violet),var(--pink),var(--lime));position:relative}.mark:after{content:"";position:absolute;inset:6px;background:#080a10;border-radius:5px}.navlinks{display:flex;gap:18px;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none}.hero{padding:78px 0 48px}.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted);font-size:12px;font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:var(--amber);box-shadow:0 0 16px var(--amber)}h1{max-width:970px;margin:20px 0 18px;font-size:clamp(48px,8vw,104px);line-height:.91;letter-spacing:-.068em}.gradient{background:linear-gradient(100deg,var(--lime),var(--cyan) 40%,var(--violet) 75%,var(--pink));background-clip:text;-webkit-background-clip:text;color:transparent}.lead{max-width:790px;margin:0;color:var(--muted);font-size:clamp(18px,2.1vw,22px)}.facts{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}.fact{padding:10px 13px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);font-size:13px}.fact b{color:var(--lime)}.workspace{display:grid;grid-template-columns:.85fr 1.15fr;gap:18px;padding:34px 0 84px}.panel{border:1px solid var(--line);border-radius:24px;background:rgba(16,19,29,.84);box-shadow:0 24px 80px rgba(0,0,0,.28);overflow:hidden}.panel-head{padding:20px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;align-items:center}.panel-head h2{margin:0;font-size:19px}.panel-body{padding:22px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}label{font-size:13px;font-weight:800;color:#dce2ed}input,textarea{width:100%;border:1px solid var(--line);border-radius:13px;background:#090b11;color:var(--text);padding:12px 13px}textarea{min-height:205px;resize:vertical;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}.hint{color:var(--muted);font-size:12px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:17px}.button{border:1px solid var(--line);border-radius:999px;padding:12px 16px;background:rgba(255,255,255,.055);color:var(--text);font-weight:850;cursor:pointer;text-decoration:none}.button.primary{border-color:transparent;color:#06080b;background:linear-gradient(100deg,var(--lime),#f0ffb7)}.button:hover{transform:translateY(-1px)}.notice{margin-top:17px;padding:13px 14px;border:1px solid rgba(255,198,109,.24);border-radius:13px;background:rgba(255,198,109,.06);color:#ffdda9;font-size:13px}.error{display:none;margin-top:14px;color:#ffb1bd}.error.show{display:block}.empty{min-height:490px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:40px}.empty strong{display:block;color:var(--text);font-size:22px;margin-bottom:8px}.results{display:none}.results.show{display:block}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.metric{padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}.metric span{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;margin-top:7px;font-size:20px;letter-spacing:-.03em}.hashes{display:grid;gap:10px;margin-top:14px}.hash{padding:13px;border:1px dashed rgba(102,247,255,.25);border-radius:13px;background:#080a10;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--cyan);overflow-wrap:anywhere}.hash b{display:block;color:var(--muted);font-family:Inter,system-ui,sans-serif;margin-bottom:4px}.table-wrap{margin-top:18px;overflow:auto;border:1px solid var(--line);border-radius:16px}table{width:100%;border-collapse:collapse;min-width:700px}th,td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em}td code{color:#dbe6f5}.bar{height:7px;width:150px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--lime),var(--cyan),var(--violet));border-radius:inherit}.excluded{margin-top:16px;color:var(--muted);font-size:13px}.explain{border-top:1px solid var(--line);padding:24px 0 78px}.explain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.explain article{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025)}.explain h3{margin:0 0 8px}.explain p{margin:0;color:var(--muted)}footer{padding:28px 0 45px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.foot a{text-decoration:none}@media(max-width:900px){.workspace{grid-template-columns:1fr}.metrics,.explain-grid{grid-template-columns:1fr}.empty{min-height:300px}}@media(max-width:620px){.navlinks a:not(:last-child){display:none}.fields{grid-template-columns:1fr}.hero{padding-top:55px}h1{font-size:55px}.panel-body{padding:17px}.panel-head{padding:17px}}
+  </style>
+</head>
+<body>
+  <header class="nav"><div class="wrap navin"><a class="brand" href="./"><span class="mark"></span>TRADEPROOF</a><nav class="navlinks"><a href="./tokenomics.html">Tokenomics</a><a href="./create.html">Create Passport</a><a href="https://github.com/moseszhu999/trade-proof-passport" rel="noopener">GitHub ↗</a></nav></div></header>
+  <main>
+    <section class="wrap hero">
+      <span class="pill"><span class="dot"></span>SIMULATION ONLY · TOKEN NOT LIVE</span>
+      <h1>Genesis Proof.<br><span class="gradient">See contribution become allocation.</span></h1>
+      <p class="lead">Explore the draft 10,000,000 TPROOF Season 0 pool. The curve rewards useful work while reducing whale concentration through the square root of verified Points.</p>
+      <div class="facts"><span class="fact"><b>10M</b> draft pool</span><span class="fact"><b>25</b> minimum Points</span><span class="fact"><b>√ Points</b> reward weight</span><span class="fact"><b>100%</b> deterministic</span><span class="fact"><b>0</b> database dependency</span></div>
+    </section>
+
+    <section class="wrap workspace">
+      <article class="panel">
+        <div class="panel-head"><h2>Public Points input</h2><span class="pill">LOCAL BROWSER</span></div>
+        <div class="panel-body">
+          <div class="fields">
+            <div class="field"><label for="pool">Season pool · TPROOF</label><input id="pool" value="10000000" inputmode="numeric"></div>
+            <div class="field"><label for="minimum">Minimum Points</label><input id="minimum" value="25" inputmode="numeric"></div>
+            <div class="field full"><label for="entries">Wallet, verified Points</label><textarea id="entries" spellcheck="false">0x00000000000000000000000000000000000000b0,225
+0x00000000000000000000000000000000000000c0,24
+0x00000000000000000000000000000000000000a0,100</textarea><span class="hint">One wallet per line. Below-minimum wallets remain visible as excluded. Data stays in this browser.</span></div>
+          </div>
+          <div class="actions"><button class="button primary" id="calculate" type="button">Compile allocation →</button><button class="button" id="reset" type="button">Reset sample</button></div>
+          <div class="notice"><strong>No eligibility or claim is created here.</strong> The Allocation, Contribution and Token addresses are deterministic placeholders until reviewed testnet deployments exist.</div>
+          <p class="error" id="error" role="alert"></p>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head"><h2>Deterministic output</h2><span class="pill">MERKLE + DATASET</span></div>
+        <div class="empty" id="empty"><div><strong>Compile the sample.</strong>The same input always produces the same rewards, leaves, root and digest.</div></div>
+        <div class="panel-body results" id="results">
+          <div class="metrics"><div class="metric"><span>Eligible wallets</span><strong id="eligible">—</strong></div><div class="metric"><span>Excluded wallets</span><strong id="excludedCount">—</strong></div><div class="metric"><span>Allocated</span><strong id="allocated">—</strong></div></div>
+          <div class="hashes"><div class="hash"><b>Merkle Root</b><span id="root"></span></div><div class="hash"><b>Canonical Dataset Digest</b><span id="digest"></span></div></div>
+          <div class="actions"><button class="button" id="copyRoot" type="button">Copy root</button><button class="button" id="download" type="button">Download dataset JSON</button><button class="button" id="share" type="button">Share simulator</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Wallet</th><th>Points</th><th>√ weight</th><th>TPROOF allocation</th></tr></thead><tbody id="rows"></tbody></table></div>
+          <p class="excluded" id="excluded"></p>
+        </div>
+      </article>
+    </section>
+
+    <section class="wrap explain"><div class="explain-grid"><article><h3>Diminishing concentration</h3><p>Four times the Points creates twice—not four times—the allocation weight. More contribution still matters, but a single actor cannot dominate linearly.</p></article><article><h3>Publicly reproducible</h3><p>Every leaf includes chain, contract, season, revision, wallet, final Points and amount. Anyone can independently rebuild the same root.</p></article><article><h3>Chain verifies the snapshot</h3><p>The claim contract checks each wallet’s closed-season onchain Points before transferring pre-funded Tokens. The publisher cannot invent Points inside a Merkle file.</p></article></div></section>
+  </main>
+  <footer><div class="wrap foot"><span>TradeProof · Genesis Proof simulator v0.1 · No claim or sale is active.</span><div><a href="./tokenomics.html">Tokenomics</a> · <a href="../tokenomics/tproof-tokenomics-v0.1.json">Economics JSON</a> · <a href="https://github.com/moseszhu999/chaintrace-contracts" rel="noopener">Contracts ↗</a></div></div></footer>
+
+  <script type="module">
+    import { compileSeasonAllocation } from './season-allocation.mjs';
+
+    const sample=document.getElementById('entries').value;
+    const placeholder={allocationContract:'0x1111111111111111111111111111111111111111',contributionContract:'0x2222222222222222222222222222222222222222',tokenContract:'0x3333333333333333333333333333333333333333'};
+    let current=null;
+    const formatToken=(baseUnits)=>{const value=BigInt(baseUnits);const whole=value/10n**18n;const fraction=(value%10n**18n).toString().padStart(18,'0').replace(/0+$/,'');return `${whole.toLocaleString('en-US')}${fraction?`.${fraction.slice(0,6)}`:''}`};
+    const short=(address)=>`${address.slice(0,8)}…${address.slice(-6)}`;
+    const parseEntries=()=>document.getElementById('entries').value.split(/\n+/).map(line=>line.trim()).filter(Boolean).map((line,index)=>{const [account,points,...rest]=line.split(',').map(value=>value.trim());if(!account||!points||rest.length)throw new Error(`Line ${index+1}: use wallet,points`);return{account,verifiedPoints:points}});
+    const compile=()=>{const pool=document.getElementById('pool').value.trim();if(!/^\d+$/.test(pool))throw new Error('Season pool must be a whole TPROOF number');return compileSeasonAllocation({chainId:'84532',...placeholder,season:'0',revision:'1',poolAmountBaseUnits:(BigInt(pool)*10n**18n).toString(),minimumEligibilityPoints:document.getElementById('minimum').value.trim(),entries:parseEntries()})};
+    const render=(output)=>{current=output;document.getElementById('empty').style.display='none';document.getElementById('results').classList.add('show');document.getElementById('eligible').textContent=output.eligibleAccountCount;document.getElementById('excludedCount').textContent=output.excludedAccountCount;document.getElementById('allocated').textContent=`${formatToken(output.totalAllocatedBaseUnits)} TPROOF`;document.getElementById('root').textContent=output.merkleRoot;document.getElementById('digest').textContent=output.datasetDigest;const max=Math.max(...output.entries.map(entry=>Number(BigInt(entry.tokenAmountBaseUnits)/10n**18n)));document.getElementById('rows').innerHTML=output.entries.map(entry=>{const tokens=Number(BigInt(entry.tokenAmountBaseUnits)/10n**18n);return`<tr><td><code title="${entry.account}">${short(entry.account)}</code></td><td>${BigInt(entry.verifiedPoints).toLocaleString('en-US')}</td><td>${(Number(BigInt(entry.sqrtWeightScaled))/1e18).toFixed(3)}</td><td><strong>${formatToken(entry.tokenAmountBaseUnits)}</strong><div class="bar"><i style="width:${max?tokens/max*100:0}%"></i></div></td></tr>`}).join('');document.getElementById('excluded').textContent=output.excluded.length?`Excluded below ${output.minimumEligibilityPoints} Points: ${output.excluded.map(item=>`${short(item.account)} (${item.verifiedPoints})`).join(', ')}`:'No wallets were excluded.'};
+    const calculate=()=>{const error=document.getElementById('error');error.classList.remove('show');try{render(compile())}catch(cause){error.textContent=cause instanceof Error?cause.message:String(cause);error.classList.add('show')}};
+    document.getElementById('calculate').addEventListener('click',calculate);
+    document.getElementById('reset').addEventListener('click',()=>{document.getElementById('pool').value='10000000';document.getElementById('minimum').value='25';document.getElementById('entries').value=sample;calculate()});
+    document.getElementById('copyRoot').addEventListener('click',async event=>{if(!current)return;await navigator.clipboard.writeText(current.merkleRoot);event.currentTarget.textContent='Root copied ✓';setTimeout(()=>event.currentTarget.textContent='Copy root',1500)});
+    document.getElementById('download').addEventListener('click',()=>{if(!current)return;const blob=new Blob([JSON.stringify(current,null,2)+'\n'],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='tradeproof-genesis-proof-simulation.json';link.click();URL.revokeObjectURL(link.href)});
+    document.getElementById('share').addEventListener('click',async event=>{const data={title:'TradeProof Genesis Proof Simulator',text:'Explore how verified contribution Points map to the draft 10M TPROOF Genesis Proof pool.',url:location.href};if(navigator.share){try{await navigator.share(data);return}catch{}}await navigator.clipboard.writeText(location.href);event.currentTarget.textContent='Link copied ✓';setTimeout(()=>event.currentTarget.textContent='Share simulator',1500)});
+    calculate();
+  </script>
+</body>
+</html>
