@@ -39,6 +39,7 @@ const encoded = encodeRwpRequest(request);
 assert.deepEqual(decodeRwpRequest(encoded), request);
 const url = buildRwpRequestUrl(request, card, 'https://example.test/rwp.html?unsafe=removed#old=1');
 const parsedUrl = new URL(url);
+assert.equal(parsedUrl.pathname, '/rwp-respond.html');
 assert.equal(parsedUrl.search, '');
 assert.ok(new URLSearchParams(parsedUrl.hash.slice(1)).get('card'));
 assert.deepEqual(readRwpRequestFromHash(parsedUrl.hash), request);
@@ -111,4 +112,4 @@ const followUpPassport = {
 };
 
 await writeFile('/tmp/rwp-follow-up-passport.json', `${JSON.stringify(followUpPassport, null, 2)}\n`);
-console.log('PASS: privacy-bounded RWP Request digest, link integrity and viral lineage');
+console.log('PASS: privacy-bounded RWP Request digest, holder-response routing and viral lineage');
