@@ -17,6 +17,11 @@ assert.match(page, /does not activate a Token claim, sale, market, liquidity poo
 assert.match(page, /registry-client\.mjs/);
 assert.match(page, /Request wallet anchor/);
 assert.match(page, /I understand this sends an irreversible Base Sepolia transaction containing only hashes/);
+assert.match(
+  page,
+  /https:\/\/raw\.githubusercontent\.com\/moseszhu999\/trade-proof-passport\/main\/examples\/steel-cabinet-passport\.json/
+);
+assert.doesNotMatch(page, /fetch\('\.\.\/examples\//);
 assert.doesNotMatch(page, /private\s*key/i);
 assert.doesNotMatch(page, /seed\s*phrase/i);
 assert.doesNotMatch(page, /claim\s+now/i);
