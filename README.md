@@ -4,39 +4,150 @@
 
 **Proof for trade. Ownership for contributors.**
 
-TradeProof combines a useful portable trade-proof format, a browser-native multi-party response loop, an onchain integrity layer, and a machine-verifiable economic model for future contributor ownership.
+## Before Real-World Assets, there must be Real-World Proof
+
+**TradeProof is the open, agent-native Real-World Proof protocol, starting with global trade.**
+
+RWA represents value. RWP records how a real-world claim was formed, what evidence supports it, where the claim came from, which responsible roles confirmed or disputed it, which version is current, and what may be disclosed.
+
+```text
+Trade creates value.
+RWP makes it credible.
+Agents make it scalable.
+DAO makes the protocol ownable.
+```
+
+Trade Proof Passport is the first trade-domain carrier of RWP Core:
+
+```text
+Claim
++ Evidence
++ Provenance
++ Confirmation
++ State
++ Disclosure
++ Digest
++ History
+```
+
+RWP does not claim absolute truth. It makes claims, sources, responsibility and history independently inspectable.
 
 ## Live product
 
 - Project site: `https://moseszhu999.github.io/trade-proof-passport/`
-- Token economics: `https://moseszhu999.github.io/trade-proof-passport/tokenomics.html`
-- Genesis Proof simulator: `https://moseszhu999.github.io/trade-proof-passport/genesis.html`
+- RWP Core + Viral Proof Cards: `https://moseszhu999.github.io/trade-proof-passport/rwp.html`
 - Create a Passport: `https://moseszhu999.github.io/trade-proof-passport/create.html`
 - Import and share: `https://moseszhu999.github.io/trade-proof-passport/view.html`
 - Respond: `https://moseszhu999.github.io/trade-proof-passport/respond.html`
+- Anchor and verify: `https://moseszhu999.github.io/trade-proof-passport/onchain.html`
+- Token economics: `https://moseszhu999.github.io/trade-proof-passport/tokenomics.html`
+- Genesis Proof simulator: `https://moseszhu999.github.io/trade-proof-passport/genesis.html`
 - Synthetic example: `https://moseszhu999.github.io/trade-proof-passport/example.html`
 
-Current browser flow:
+No account or wallet is required to create a Passport, generate a bounded Proof Card or verify local JSON.
+
+## Product loop
 
 ```text
-Create Passport
+Create a local Trade RWP Passport
+→ attach evidence references and field-level provenance
 → create a privacy-bounded share link
-→ counterparty confirms, rejects, or requests a change
-→ send a standard Response object back
-→ optionally anchor the exact canonical digest onchain
+→ counterparty confirms, rejects or requests a change
+→ generate a standard Response object
+→ optionally anchor the exact canonical digest on Base Sepolia
+→ generate a Viral Proof Card containing no source secrets
+→ recipient inspects, requests authorized evidence or creates another RWP
 ```
 
-No account or wallet is required to create the initial Passport.
+The useful viral event is not a page view or social impression. It is a distinct recipient entering another real workflow and producing a new proof object or responsible response.
 
-## Canonical testnet Registry
+## Your data stays with you
 
-`TradeProofRegistry` is deployed on Base Sepolia:
+TradeProof is not a central trade-data platform.
 
 ```text
-Address: 0xad1c714140ceb8ed7c5234d939a06926f5edaba2
+local files / ERP / logistics events
+→ local or holder-controlled Agent
+→ candidate claims and provenance
+→ responsible-role review
+→ portable Passport
+→ bounded disclosure
+→ public digest and state
+```
+
+A Viral Proof Card excludes:
+
+- organization and personal names;
+- party identifiers;
+- private fact statements;
+- source-document contents;
+- evidence URIs and evidence digests;
+- commercial prices and bank details;
+- private confirmation notes.
+
+The public promise is:
+
+> **Your trade data stays with you. Share proofs, not secrets.**
+
+## RWP Provenance v0.1
+
+The optional `provenance[]` collection connects a fact to an evidence record and a field-level locator:
+
+```text
+provenanceId
+factId
+evidenceId
+locator: page / field / cell / JSON Pointer / event ID
+extraction: manual / document parser / system event / agent assisted
+review: responsible reviewer + time
+```
+
+Agents may extract, reconcile and propose candidate mappings. They may not invent evidence, silently resolve conflicts or become an authorized real-world party merely by generating text.
+
+The canonical draft is:
+
+```text
+standard/real-world-proof-core-v0.1.md
+```
+
+## RWP, RWA, Agent and DAO
+
+```text
+real-world event
+→ RWP claim, evidence, provenance and confirmation
+→ established asset or right candidate
+→ optional RWA projection
+→ optional finance, insurance or capital workflow
+```
+
+The DAO may govern schemas, canonicalization profiles, Trade Pools, Hooks, connectors, grants and Treasury policy.
+
+It cannot vote a shipment, inspection, warehouse event, invoice, acceptance or legal right into existence.
+
+```text
+DAO governance != real-world truth
+Token balance != evidence validity
+```
+
+## Canonical Base Sepolia Registry
+
+```text
+TradeProofRegistry: 0xad1c714140ceb8ed7c5234d939a06926f5edaba2
 Chain ID: 84532
-Block: 44891502
-Transaction: 0x6ffcae50367e9087c736ff5c7edd7d30483aedb0e8082488a0d8a8784cbdd31c
+Registry block: 44891502
+```
+
+The Registry records canonical Passport and Response digests, issuer wallet, block timestamp, schema/profile hashes, supersession links and revocation state. It stores no source document and does not prove identity, authority, legal effect or objective truth.
+
+## TPROOF economic constitution
+
+### Deployed economic stack
+
+```text
+TPROOF:            0xd0a60427482C2cBE1C6566772DC5838AA06DED80
+Contribution:      0xcb33eA69dDa48f2A345Fc1F2A3B85f329a5eb1E0
+Season Allocation: 0x0bFd6CEab5dB51d7B53789484ECD147B10D7fC65
+Team Vesting:      0x65Ab9CE997975f18b6a06957D75AA5a00b3dc467
 ```
 
 Canonical Solidity source and deployment evidence live in:
@@ -45,163 +156,96 @@ Canonical Solidity source and deployment evidence live in:
 https://github.com/moseszhu999/chaintrace-contracts
 ```
 
-The Registry records canonical Passport and Response digests, issuer wallet, block timestamp, schema/profile hashes, supersession links and revocation state. It does not store source documents or prove that a real-world assertion is true.
-
-## TPROOF economic constitution
-
-`$TPROOF` is **not live**. There is no public sale, claim, price, listing, revenue share, yield, redemption promise or guaranteed return.
-
-The economic model is now published in two synchronized forms:
-
-```text
-standard/tproof-token-economics-v0.1.md
-tokenomics/tproof-tokenomics-v0.1.json
-```
-
-Verify it locally:
-
-```bash
-node tools/verify-tokenomics.mjs
-node tools/verify-season-allocation.mjs
-node tools/compile-season-allocation.mjs examples/genesis-proof-allocation-input.json
-```
-
-The allocation compiler is dependency-free and runs in both Node.js and the browser. It converts public closed-season Points into a deterministic square-root allocation, Solidity-compatible claim leaves, Merkle proofs, a Merkle root and a canonical dataset digest. It does not require a private eligibility database and does not activate a claim.
-
-The model separates three assets:
-
-```text
-Proof Points
-  non-transferable seasonal contribution accounting
-
-Contribution Receipts
-  future non-transferable onchain contribution history
-
-TPROOF
-  future transferable utility and governance token
-```
-
-The economic loop is:
-
-```text
-useful trade-proof action
-→ independent counterparty response
-→ verified contribution receipt
-→ seasonal Proof Points
-→ seasonal TPROOF allocation
-→ governance and sponsored public goods
-→ more integrations, adoption and useful actions
-```
-
-Draft parameters:
+`$TPROOF` is **not live** as a public claim, sale, market or liquidity product.
 
 ```text
 Maximum supply: 1,000,000,000 TPROOF
-Supply policy: fixed at genesis
-Post-genesis minting: disabled
-Community emissions: 45% over eight years
-Season length: 90 days
+Post-genesis mint: disabled
+Community allocation: 45% over eight years
 Genesis Proof pool: 1% / 10,000,000 TPROOF
-Genesis status: reserved in draft, not claimable
 Core-team vesting: 12-month cliff + 48-month linear vesting
+Public claim: false
+Public sale: false
+Liquidity pool: false
+Mainnet authorization: false
 ```
 
-Draft seasonal reward curve:
+**Economics as code** means supply, allocations, anti-Sybil zeros, seasonal rules and launch boundaries remain machine-verifiable rather than editable marketing claims.
+
+TPROOF is not evidence and cannot make a Passport valid. It is designed for contribution economics, protocol governance, public-goods grants, proposal/challenge bonds and sponsored proof infrastructure.
+
+**Token state must never determine whether a Passport or Response is valid**, current, revoked or superseded.
+
+## Contribution before liquidity
+
+The planned economic loop is:
 
 ```text
-wallet reward
-=
-season pool
-× sqrt(wallet verified points)
-÷ sum(sqrt(all eligible wallets' verified points))
+useful proof action
+→ independent counterparty response or reusable public infrastructure
+→ verified Contribution Receipt
+→ seasonal Proof Points
+→ reviewed seasonal TPROOF allocation
+→ DAO-funded standards, connectors and public goods
+→ more useful RWP adoption
 ```
-
-The square-root curve reduces reward concentration while retaining an incentive to contribute.
 
 No points are awarded for:
 
 - page views;
 - wallet connections;
 - empty social posts;
+- copied Proof Cards;
 - self-responses;
 - duplicate artifacts;
 - repeated wash activity between the same wallet pair.
 
-The highest-value economic event is viral reuse: a recipient responds to a Passport and later becomes the creator of a distinct Passport for another workflow.
+The scarce resource is not closed code. It is verified participation: real counterparty confirmations, accepted proof patterns, durable provenance history, reliable connectors and active trade corridors.
 
-## Draft allocation
+### Public allocation data, not a private eligibility database
 
-```text
-45% community contributions             450,000,000
-20% ecosystem and developer fund        200,000,000
-15% core team with long vesting         150,000,000
-10% real adoption incentives            100,000,000
- 5% liquidity bootstrapping reserve      50,000,000
- 5% security and standards reserve       50,000,000
-                                        -----------
-                                      1,000,000,000
+The browser and Node compiler deterministically transform public closed-season Points into square-root allocations, Solidity-compatible leaves, Merkle proofs, a Merkle root and a canonical dataset digest.
+
+```bash
+node tools/compile-season-allocation.mjs examples/genesis-proof-allocation-input.json
 ```
 
-The machine-readable verifier rejects allocation drift, a hidden post-genesis mint path, an active-sale claim, rights over trade assets, or Token control over Passport validity.
+The shared browser implementation is:
 
-## Planned TPROOF utility
+```text
+docs/season-allocation.mjs
+```
 
-- standards and canonicalization-profile governance;
-- ecosystem, integration, security and public-goods grants;
-- refundable proposal bonds;
-- challenge bonds under published rules;
-- sponsored contribution pools;
-- public-goods matching.
+The compiler does not create eligibility, fund a Season or activate a claim.
 
-Token state must never determine whether a Passport or Response is valid, current, revoked or superseded. Basic Passport creation, local verification and public Registry reading remain available without TPROOF.
-
-## Launch gates
-
-No public offer, claim, liquidity action or admission to trading should begin until the published gates pass, including:
-
-- reviewed `TradeProofContribution` contract;
-- fixed-supply Token and vesting contracts with no hidden mint;
-- source-verified testnet deployments;
-- external security review;
-- canonical public disclosure;
-- target-jurisdiction legal review;
-- published anti-Sybil and appeal rules;
-- treasury multisig and timelock policy;
-- community approval of final launch parameters.
-
-## Try the Passport verifier
+## Verify locally
 
 ```bash
 git clone https://github.com/moseszhu999/trade-proof-passport.git
 cd trade-proof-passport
 node tools/verify-passport.mjs examples/steel-cabinet-passport.json
+node tools/verify-rwp-core.mjs
+node tools/validate-rwp-page.mjs
+node tools/verify-registry-client.mjs
+node tools/verify-tokenomics.mjs
+node tools/verify-season-allocation.mjs
+node tools/compile-season-allocation.mjs examples/genesis-proof-allocation-input.json
 ```
 
-Expected result:
+Expected Passport output includes:
 
 ```text
 PASS: tpp:example:steel-cabinet:001
 Facts: 3
 Evidence records: 4
+Provenance records: 4
 Confirmations: 3
 ```
-
-## Why this exists
-
-Trade evidence is fragmented across email, chat, PDFs, spreadsheets, logistics systems, inspection reports and multiple organizations. A receiver often has to reconstruct:
-
-- what the trade is about;
-- which facts are being asserted;
-- what evidence supports each fact;
-- who confirmed, rejected, or requested a change;
-- which version is current;
-- whether an earlier object was superseded or revoked.
-
-TradeProof packages those relationships into portable JSON objects that can be rendered by a web page, processed by an Agent, referenced by an ERP or anchored onchain.
 
 ## Repository structure
 
 ```text
+standard/real-world-proof-core-v0.1.md
 standard/trade-proof-passport-v0.1.md
 standard/trade-proof-response-v0.1.md
 standard/tproof-token-economics-v0.1.md
@@ -209,54 +253,47 @@ schema/trade-proof-passport.schema.json
 schema/trade-proof-response.schema.json
 tokenomics/tproof-tokenomics-v0.1.json
 examples/steel-cabinet-passport.json
-examples/genesis-proof-allocation-input.json
-examples/genesis-proof-allocation-output.json
 tools/verify-passport.mjs
-tools/verify-tokenomics.mjs
-tools/compile-season-allocation.mjs
-tools/verify-season-allocation.mjs
-tools/verify-season-allocation-cast.mjs
+tools/verify-rwp-core.mjs
+tools/validate-rwp-page.mjs
+docs/rwp-card.mjs
+docs/rwp.html
 docs/season-allocation.mjs
-docs/index.html
-docs/tokenomics.html
-docs/genesis.html
 docs/create.html
 docs/view.html
 docs/respond.html
-docs/example.html
+docs/onchain.html
+docs/tokenomics.html
+docs/genesis.html
 ```
 
 ## Design principles
 
-1. **Useful before the token** — the product performs real work now.
-2. **Viral through workflow** — every useful response naturally invites another organization.
-3. **Economics as code** — supply, allocations, scoring boundaries and launch gates are machine-verifiable.
-4. **Contribution before liquidity** — non-transferable Proof Points and receipts precede Token distribution.
-5. **Public allocation data, not a private eligibility database** — deterministic inputs produce independently reproducible rewards, leaves, roots and digests.
-6. **Privacy-bounded** — source files, evidence URIs and private party identifiers do not need to be public.
-7. **Onchain integrity, not automatic truth** — the Registry proves chronology and exact digest identity.
-8. **Contributor ownership** — future incentives reward measurable network value.
-9. **Portable and open** — the same objects can move across websites, Agents, ERP systems and wallets.
+1. **RWP is the core** — claims, evidence, provenance, responsibility and history come before RWA.
+2. **Useful before the Token** — Passport creation, Proof Cards and verification work without TPROOF.
+3. **Holder-controlled** — source data remains with its holder or chosen infrastructure.
+4. **Viral through workflow** — sharing invites a responsible response or another useful RWP, not empty impressions.
+5. **Agent-scaled, protocol-constrained** — Agents compile candidates; deterministic rules and accountable reviewers establish state.
+6. **DAO-owned, truth-independent** — governance owns infrastructure but cannot manufacture facts.
+7. **Onchain integrity, not automatic truth** — the Registry proves chronology and digest identity.
+8. **Portable and open** — anyone may fork the frontend, reproduce a digest or build another client.
+9. **Contribution before liquidity** — verified network value precedes Token distribution.
+10. **Trade first, not trade only** — global trade is the first domain for the general RWP category.
 
 ## Permanent boundaries
 
-TradeProof does not currently perform:
+TradeProof does not currently provide:
 
-- token issuance or movement;
-- a public token sale or claim;
-- payments or settlement;
-- financing approval;
+- a public Token claim, sale, market or liquidity pool;
+- payment, settlement, lending or disbursement;
 - custody or asset tokenization;
-- customs, legal, insurance or regulatory approval;
+- customs, legal, insurance, financing or regulatory approval;
 - identity or organizational-authority verification;
 - automatic truth or reputation scoring;
-- public disclosure of private commercial documents.
+- public disclosure of private commercial documents;
+- a guarantee that an RWP forms a legally valid RWA.
 
 TPROOF provides no ownership of trade goods, invoices, receivables or payments, and no revenue share, dividend, guaranteed yield, redemption promise or guaranteed price support.
-
-## Status
-
-The Passport, Response and Token Economics documents are community draft `v0.1`. The Registry is an experimental, unaudited Base Sepolia deployment. Explorer source verification is still pending. TPROOF is not live.
 
 ## License
 

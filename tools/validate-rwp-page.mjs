@@ -1,0 +1,68 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+
+const page = await readFile(new URL('../docs/rwp.html', import.meta.url), 'utf8');
+const card = await readFile(new URL('../docs/rwp-card.mjs', import.meta.url), 'utf8');
+const standard = await readFile(new URL('../standard/real-world-proof-core-v0.1.md', import.meta.url), 'utf8');
+const sitemap = await readFile(new URL('../docs/sitemap.xml', import.meta.url), 'utf8');
+const createPage = await readFile(new URL('../docs/create.html', import.meta.url), 'utf8');
+
+for (const phrase of [
+  'Before RWA',
+  'prove reality',
+  'Your trade data stays with you',
+  'The complete Passport is processed locally',
+  'Generate a Viral Proof Card',
+  'Copy proof link',
+  'Share on X',
+  'LinkedIn',
+  'Agents',
+  'RWP',
+  'DAO',
+  'The crypto playbook',
+  'RWP holdings and DAO votes cannot change evidence validity'.replace('RWP holdings', 'TPROOF holdings')
+]) {
+  assert.ok(page.includes(phrase), `missing RWP page phrase: ${phrase}`);
+}
+
+assert.match(page, /navigator\.share/);
+assert.match(page, /twitter\.com\/intent\/tweet/);
+assert.match(page, /linkedin\.com\/sharing\/share-offsite/);
+assert.match(page, /rwp-card\.mjs/);
+assert.match(page, /raw\.githubusercontent\.com\/moseszhu999\/trade-proof-passport\/main\/examples\/steel-cabinet-passport\.json/);
+assert.doesNotMatch(page, /private\s*key/i);
+assert.doesNotMatch(page, /seed\s*phrase/i);
+assert.doesNotMatch(page, /claim\s+now/i);
+assert.doesNotMatch(page, /buy\s+TPROOF/i);
+assert.doesNotMatch(page, /guaranteed\s+(return|yield|price)/i);
+
+for (const phrase of [
+  'real-world-proof-card',
+  'privacy-bounded card',
+  'sourceDigest',
+  'cardDigest',
+  'confirmedRoles',
+  'respondedRoles',
+  'callToAction',
+  'cardDigest does not match',
+  'forbidden private-field marker'
+]) {
+  assert.ok(card.includes(phrase), `missing RWP card contract: ${phrase}`);
+}
+assert.doesNotMatch(card, /eth_sendTransaction|eth_sendRawTransaction/);
+
+for (const phrase of [
+  'Before Real-World Assets, there must be Real-World Proof',
+  'Trade Proof Passport is the first domain-specific carrier',
+  'No provenance record without a claim and evidence reference',
+  'DAO governance != real-world truth',
+  'Share proofs, not secrets',
+  'Page views, wallet connections, empty social posts, copied cards and self-responses are not proof contributions'
+]) {
+  assert.ok(standard.includes(phrase), `missing RWP standard invariant: ${phrase}`);
+}
+
+assert.match(sitemap, /rwp\.html/);
+assert.match(createPage, /rwp\.html/);
+
+console.log('PASS: RWP category narrative, privacy boundary and useful viral Proof Card surface');

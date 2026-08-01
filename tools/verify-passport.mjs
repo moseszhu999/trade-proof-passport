@@ -47,6 +47,15 @@ const DISCLOSURE_PROFILES = new Set([
   "public_summary"
 ]);
 
+const PROVENANCE_METHODS = new Set([
+  "manual",
+  "document_parser",
+  "system_event",
+  "agent_assisted"
+]);
+
+const PROVENANCE_LOCATORS = ["page", "field", "cell", "jsonPointer", "eventId"];
+
 const DIGEST_LENGTHS = {
   sha256: 64,
   sha384: 96,
@@ -57,12 +66,10 @@ const DIGEST_LENGTHS = {
 function duplicateValues(values) {
   const seen = new Set();
   const duplicates = new Set();
-
   for (const value of values) {
     if (seen.has(value)) duplicates.add(value);
     seen.add(value);
   }
-
   return [...duplicates];
 }
 
@@ -100,21 +107,27 @@ function validate(passport) {
   for (const field of ["parties", "facts", "evidence", "confirmations"]) {
     if (!Array.isArray(passport[field])) errors.push(`${field} must be an array.`);
   }
+  if (passport.provenance !== undefined && !Array.isArray(passport.provenance)) {
+    errors.push("provenance must be an array when present.");
+  }
 
   const parties = Array.isArray(passport.parties) ? passport.parties : [];
   const facts = Array.isArray(passport.facts) ? passport.facts : [];
   const evidence = Array.isArray(passport.evidence) ? passport.evidence : [];
+  const provenance = Array.isArray(passport.provenance) ? passport.provenance : [];
   const confirmations = Array.isArray(passport.confirmations) ? passport.confirmations : [];
 
   const partyIds = parties.map((item) => item?.partyId).filter(Boolean);
   const factIds = facts.map((item) => item?.factId).filter(Boolean);
   const evidenceIds = evidence.map((item) => item?.evidenceId).filter(Boolean);
+  const provenanceIds = provenance.map((item) => item?.provenanceId).filter(Boolean);
   const confirmationIds = confirmations.map((item) => item?.confirmationId).filter(Boolean);
 
   for (const [label, values] of [
     ["partyId", partyIds],
     ["factId", factIds],
     ["evidenceId", evidenceIds],
+    ["provenanceId", provenanceIds],
     ["confirmationId", confirmationIds]
   ]) {
     for (const duplicate of duplicateValues(values)) {
@@ -125,6 +138,8 @@ function validate(passport) {
   const partySet = new Set(partyIds);
   const evidenceSet = new Set(evidenceIds);
   const factMap = new Map(facts.map((fact) => [fact?.factId, fact]));
+  const provenanceMap = new Map(provenance.map((item) => [item?.provenanceId, item]));
+  const referencedProvenance = new Set();
 
   parties.forEach((party, index) => {
     if (!party?.partyId) errors.push(`parties[${index}].partyId is required.`);
@@ -142,7 +157,6 @@ function validate(passport) {
 
     const algorithm = item?.digest?.algorithm;
     const value = item?.digest?.value;
-
     if (!algorithm || !(algorithm in DIGEST_LENGTHS)) {
       errors.push(`evidence[${index}].digest.algorithm is unsupported.`);
     } else if (typeof value !== "string" || !/^[a-fA-F0-9]+$/.test(value)) {
@@ -155,6 +169,65 @@ function validate(passport) {
 
     if (item?.issuedBy && !partySet.has(item.issuedBy)) {
       errors.push(`evidence[${index}] references unknown issuedBy party: ${item.issuedBy}`);
+    }
+  });
+
+  provenance.forEach((item, index) => {
+    if (!item?.provenanceId) errors.push(`provenance[${index}].provenanceId is required.`);
+    if (!factMap.has(item?.factId)) {
+      errors.push(`provenance[${index}] references unknown fact: ${item?.factId}`);
+    }
+    if (!evidenceSet.has(item?.evidenceId)) {
+      errors.push(`provenance[${index}] references unknown evidence: ${item?.evidenceId}`);
+    }
+
+    const locator = item?.locator;
+    if (!locator || typeof locator !== "object" || Array.isArray(locator)) {
+      errors.push(`provenance[${index}].locator must be an object.`);
+    } else {
+      const populated = PROVENANCE_LOCATORS.filter((key) => locator[key] !== undefined);
+      if (populated.length === 0) {
+        errors.push(`provenance[${index}].locator must contain at least one locator field.`);
+      }
+      if (locator.page !== undefined && (!Number.isInteger(locator.page) || locator.page < 1)) {
+        errors.push(`provenance[${index}].locator.page must be a positive integer.`);
+      }
+      for (const key of ["field", "cell", "jsonPointer", "eventId"]) {
+        if (locator[key] !== undefined && (typeof locator[key] !== "string" || locator[key].length === 0)) {
+          errors.push(`provenance[${index}].locator.${key} must be a non-empty string.`);
+        }
+      }
+    }
+
+    const extraction = item?.extraction;
+    if (!extraction || typeof extraction !== "object" || Array.isArray(extraction)) {
+      errors.push(`provenance[${index}].extraction must be an object.`);
+    } else {
+      if (!PROVENANCE_METHODS.has(extraction.method)) {
+        errors.push(`provenance[${index}].extraction.method is invalid.`);
+      }
+      if (
+        extraction.confidence !== undefined &&
+        (typeof extraction.confidence !== "number" || extraction.confidence < 0 || extraction.confidence > 1)
+      ) {
+        errors.push(`provenance[${index}].extraction.confidence must be between 0 and 1.`);
+      }
+      if (extraction.method === "agent_assisted" && !extraction.agentProfile) {
+        warnings.push(`Agent-assisted provenance ${item?.provenanceId} has no agentProfile.`);
+      }
+    }
+
+    if (item?.review !== undefined) {
+      if (!item.review || typeof item.review !== "object" || Array.isArray(item.review)) {
+        errors.push(`provenance[${index}].review must be an object.`);
+      } else {
+        if (!partySet.has(item.review.reviewedBy)) {
+          errors.push(`provenance[${index}] references unknown reviewer: ${item.review.reviewedBy}`);
+        }
+        if (!isDateTime(item.review.reviewedAt)) {
+          errors.push(`provenance[${index}].review.reviewedAt is invalid.`);
+        }
+      }
     }
   });
 
@@ -179,6 +252,30 @@ function validate(passport) {
           errors.push(`facts[${index}] references unknown evidence: ${evidenceRef}`);
         }
       }
+      if (fact.status === "confirmed" && fact.evidenceRefs.length === 0) {
+        errors.push(`facts[${index}] is confirmed but has no evidence reference.`);
+      }
+    }
+
+    if (fact?.provenanceRefs !== undefined) {
+      if (!Array.isArray(fact.provenanceRefs)) {
+        errors.push(`facts[${index}].provenanceRefs must be an array when present.`);
+      } else {
+        for (const provenanceRef of fact.provenanceRefs) {
+          const source = provenanceMap.get(provenanceRef);
+          if (!source) {
+            errors.push(`facts[${index}] references unknown provenance: ${provenanceRef}`);
+            continue;
+          }
+          referencedProvenance.add(provenanceRef);
+          if (source.factId !== fact.factId) {
+            errors.push(`facts[${index}] references provenance for another fact: ${provenanceRef}`);
+          }
+          if (Array.isArray(fact.evidenceRefs) && !fact.evidenceRefs.includes(source.evidenceId)) {
+            errors.push(`facts[${index}] provenance ${provenanceRef} uses evidence not cited by the fact.`);
+          }
+        }
+      }
     }
 
     if (fact?.supersedesFactId) {
@@ -189,6 +286,12 @@ function validate(passport) {
       }
     }
   });
+
+  for (const item of provenance) {
+    if (item?.provenanceId && !referencedProvenance.has(item.provenanceId)) {
+      warnings.push(`Provenance record is not referenced by its fact: ${item.provenanceId}`);
+    }
+  }
 
   confirmations.forEach((confirmation, index) => {
     if (!confirmation?.confirmationId) {
@@ -230,6 +333,7 @@ function validate(passport) {
 
   if (facts.length === 0) warnings.push("Passport contains no facts.");
   if (confirmations.length === 0) warnings.push("Passport contains no confirmations.");
+  if (provenance.length === 0) warnings.push("Passport contains no field-level RWP provenance.");
 
   return { errors, warnings };
 }
@@ -252,7 +356,6 @@ async function main() {
   }
 
   const { errors, warnings } = validate(passport);
-
   for (const warning of warnings) console.warn(`WARN: ${warning}`);
 
   if (errors.length > 0) {
@@ -264,6 +367,7 @@ async function main() {
   console.log(`PASS: ${passport.passportId}`);
   console.log(`Facts: ${passport.facts.length}`);
   console.log(`Evidence records: ${passport.evidence.length}`);
+  console.log(`Provenance records: ${Array.isArray(passport.provenance) ? passport.provenance.length : 0}`);
   console.log(`Confirmations: ${passport.confirmations.length}`);
 }
 

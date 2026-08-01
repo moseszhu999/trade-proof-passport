@@ -48,7 +48,8 @@
       "version": 1,
       "assertedBy": "party:exporter:example",
       "assertedAt": "2026-07-31T14:05:00Z",
-      "evidenceRefs": ["evidence:purchase-order"]
+      "evidenceRefs": ["evidence:purchase-order"],
+      "provenanceRefs": ["provenance:po-quantity"]
     },
     {
       "factId": "fact:steel-thickness:v1",
@@ -58,7 +59,8 @@
       "version": 1,
       "assertedBy": "party:manufacturer:example",
       "assertedAt": "2026-07-31T14:20:00Z",
-      "evidenceRefs": ["evidence:specification", "evidence:inspection-summary"]
+      "evidenceRefs": ["evidence:specification", "evidence:inspection-summary"],
+      "provenanceRefs": ["provenance:spec-thickness", "provenance:inspection-thickness"]
     },
     {
       "factId": "fact:pickup-status:v1",
@@ -68,7 +70,8 @@
       "version": 1,
       "assertedBy": "party:logistics:example",
       "assertedAt": "2026-07-31T15:00:00Z",
-      "evidenceRefs": ["evidence:logistics-status"]
+      "evidenceRefs": ["evidence:logistics-status"],
+      "provenanceRefs": ["provenance:pickup-event"]
     }
   ],
   "evidence": [
@@ -123,6 +126,76 @@
       "disclosure": "public_summary",
       "issuedAt": "2026-07-31T15:00:00Z",
       "issuedBy": "party:logistics:example"
+    }
+  ],
+  "provenance": [
+    {
+      "provenanceId": "provenance:po-quantity",
+      "factId": "fact:goods-and-quantity:v1",
+      "evidenceId": "evidence:purchase-order",
+      "locator": {
+        "page": 1,
+        "field": "Ordered quantity"
+      },
+      "extraction": {
+        "method": "agent_assisted",
+        "confidence": 0.99,
+        "agentProfile": "tradeproof-local-document-parser-v0.1"
+      },
+      "review": {
+        "reviewedBy": "party:exporter:example",
+        "reviewedAt": "2026-07-31T14:10:00Z"
+      }
+    },
+    {
+      "provenanceId": "provenance:spec-thickness",
+      "factId": "fact:steel-thickness:v1",
+      "evidenceId": "evidence:specification",
+      "locator": {
+        "page": 2,
+        "field": "Minimum cabinet body steel thickness"
+      },
+      "extraction": {
+        "method": "document_parser",
+        "confidence": 0.98
+      },
+      "review": {
+        "reviewedBy": "party:manufacturer:example",
+        "reviewedAt": "2026-07-31T14:25:00Z"
+      }
+    },
+    {
+      "provenanceId": "provenance:inspection-thickness",
+      "factId": "fact:steel-thickness:v1",
+      "evidenceId": "evidence:inspection-summary",
+      "locator": {
+        "page": 1,
+        "field": "Measured body steel thickness"
+      },
+      "extraction": {
+        "method": "agent_assisted",
+        "confidence": 0.97,
+        "agentProfile": "tradeproof-local-inspection-parser-v0.1"
+      },
+      "review": {
+        "reviewedBy": "party:inspection:example",
+        "reviewedAt": "2026-07-31T14:40:00Z"
+      }
+    },
+    {
+      "provenanceId": "provenance:pickup-event",
+      "factId": "fact:pickup-status:v1",
+      "evidenceId": "evidence:logistics-status",
+      "locator": {
+        "eventId": "SC-PICKUP-001"
+      },
+      "extraction": {
+        "method": "system_event"
+      },
+      "review": {
+        "reviewedBy": "party:logistics:example",
+        "reviewedAt": "2026-07-31T15:05:00Z"
+      }
     }
   ],
   "confirmations": [
