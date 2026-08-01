@@ -44,7 +44,7 @@ RWP does not claim absolute truth. It makes claims, sources, responsibility and 
 - Genesis Proof simulator: `https://moseszhu999.github.io/trade-proof-passport/genesis.html`
 - Synthetic example: `https://moseszhu999.github.io/trade-proof-passport/example.html`
 
-No account or wallet is required to create a Passport, generate a bounded Proof Card or verify local JSON.
+No account or wallet is required to create a Passport, generate a bounded Proof Card, create an RWP Request or verify local JSON.
 
 ## Product loop
 
@@ -56,7 +56,8 @@ Create a local Trade RWP Passport
 → generate a standard Response object
 → optionally anchor the exact canonical digest on Base Sepolia
 → generate a Viral Proof Card containing no source secrets
-→ recipient inspects, requests authorized evidence or creates another RWP
+→ recipient requests authorized evidence, responsible confirmation or a change
+→ recipient creates a distinct follow-up RWP with digest lineage
 ```
 
 The useful viral event is not a page view or social impression. It is a distinct recipient entering another real workflow and producing a new proof object or responsible response.
@@ -108,6 +109,47 @@ The canonical draft is:
 
 ```text
 standard/real-world-proof-core-v0.1.md
+```
+
+## Recipient requests and viral lineage
+
+A recipient can turn a Proof Card into a machine-verifiable but unsigned request:
+
+```text
+request_authorized_evidence
+request_responsible_confirmation
+request_change
+```
+
+The request contains only:
+
+```text
+source Passport digest
+source Proof Card digest
+requester role category
+requested action
+evidence category list
+optional 280-character public note
+request timestamp and canonical digest
+```
+
+It does not contain the complete Passport, grant access, compel disclosure or authenticate the requester.
+
+A recipient can also create a distinct follow-up Passport carrying:
+
+```text
+relation: reuses_pattern_from
+sourceArtifactType: RealWorldProofCard
+sourceDigest
+sourceCardDigest
+optional sourceRequestDigest
+recordedAt
+```
+
+Lineage records workflow reuse. It does not prove that two cases share the same goods, parties, rights or transaction. The canonical request draft is:
+
+```text
+standard/real-world-proof-request-v0.1.md
 ```
 
 ## RWP, RWA, Agent and DAO
@@ -200,6 +242,8 @@ No points are awarded for:
 - duplicate artifacts;
 - repeated wash activity between the same wallet pair.
 
+A request link or lineage record is not automatically a contribution. It becomes meaningful only when it leads to authorized evidence exchange, a responsible response, a distinct real workflow or reusable public infrastructure.
+
 The scarce resource is not closed code. It is verified participation: real counterparty confirmations, accepted proof patterns, durable provenance history, reliable connectors and active trade corridors.
 
 ### Public allocation data, not a private eligibility database
@@ -225,6 +269,8 @@ git clone https://github.com/moseszhu999/trade-proof-passport.git
 cd trade-proof-passport
 node tools/verify-passport.mjs examples/steel-cabinet-passport.json
 node tools/verify-rwp-core.mjs
+node tools/verify-rwp-request.mjs
+node tools/verify-passport.mjs /tmp/rwp-follow-up-passport.json
 node tools/validate-rwp-page.mjs
 node tools/verify-registry-client.mjs
 node tools/verify-tokenomics.mjs
@@ -240,23 +286,28 @@ Facts: 3
 Evidence records: 4
 Provenance records: 4
 Confirmations: 3
+Lineage records: 0
 ```
 
 ## Repository structure
 
 ```text
 standard/real-world-proof-core-v0.1.md
+standard/real-world-proof-request-v0.1.md
 standard/trade-proof-passport-v0.1.md
 standard/trade-proof-response-v0.1.md
 standard/tproof-token-economics-v0.1.md
 schema/trade-proof-passport.schema.json
 schema/trade-proof-response.schema.json
+schema/real-world-proof-request.schema.json
 tokenomics/tproof-tokenomics-v0.1.json
 examples/steel-cabinet-passport.json
 tools/verify-passport.mjs
 tools/verify-rwp-core.mjs
+tools/verify-rwp-request.mjs
 tools/validate-rwp-page.mjs
 docs/rwp-card.mjs
+docs/rwp-request.mjs
 docs/rwp.html
 docs/season-allocation.mjs
 docs/create.html
@@ -270,9 +321,9 @@ docs/genesis.html
 ## Design principles
 
 1. **RWP is the core** — claims, evidence, provenance, responsibility and history come before RWA.
-2. **Useful before the Token** — Passport creation, Proof Cards and verification work without TPROOF.
+2. **Useful before the Token** — Passport creation, Proof Cards, recipient requests and verification work without TPROOF.
 3. **Holder-controlled** — source data remains with its holder or chosen infrastructure.
-4. **Viral through workflow** — sharing invites a responsible response or another useful RWP, not empty impressions.
+4. **Viral through workflow** — sharing invites an authorized request, responsible response or another useful RWP, not empty impressions.
 5. **Agent-scaled, protocol-constrained** — Agents compile candidates; deterministic rules and accountable reviewers establish state.
 6. **DAO-owned, truth-independent** — governance owns infrastructure but cannot manufacture facts.
 7. **Onchain integrity, not automatic truth** — the Registry proves chronology and digest identity.

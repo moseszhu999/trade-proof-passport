@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/moseszhu999/trade-proof-passport/schema/real-world-proof-request.schema.json",
+  "title": "Real-World Proof Request v0.1",
+  "description": "Privacy-bounded, unsigned recipient request referencing a Real-World Proof Card by digest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "domain",
+    "source",
+    "requestedAction",
+    "requester",
+    "evidenceTypes",
+    "createdAt",
+    "assurance",
+    "requestId",
+    "requestDigest"
+  ],
+  "properties": {
+    "format": { "const": "real-world-proof-request" },
+    "version": { "const": "0.1" },
+    "domain": { "const": "trade" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactType", "passportDigest", "cardDigest"],
+      "properties": {
+        "artifactType": { "const": "RealWorldProofCard" },
+        "passportDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+        "cardDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+      }
+    },
+    "requestedAction": {
+      "type": "string",
+      "enum": [
+        "request_authorized_evidence",
+        "request_responsible_confirmation",
+        "request_change"
+      ]
+    },
+    "requester": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "exporter",
+            "buyer",
+            "supplier",
+            "manufacturer",
+            "inspection",
+            "logistics",
+            "warehouse",
+            "customs",
+            "insurance",
+            "legal",
+            "funder",
+            "other"
+          ]
+        }
+      }
+    },
+    "evidenceTypes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "bill_of_lading",
+          "commercial_invoice",
+          "customs_record",
+          "inspection_report",
+          "insurance_record",
+          "logistics_event",
+          "packing_list",
+          "purchase_order",
+          "warehouse_receipt",
+          "other"
+        ]
+      }
+    },
+    "note": { "type": "string", "minLength": 1, "maxLength": 280 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "assurance": { "type": "string", "minLength": 1 },
+    "requestId": { "type": "string", "pattern": "^rwpr:[0-9a-f]{16}$" },
+    "requestDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+  }
+}

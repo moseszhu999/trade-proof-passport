@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/moseszhu999/trade-proof-passport/schema/trade-proof-passport.schema.json",
   "title": "Trade Proof Passport v0.1",
-  "description": "Community draft schema for a trade-domain Real-World Proof carrier containing facts, evidence, field-level provenance, confirmations and lifecycle status.",
+  "description": "Community draft schema for a trade-domain Real-World Proof carrier containing facts, evidence, field-level provenance, confirmations, optional viral lineage and lifecycle status.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -233,6 +233,29 @@
               "proofValue": { "type": "string" }
             }
           }
+        }
+      }
+    },
+    "lineage": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relation", "sourceArtifactType", "sourceDigest", "recordedAt"],
+        "properties": {
+          "relation": {
+            "type": "string",
+            "enum": ["derived_from", "responds_to", "reuses_pattern_from"]
+          },
+          "sourceArtifactType": {
+            "type": "string",
+            "enum": ["TradeProofPassport", "RealWorldProofCard", "RealWorldProofRequest"]
+          },
+          "sourceDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+          "sourceCardDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+          "sourceRequestDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+          "recordedAt": { "type": "string", "format": "date-time" }
         }
       }
     },
