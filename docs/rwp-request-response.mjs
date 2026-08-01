@@ -50,6 +50,8 @@ const ROLE_SET = new Set([
 const isRecord = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 const isBytes32 = (value) => /^0x[0-9a-f]{64}$/.test(value ?? '');
 const isDateTime = (value) => typeof value === 'string' && !Number.isNaN(Date.parse(value));
+const containsEndpointOrPrivateMarker = (value) =>
+  /party:|evidence:\/\/|displayName|goodsDescription|"statement"|proofValue|@|https?:\/\//i.test(value);
 
 const toBase64Url = (text) => {
   const bytes = new TextEncoder().encode(text);
@@ -74,6 +76,9 @@ const fromBase64Url = (value) => {
 const normalizeNote = (value) => {
   const note = typeof value === 'string' ? value.trim() : '';
   if (note.length > MAX_NOTE_LENGTH) throw new Error(`Public response note must be at most ${MAX_NOTE_LENGTH} characters.`);
+  if (containsEndpointOrPrivateMarker(note)) {
+    throw new Error('Public response note contains a forbidden private or endpoint marker.');
+  }
   return note;
 };
 
@@ -122,7 +127,12 @@ const unsignedResponsePayload = (card, request, options = {}) => {
       throw new Error('A partial evidence acceptance must offer a non-empty proper subset of requested evidence categories.');
     }
   }
-  if (status === 'accept' && mode === 'none') throw new Error('An accepted response requires a fulfillment mode.');
+  if (status === 'accept') {
+    if (mode === 'none') throw new Error('An accepted response requires a fulfillment mode.');
+    if (request.evidenceTypes.length > 0 && evidenceTypes.length !== request.evidenceTypes.length) {
+      throw new Error('A complete acceptance must offer every requested evidence category.');
+    }
+  }
   if (mode === 'authorized_off_channel' && !channelHint) throw new Error('authorized_off_channel requires a channel hint.');
   if (mode !== 'authorized_off_channel' && channelHint) throw new Error('channelHint is only allowed for authorized_off_channel.');
   if (mode === 'public_note_only' && note.length === 0) throw new Error('public_note_only requires a public note.');
@@ -221,12 +231,17 @@ export const validateRwpRequestResponse = (response, request) => {
       errors.push('Partial evidence acceptance must be a non-empty proper subset.');
     }
   }
-  if (status === 'accept' && mode === 'none') errors.push('Accept boundary is invalid.');
+  if (status === 'accept') {
+    if (mode === 'none') errors.push('Accept boundary is invalid.');
+    if (requestErrors.length === 0 && request.evidenceTypes.length > 0 && evidenceTypes?.length !== request.evidenceTypes.length) {
+      errors.push('Complete acceptance must offer every requested evidence category.');
+    }
+  }
   if (mode === 'authorized_off_channel' && !channelHint) errors.push('authorized_off_channel requires channelHint.');
   if (mode !== 'authorized_off_channel' && channelHint) errors.push('channelHint is only allowed for authorized_off_channel.');
   if (mode === 'public_note_only' && !response.note) errors.push('public_note_only requires note.');
 
-  if (/party:|evidence:\/\/|displayName|goodsDescription|"statement"|proofValue|@|https?:\/\//i.test(canonicalizeJson(response))) {
+  if (containsEndpointOrPrivateMarker(canonicalizeJson(response))) {
     errors.push('RWP Request Response contains a forbidden private or endpoint marker.');
   }
 
