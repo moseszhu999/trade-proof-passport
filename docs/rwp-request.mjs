@@ -212,11 +212,14 @@ export const readRwpRequestFromHash = (hash) => {
 export const buildFollowUpLineage = (card, options = {}) => {
   const errors = validateProofCard(card);
   if (errors.length > 0) throw new Error(errors.join(' '));
+  const requestDigest = options.requestDigest;
+  if (requestDigest !== undefined && !isBytes32(requestDigest)) throw new Error('requestDigest must be lowercase bytes32 hex.');
   return {
     relation: 'reuses_pattern_from',
     sourceArtifactType: 'RealWorldProofCard',
     sourceDigest: card.sourceDigest,
     sourceCardDigest: card.cardDigest,
+    ...(requestDigest ? { sourceRequestDigest: requestDigest } : {}),
     recordedAt: new Date(options.recordedAt ?? Date.now()).toISOString()
   };
 };
