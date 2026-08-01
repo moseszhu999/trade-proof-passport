@@ -29,7 +29,10 @@ assert.equal(BASE_SEPOLIA.chainId, 84532);
 assert.equal(BASE_SEPOLIA.chainIdHex, '0x14a34');
 assert.equal(REGISTRY_ADDRESS, '0xad1c714140ceb8ed7c5234d939a06926f5edaba2');
 assert.equal(classifyArtifact(passport), 'Passport');
-assert.equal(canonicalizeArtifact({ schemaVersion: '0.1', passportId: 'x', b: 1, a: 2 }), '{"a":2,"b":1,"passportId":"x","schemaVersion":"0.1"}');
+assert.equal(
+  canonicalizeArtifact({ schemaVersion: '0.1', passportId: 'tpp:test', b: 1, a: 2 }),
+  '{"a":2,"b":1,"passportId":"tpp:test","schemaVersion":"0.1"}'
+);
 
 const first = computeArtifactHashes(passport);
 const second = computeArtifactHashes(JSON.parse(JSON.stringify(passport)));
