@@ -71,22 +71,26 @@ assert.deepEqual(validateRwpRequestResponse(partial, request), []);
 const clarification = buildRwpRequestResponse(card, request, {
   status: 'request_clarification',
   responderRole: 'exporter',
-  mode: 'public_note_only',
-  evidenceTypes: [],
+  mode: 'authorized_off_channel',
+  evidenceTypes: ['inspection_report'],
+  channelHint: 'secure_data_room',
   note: 'Please identify which inspection stage is required.',
   createdAt: '2026-08-02T01:07:00.000Z'
 });
 assert.deepEqual(validateRwpRequestResponse(clarification, request), []);
+assert.deepEqual(clarification.fulfillment, { mode: 'public_note_only', evidenceTypes: [] });
 
 const declined = buildRwpRequestResponse(card, request, {
   status: 'decline',
   responderRole: 'exporter',
-  mode: 'none',
-  evidenceTypes: [],
+  mode: 'authorized_off_channel',
+  evidenceTypes: ['inspection_report'],
+  channelHint: 'existing_business_channel',
   note: 'The requested disclosure is not authorized.',
   createdAt: '2026-08-02T01:08:00.000Z'
 });
 assert.deepEqual(validateRwpRequestResponse(declined, request), []);
+assert.deepEqual(declined.fulfillment, { mode: 'none', evidenceTypes: [] });
 
 const serialized = canonicalizeJson(accepted);
 for (const forbidden of [
@@ -114,22 +118,22 @@ assert.throws(
 );
 assert.throws(
   () => buildRwpRequestResponse(card, request, {
-    status: 'decline',
-    responderRole: 'exporter',
-    mode: 'authorized_off_channel',
-    evidenceTypes: ['inspection_report'],
-    channelHint: 'existing_business_channel'
-  }),
-  /declined response/
-);
-assert.throws(
-  () => buildRwpRequestResponse(card, request, {
     status: 'request_clarification',
     responderRole: 'exporter',
     mode: 'public_note_only',
     evidenceTypes: []
   }),
   /requires a public note/
+);
+assert.throws(
+  () => buildRwpRequestResponse(card, request, {
+    status: 'accept',
+    responderRole: 'exporter',
+    mode: 'authorized_off_channel',
+    evidenceTypes: ['inspection_report'],
+    channelHint: 'existing_business_channel'
+  }),
+  /every requested evidence category/
 );
 assert.throws(
   () => encodeRwpRequestResponse({ ...accepted, note: 'Changed after digest' }, request),
@@ -140,12 +144,22 @@ assert.throws(
     status: 'accept',
     responderRole: 'exporter',
     mode: 'authorized_off_channel',
-    evidenceTypes: ['inspection_report'],
+    evidenceTypes: ['inspection_report', 'packing_list'],
     channelHint: 'existing_business_channel',
     note: 'Contact holder@example.com'
   }),
   /forbidden private or endpoint marker/
 );
+
+const invalidDecline = {
+  ...declined,
+  fulfillment: {
+    mode: 'authorized_off_channel',
+    evidenceTypes: ['inspection_report'],
+    channelHint: 'existing_business_channel'
+  }
+};
+assert.match(validateRwpRequestResponse(invalidDecline, request).join(' '), /Decline boundary/);
 
 const otherRequest = buildRwpRequest(card, {
   requestedAction: 'request_change',
@@ -155,4 +169,4 @@ const otherRequest = buildRwpRequest(card, {
 });
 assert.match(validateRwpRequestResponse(accepted, otherRequest).join(' '), /source does not match/i);
 
-console.log('PASS: RWP Request Response decisions, source binding, privacy and three-layer link integrity');
+console.log('PASS: RWP Request Response decisions, UI-safe normalization, strict validation, privacy and link integrity');
