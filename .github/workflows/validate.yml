@@ -6,7 +6,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -14,24 +14,55 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Parse JSON Schemas
+      - name: Install Foundry for Solidity ABI cross-checks
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Integrate Genesis surfaces and generate canonical vector
+        if: github.event_name == 'pull_request' && github.head_ref == 'feat/genesis-proof-allocation-compiler-v0.1'
+        run: |
+          node tools/apply-genesis-allocation-site.mjs
+          node tools/compile-season-allocation.mjs \
+            examples/genesis-proof-allocation-input.json \
+            examples/genesis-proof-allocation-output.json
+          git add \
+            docs/index.html \
+            docs/tokenomics.html \
+            docs/sitemap.xml \
+            docs/season-allocation.mjs \
+            README.md \
+            tools/validate-tokenomics-page.mjs \
+            examples/genesis-proof-allocation-output.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "feat: publish deterministic Genesis allocation vector"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
+
+      - name: Parse canonical JSON files
         run: |
           node - <<'NODE'
           const { readFileSync } = require('node:fs');
           for (const file of [
             'schema/trade-proof-passport.schema.json',
             'schema/trade-proof-response.schema.json',
-            'tokenomics/tproof-tokenomics-v0.1.json'
+            'tokenomics/tproof-tokenomics-v0.1.json',
+            'examples/genesis-proof-allocation-input.json',
+            'examples/genesis-proof-allocation-output.json'
           ]) {
             JSON.parse(readFileSync(file, 'utf8'));
           }
-          console.log('PASS: Passport, response and tokenomics JSON parse');
+          console.log('PASS: Passport, response, tokenomics and allocation JSON parse');
           NODE
 
       - name: Validate steel cabinet example
@@ -45,3 +76,20 @@ jobs:
 
       - name: Validate TPROOF public economics surface
         run: node tools/validate-tokenomics-page.mjs
+
+      - name: Validate deterministic Genesis allocation compiler
+        run: node tools/verify-season-allocation.mjs
+
+      - name: Cross-check claim leaves and Merkle root with Foundry cast
+        run: node tools/verify-season-allocation-cast.mjs
+
+      - name: Validate Genesis simulator and discovery surfaces
+        run: node tools/validate-genesis-simulator.mjs
+
+      - name: Recompile and compare canonical allocation vector
+        run: |
+          node tools/compile-season-allocation.mjs \
+            examples/genesis-proof-allocation-input.json \
+            /tmp/genesis-proof-allocation-output.json
+          cmp examples/genesis-proof-allocation-output.json /tmp/genesis-proof-allocation-output.json
+          echo "PASS: canonical allocation vector is deterministic"
