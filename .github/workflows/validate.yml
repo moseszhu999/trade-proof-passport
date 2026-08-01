@@ -69,6 +69,9 @@ jobs:
       - name: Validate Registry digest, ABI and read model
         run: node tools/verify-registry-client.mjs
 
+      - name: Validate bounded onchain Registry public surface
+        run: node tools/validate-onchain-page.mjs
+
       - name: Recompile and compare canonical allocation vector
         run: |
           node tools/compile-season-allocation.mjs \
