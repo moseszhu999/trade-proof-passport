@@ -2,6 +2,8 @@
 
 [![Validate Trade Proof Passport](https://github.com/moseszhu999/trade-proof-passport/actions/workflows/validate.yml/badge.svg)](https://github.com/moseszhu999/trade-proof-passport/actions/workflows/validate.yml)
 
+**Proof for trade. Ownership for contributors.**
+
 ## Before Real-World Assets, there must be Real-World Proof
 
 **TradeProof is the open, agent-native Real-World Proof protocol, starting with global trade.**
@@ -154,6 +156,8 @@ Canonical Solidity source and deployment evidence live in:
 https://github.com/moseszhu999/chaintrace-contracts
 ```
 
+`$TPROOF` is **not live** as a public claim, sale, market or liquidity product.
+
 Current economic state remains inactive:
 
 ```text
@@ -166,6 +170,8 @@ Mainnet authorization: false
 ```
 
 TPROOF is not evidence and cannot make a Passport valid. It is designed for contribution economics, protocol governance, public-goods grants, proposal/challenge bonds and sponsored proof infrastructure.
+
+**Token state must never determine whether a Passport or Response is valid**, current, revoked or superseded.
 
 ## Contribution before liquidity
 
