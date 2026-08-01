@@ -66,6 +66,7 @@
       readAnchor
     } from './registry-client.mjs';
 
+    const EXAMPLE_URL='https://raw.githubusercontent.com/moseszhu999/trade-proof-passport/main/examples/steel-cabinet-passport.json';
     const byId=(id)=>document.getElementById(id);
     const state={artifact:null,hashes:null};
     const publicRpc=createPublicRpc();
@@ -112,7 +113,7 @@
     });
     byId('computeButton').addEventListener('click',compute);
     byId('loadExample').addEventListener('click',async()=>{
-      try{const response=await fetch('../examples/steel-cabinet-passport.json');if(!response.ok)throw new Error('Synthetic example could not be loaded.');byId('artifactText').value=JSON.stringify(await response.json(),null,2);compute();}catch(error){setResult(byId('hashResult'),error.message,'error');}
+      try{const response=await fetch(EXAMPLE_URL);if(!response.ok)throw new Error('Synthetic example could not be loaded.');byId('artifactText').value=JSON.stringify(await response.json(),null,2);compute();}catch(error){setResult(byId('hashResult'),error.message,'error');}
     });
 
     byId('verifyButton').addEventListener('click',async()=>{
