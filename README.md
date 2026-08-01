@@ -202,6 +202,22 @@ No points are awarded for:
 
 The scarce resource is not closed code. It is verified participation: real counterparty confirmations, accepted proof patterns, durable provenance history, reliable connectors and active trade corridors.
 
+### Public allocation data, not a private eligibility database
+
+The browser and Node compiler deterministically transform public closed-season Points into square-root allocations, Solidity-compatible leaves, Merkle proofs, a Merkle root and a canonical dataset digest.
+
+```bash
+node tools/compile-season-allocation.mjs examples/genesis-proof-allocation-input.json
+```
+
+The shared browser implementation is:
+
+```text
+docs/season-allocation.mjs
+```
+
+The compiler does not create eligibility, fund a Season or activate a claim.
+
 ## Verify locally
 
 ```bash
@@ -213,6 +229,7 @@ node tools/validate-rwp-page.mjs
 node tools/verify-registry-client.mjs
 node tools/verify-tokenomics.mjs
 node tools/verify-season-allocation.mjs
+node tools/compile-season-allocation.mjs examples/genesis-proof-allocation-input.json
 ```
 
 Expected Passport output includes:
@@ -241,6 +258,7 @@ tools/verify-rwp-core.mjs
 tools/validate-rwp-page.mjs
 docs/rwp-card.mjs
 docs/rwp.html
+docs/season-allocation.mjs
 docs/create.html
 docs/view.html
 docs/respond.html
