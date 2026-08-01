@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/moseszhu999/trade-proof-passport/schema/real-world-proof-request-response.schema.json",
+  "title": "Real-World Proof Request Response v0.1",
+  "description": "Privacy-bounded, unsigned holder response to a Real-World Proof Request.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "version",
+    "domain",
+    "source",
+    "decision",
+    "responder",
+    "fulfillment",
+    "createdAt",
+    "assurance",
+    "responseId",
+    "responseDigest"
+  ],
+  "properties": {
+    "format": { "const": "real-world-proof-request-response" },
+    "version": { "const": "0.1" },
+    "domain": { "const": "trade" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactType", "passportDigest", "cardDigest", "requestId", "requestDigest"],
+      "properties": {
+        "artifactType": { "const": "RealWorldProofRequest" },
+        "passportDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+        "cardDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+        "requestId": { "type": "string", "pattern": "^rwpr:[0-9a-f]{16}$" },
+        "requestDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["accept", "partially_accept", "request_clarification", "decline"]
+        }
+      }
+    },
+    "responder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "exporter",
+            "buyer",
+            "supplier",
+            "manufacturer",
+            "inspection",
+            "logistics",
+            "warehouse",
+            "customs",
+            "insurance",
+            "legal",
+            "funder",
+            "other"
+          ]
+        }
+      }
+    },
+    "fulfillment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "evidenceTypes"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["authorized_off_channel", "public_note_only", "none"]
+        },
+        "evidenceTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "bill_of_lading",
+              "commercial_invoice",
+              "customs_record",
+              "inspection_report",
+              "insurance_record",
+              "logistics_event",
+              "packing_list",
+              "purchase_order",
+              "warehouse_receipt",
+              "other"
+            ]
+          }
+        },
+        "channelHint": {
+          "type": "string",
+          "enum": ["existing_business_channel", "secure_data_room", "encrypted_email", "other"]
+        }
+      }
+    },
+    "note": { "type": "string", "minLength": 1, "maxLength": 280 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "assurance": { "type": "string", "minLength": 1 },
+    "responseId": { "type": "string", "pattern": "^rwprr:[0-9a-f]{16}$" },
+    "responseDigest": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" }
+  }
+}

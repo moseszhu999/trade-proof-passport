@@ -196,6 +196,7 @@ export const buildRwpRequestUrl = (request, card, baseUrl) => {
 
   const url = new URL(baseUrl);
   url.search = '';
+  url.pathname = url.pathname.replace(/[^/]*$/, 'rwp-respond.html');
   url.hash = new URLSearchParams({
     card: encodeProofCard(card),
     request: encodeRwpRequest(request)
