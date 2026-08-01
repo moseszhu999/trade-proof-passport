@@ -21,7 +21,7 @@ for (const phrase of [
   'Generate response JSON & link',
   'Copy response link',
   'Download response JSON',
-  'Unsigned and self-declared',
+  'unsigned and self-declared',
   'No document is uploaded here',
   'No contact endpoints or confidential content'
 ]) {
