@@ -20,10 +20,21 @@ requireValues(landing, [
 
 requireValues(i18nModule, [
   "supportedLocales = ['en', 'zh-CN', 'ja-JP']",
-  '让贸易证据可验证。',
-  '貿易のための証明。',
+  'Before RWA,',
+  '现实资产之前，',
+  'RWA の前に、',
+  'Share proofs, not secrets',
+  '只分享证明，不交出秘密',
+  '秘密ではなく証明を共有',
+  'RWP Core + Viral Proof Cards are live.',
+  'RWP Core 与 Viral Proof Card 已上线。',
+  'RWP Core と Viral Proof Card が公開されました。',
+  "href = './rwp.html'",
+  "setAttribute('href', './rwp.html')",
+  'data-rwp-home-link',
+  'applyRwpEntryPoints',
   'tradeProofLocale'
-], 'internationalization contract');
+], 'internationalization and RWP entry contract');
 
 if (supportedLocales.join(',') !== 'en,zh-CN,ja-JP') {
   throw new Error(`Unexpected locale set: ${supportedLocales.join(',')}`);
@@ -41,8 +52,17 @@ for (const locale of supportedLocales) {
     throw new Error(`${locale} key mismatch. Missing: ${missing.join(', ')}. Extra: ${extra.join(', ')}.`);
   }
 }
-if (getMessage('zh-CN', 'heroLine1') !== '让贸易证据可验证。') throw new Error('Chinese translation mismatch.');
-if (getMessage('ja-JP', 'heroLine1') !== '貿易のための証明。') throw new Error('Japanese translation mismatch.');
+
+if (getMessage('en', 'heroLine1') !== 'Before RWA,') throw new Error('English RWP headline mismatch.');
+if (getMessage('zh-CN', 'heroLine1') !== '现实资产之前，') throw new Error('Chinese RWP headline mismatch.');
+if (getMessage('ja-JP', 'heroLine1') !== 'RWA の前に、') throw new Error('Japanese RWP headline mismatch.');
+for (const locale of supportedLocales) {
+  const announcement = getMessage(locale, 'announcement');
+  if (!announcement.includes('./rwp.html')) throw new Error(`${locale} announcement does not link to RWP.`);
+  if (!getMessage(locale, 'openExample').toLowerCase().includes('proof card')) {
+    throw new Error(`${locale} secondary hero CTA does not identify Proof Card.`);
+  }
+}
 
 const allocations = [...landing.matchAll(/<b>(45|20|15|10|5)%<\/b>/g)].map((match) => Number(match[1]));
 const total = allocations.reduce((sum, value) => sum + value, 0);
@@ -52,4 +72,5 @@ if (allocations.length !== 6 || total !== 100) {
 
 console.log('PASS: launch-site visual contract');
 console.log('PASS: accessible six-slice token allocation pie chart totals 100%');
-console.log('PASS: English, Simplified Chinese and Japanese translations are complete');
+console.log('PASS: English, Simplified Chinese and Japanese RWP narratives are complete');
+console.log('PASS: homepage nav, announcement and hero CTA route to Viral Proof Cards');
