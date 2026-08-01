@@ -129,9 +129,7 @@ DAO governance != real-world truth
 Token balance != evidence validity
 ```
 
-## Canonical Base Sepolia deployments
-
-### Registry
+## Canonical Base Sepolia Registry
 
 ```text
 TradeProofRegistry: 0xad1c714140ceb8ed7c5234d939a06926f5edaba2
@@ -141,13 +139,15 @@ Registry block: 44891502
 
 The Registry records canonical Passport and Response digests, issuer wallet, block timestamp, schema/profile hashes, supersession links and revocation state. It stores no source document and does not prove identity, authority, legal effect or objective truth.
 
-### Economic stack
+## TPROOF economic constitution
+
+### Deployed economic stack
 
 ```text
-TPROOF:           0xd0a60427482C2cBE1C6566772DC5838AA06DED80
-Contribution:     0xcb33eA69dDa48f2A345Fc1F2A3B85f329a5eb1E0
-Season Allocation:0x0bFd6CEab5dB51d7B53789484ECD147B10D7fC65
-Team Vesting:     0x65Ab9CE997975f18b6a06957D75AA5a00b3dc467
+TPROOF:            0xd0a60427482C2cBE1C6566772DC5838AA06DED80
+Contribution:      0xcb33eA69dDa48f2A345Fc1F2A3B85f329a5eb1E0
+Season Allocation: 0x0bFd6CEab5dB51d7B53789484ECD147B10D7fC65
+Team Vesting:      0x65Ab9CE997975f18b6a06957D75AA5a00b3dc467
 ```
 
 Canonical Solidity source and deployment evidence live in:
@@ -158,16 +158,19 @@ https://github.com/moseszhu999/chaintrace-contracts
 
 `$TPROOF` is **not live** as a public claim, sale, market or liquidity product.
 
-Current economic state remains inactive:
-
 ```text
 Maximum supply: 1,000,000,000 TPROOF
 Post-genesis mint: disabled
+Community allocation: 45% over eight years
+Genesis Proof pool: 1% / 10,000,000 TPROOF
+Core-team vesting: 12-month cliff + 48-month linear vesting
 Public claim: false
 Public sale: false
 Liquidity pool: false
 Mainnet authorization: false
 ```
+
+**Economics as code** means supply, allocations, anti-Sybil zeros, seasonal rules and launch boundaries remain machine-verifiable rather than editable marketing claims.
 
 TPROOF is not evidence and cannot make a Passport valid. It is designed for contribution economics, protocol governance, public-goods grants, proposal/challenge bonds and sponsored proof infrastructure.
 
