@@ -1,0 +1,34 @@
+{
+  "network": "base-sepolia",
+  "chainId": 84532,
+  "chainIdHex": "0x14a34",
+  "rpcUrl": "https://sepolia.base.org",
+  "blockExplorerUrl": "https://base-sepolia.blockscout.com",
+  "reviewedSource": "005839c62c1a67392b2f5cced25374f5b48fecc1",
+  "registry": {
+    "address": "0xad1c714140ceb8ed7c5234d939a06926f5edaba2",
+    "status": "deployed-testnet",
+    "sourceVerification": "pending"
+  },
+  "economicStack": {
+    "status": "deployed-testnet-inactive",
+    "contribution": "0xcb33eA69dDa48f2A345Fc1F2A3B85f329a5eb1E0",
+    "token": "0xd0a60427482C2cBE1C6566772DC5838AA06DED80",
+    "teamVesting": "0x65Ab9CE997975f18b6a06957D75AA5a00b3dc467",
+    "seasonAllocation": "0x0bFd6CEab5dB51d7B53789484ECD147B10D7fC65",
+    "genesis": "0x2a00707664d738d41EDc4e453F173D38f6D83ECb",
+    "communityTreasury": "0xBf485863EA313b75dC6cf389A9A86Bd98a0dF910",
+    "ecosystemTreasury": "0x3Ca8dd7dF625d51aF1Da77716269D788DD869089",
+    "adoptionTreasury": "0x895C0C8749EF5DE94BA544cf28dDEd68fd6b3Aba",
+    "liquidityReserve": "0xC7F135d85aAe58bd409F7263FadbD041d6031B92",
+    "securityReserve": "0x594ce0619d5bAcA2F66992c89610cb57A704d0AB"
+  },
+  "boundaries": {
+    "publicClaimActive": false,
+    "saleActive": false,
+    "liquidityPoolActive": false,
+    "mainnetAuthorized": false,
+    "formalAuditComplete": false,
+    "legalLaunchClearance": false
+  }
+}

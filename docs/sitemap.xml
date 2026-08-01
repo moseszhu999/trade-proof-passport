@@ -16,6 +16,11 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://moseszhu999.github.io/trade-proof-passport/onchain.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://moseszhu999.github.io/trade-proof-passport/example.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

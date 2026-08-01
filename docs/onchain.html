@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anchor and verify · TradeProof</title>
+  <meta name="description" content="Compute a Trade Proof Passport or Response digest locally, verify it on the Base Sepolia Registry, and optionally request a wallet-confirmed digest anchor.">
+  <meta property="og:title" content="Anchor and verify · TradeProof">
+  <meta property="og:description" content="Local JCS-compatible digest computation and Base Sepolia Registry verification for TradeProof artifacts.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/onchain.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/onchain.html">
+  <style>
+    :root{color-scheme:dark;--bg:#06070a;--panel:#10131b;--panel2:#151a25;--line:#293142;--text:#f7f9ff;--muted:#a8b0c1;--lime:#bcff4d;--cyan:#59ecff;--amber:#ffc66d;--red:#ff788f}
+    *{box-sizing:border-box}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 50% -10%,#19162a 0,var(--bg) 42%)}a{color:inherit}button,input,textarea{font:inherit}.wrap{width:min(1080px,calc(100% - 32px));margin:auto;padding:30px 0 80px}.nav{display:flex;flex-wrap:wrap;gap:18px;color:var(--muted)}.brand{font-weight:900;color:var(--text);text-decoration:none}h1{font-size:clamp(42px,7vw,76px);line-height:.96;letter-spacing:-.055em;margin:38px 0 18px}.lead{max-width:800px;color:var(--muted);font-size:19px}.badges,.actions{display:flex;flex-wrap:wrap;gap:10px}.badge{padding:7px 11px;border:1px solid var(--line);border-radius:999px;font-size:12px;color:var(--muted)}.badge.live{color:var(--lime);border-color:rgba(188,255,77,.28);background:rgba(188,255,77,.06)}.notice{margin:26px 0;padding:16px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:14px;background:rgba(89,236,255,.055)}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.panel{padding:22px;border:1px solid var(--line);border-radius:20px;background:rgba(16,19,27,.9)}.panel h2{margin:0 0 8px;font-size:25px}.panel>p{color:var(--muted);margin-top:0}label{display:grid;gap:7px;margin-top:15px;font-weight:700}small{color:var(--muted);font-weight:400}textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#090c12;color:var(--text)}textarea{min-height:260px;resize:vertical;font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}input[type=file]{width:100%;padding:11px;border:1px dashed var(--line);border-radius:11px;color:var(--muted)}button,.button{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:10px 15px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);font-weight:800;text-decoration:none;cursor:pointer}button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}button:disabled{opacity:.45;cursor:not-allowed}.actions{margin-top:16px}.result{display:none;margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#0b0e15}.result.show{display:block}.result.error{border-color:rgba(255,120,143,.42)}.result.success{border-color:rgba(188,255,77,.38)}.row{padding:9px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.row span{display:block;color:var(--muted);font-size:12px}.row code{display:block;margin-top:3px;color:var(--cyan);overflow-wrap:anywhere}.anchor-options{display:none}.anchor-options.show{display:block}.check{display:flex;grid-template-columns:none;align-items:flex-start;gap:9px;font-weight:500;color:var(--muted)}.check input{margin-top:5px}.boundary{margin-top:24px;color:var(--muted);font-size:14px}.warning{color:var(--amber)}@media(max-width:800px){.grid{grid-template-columns:1fr}textarea{min-height:210px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="brand" href="./">← TRADEPROOF</a><a href="./create.html">Create</a><a href="./view.html">Import and share</a><a href="./tokenomics.html">Tokenomics</a></nav>
+    <h1>Anchor exact proof.<br>Verify it independently.</h1>
+    <p class="lead">Compute a canonical Passport or Response digest entirely in this browser. Verify the digest through the public Base Sepolia Registry, or explicitly ask your wallet to anchor only the digest and profile hashes.</p>
+    <div class="badges"><span class="badge live">Base Sepolia · chain 84532</span><span class="badge">Registry · 0xad1c…aba2</span><span class="badge">JCS + Keccak-256 profile v0.1</span></div>
+    <div class="notice"><strong>Local privacy boundary:</strong> your JSON remains in this browser. Public RPC and wallet requests receive only a 32-byte digest and contract call data. Anchoring proves that a wallet submitted a digest at a time; it does not prove identity, authority, legal effect, or the truth of trade facts.</div>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>1. Compute an artifact digest</h2>
+        <p>Paste or import the exact complete JSON object. Do not remove private fields merely to create a different public digest.</p>
+        <label>Import local JSON file<input id="artifactFile" type="file" accept="application/json,.json"></label>
+        <label>Passport or Response JSON<textarea id="artifactText" spellcheck="false" placeholder='{"schemaVersion":"0.1", ...}'></textarea></label>
+        <div class="actions"><button class="primary" id="computeButton" type="button">Compute locally</button><button id="loadExample" type="button">Load synthetic Passport</button></div>
+        <div class="result" id="hashResult" aria-live="polite"></div>
+      </section>
+
+      <section class="panel">
+        <h2>2. Verify or anchor</h2>
+        <p>Verification is read-only. Anchoring requires an injected EVM wallet, Base Sepolia test ETH, and an explicit wallet confirmation.</p>
+        <label>Artifact digest<input id="digestInput" type="text" autocomplete="off" placeholder="0x + 64 hex characters"></label>
+        <div class="actions"><button id="verifyButton" type="button">Verify on Registry</button><a class="button" href="https://base-sepolia.blockscout.com/address/0xad1c714140ceb8ed7c5234d939a06926f5edaba2" target="_blank" rel="noreferrer">Open Registry explorer</a></div>
+        <div class="result" id="verifyResult" aria-live="polite"></div>
+
+        <div class="anchor-options" id="anchorOptions">
+          <label id="passportDigestLabel">Current Passport digest for a Response<input id="passportDigest" type="text" autocomplete="off" placeholder="Required only for Response anchoring"></label>
+          <label>Supersedes digest<input id="supersedesDigest" type="text" autocomplete="off" placeholder="Optional prior digest from the same wallet"></label>
+          <label class="check"><input id="anchorConsent" type="checkbox"><span>I understand this sends an irreversible Base Sepolia transaction containing only hashes. It does not verify my identity, organizational authority, or the artifact's truth.</span></label>
+          <div class="actions"><button class="primary" id="anchorButton" type="button" disabled>Request wallet anchor</button></div>
+          <div class="result" id="anchorResult" aria-live="polite"></div>
+        </div>
+      </section>
+    </div>
+
+    <p class="boundary"><strong>Permanent separation:</strong> Registry status is independent of TPROOF holdings, Proof Points, Token transfers, claims, treasury balances, or community rewards. This page does not activate a Token claim, sale, market, liquidity pool, payment, settlement, financing, custody, or asset tokenization.</p>
+  </main>
+
+  <script type="module">
+    import {
+      BASE_SEPOLIA,
+      REGISTRY_ADDRESS,
+      ZERO_BYTES32,
+      anchorArtifact,
+      computeArtifactHashes,
+      createPublicRpc,
+      formatUnixSeconds,
+      normalizeBytes32,
+      readAnchor
+    } from './registry-client.mjs';
+
+    const EXAMPLE_URL='https://raw.githubusercontent.com/moseszhu999/trade-proof-passport/main/examples/steel-cabinet-passport.json';
+    const byId=(id)=>document.getElementById(id);
+    const state={artifact:null,hashes:null};
+    const publicRpc=createPublicRpc();
+
+    const setResult=(element,content,type='')=>{
+      element.replaceChildren();
+      element.className=`result show ${type}`.trim();
+      if(typeof content==='string'){element.textContent=content;return;}
+      for(const [label,value] of content){
+        const row=document.createElement('div');row.className='row';
+        const name=document.createElement('span');name.textContent=label;
+        const code=document.createElement('code');code.textContent=String(value);
+        row.append(name,code);element.append(row);
+      }
+    };
+
+    const compute=()=>{
+      try{
+        const artifact=JSON.parse(byId('artifactText').value);
+        const hashes=computeArtifactHashes(artifact);
+        state.artifact=artifact;state.hashes=hashes;
+        byId('digestInput').value=hashes.digest;
+        byId('anchorOptions').classList.add('show');
+        byId('passportDigestLabel').style.display=hashes.kind==='Response'?'grid':'none';
+        setResult(byId('hashResult'),[
+          ['Artifact kind',hashes.kind],
+          ['Canonical artifact digest',hashes.digest],
+          ['Schema identifier',hashes.schemaId],
+          ['Schema identifier hash',hashes.schemaHash],
+          ['Digest profile',hashes.digestProfileId],
+          ['Digest profile hash',hashes.digestProfileHash],
+          ['Canonical JSON bytes',new TextEncoder().encode(hashes.canonicalJson).length]
+        ],'success');
+      }catch(error){
+        state.artifact=null;state.hashes=null;byId('anchorOptions').classList.remove('show');
+        setResult(byId('hashResult'),error.message,'error');
+      }
+    };
+
+    byId('artifactFile').addEventListener('change',async(event)=>{
+      const file=event.target.files?.[0];if(!file)return;
+      if(file.size>2_000_000){setResult(byId('hashResult'),'File exceeds the 2 MB browser limit.','error');return;}
+      byId('artifactText').value=await file.text();compute();
+    });
+    byId('computeButton').addEventListener('click',compute);
+    byId('loadExample').addEventListener('click',async()=>{
+      try{const response=await fetch(EXAMPLE_URL);if(!response.ok)throw new Error('Synthetic example could not be loaded.');byId('artifactText').value=JSON.stringify(await response.json(),null,2);compute();}catch(error){setResult(byId('hashResult'),error.message,'error');}
+    });
+
+    byId('verifyButton').addEventListener('click',async()=>{
+      const result=byId('verifyResult');setResult(result,'Querying the public Base Sepolia Registry…');
+      try{
+        const digest=normalizeBytes32(byId('digestInput').value.trim(),'artifact digest');
+        const record=await readAnchor(publicRpc,digest);
+        if(!record.exists){setResult(result,[['Digest',digest],['Registry status','Not anchored']], '');return;}
+        const anchor=record.anchor;
+        setResult(result,[
+          ['Digest',record.digest],
+          ['Registry status',record.current?'Current':'Not current'],
+          ['Kind',anchor.kind],
+          ['Issuer wallet',anchor.issuer],
+          ['Anchored at',formatUnixSeconds(anchor.anchoredAt)],
+          ['Revoked at',formatUnixSeconds(anchor.revokedAt)],
+          ['Subject Passport digest',anchor.subjectDigest===ZERO_BYTES32?'—':anchor.subjectDigest],
+          ['Schema hash',anchor.schemaHash],
+          ['Digest profile hash',anchor.digestProfileHash],
+          ['Supersedes',anchor.supersedesDigest===ZERO_BYTES32?'—':anchor.supersedesDigest],
+          ['Successor',anchor.successorDigest===ZERO_BYTES32?'—':anchor.successorDigest],
+          ['Revocation reason hash',anchor.revocationReasonHash===ZERO_BYTES32?'—':anchor.revocationReasonHash]
+        ],record.current?'success':'');
+      }catch(error){setResult(result,error.message,'error');}
+    });
+
+    byId('anchorConsent').addEventListener('change',(event)=>{byId('anchorButton').disabled=!event.target.checked;});
+    byId('anchorButton').addEventListener('click',async()=>{
+      const result=byId('anchorResult');
+      if(!state.artifact||!state.hashes){setResult(result,'Compute the local artifact digest first.','error');return;}
+      if(!globalThis.ethereum){setResult(result,'No injected EVM wallet was detected. Install or enable a compatible wallet, then reload this page.','error');return;}
+      setResult(result,'Waiting for wallet network and transaction confirmation…');
+      try{
+        const anchored=await anchorArtifact(globalThis.ethereum,state.artifact,{
+          passportDigest:byId('passportDigest').value.trim(),
+          supersedesDigest:byId('supersedesDigest').value.trim()
+        });
+        const link=`${BASE_SEPOLIA.explorerUrl}/tx/${anchored.transactionHash}`;
+        setResult(result,[
+          ['Transaction submitted',anchored.transactionHash],
+          ['Wallet',anchored.from],
+          ['Artifact digest',anchored.digest],
+          ['Registry',REGISTRY_ADDRESS],
+          ['Explorer',link],
+          ['Status','Submitted; verify again after the transaction is included']
+        ],'success');
+        const anchorLink=document.createElement('a');anchorLink.className='button';anchorLink.href=link;anchorLink.target='_blank';anchorLink.rel='noreferrer';anchorLink.textContent='Open transaction';result.append(anchorLink);
+      }catch(error){setResult(result,error?.message||String(error),'error');}
+    });
+  </script>
+</body>
+</html>
