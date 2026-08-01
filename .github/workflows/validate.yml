@@ -32,6 +32,7 @@ jobs:
           for (const file of [
             'schema/trade-proof-passport.schema.json',
             'schema/trade-proof-response.schema.json',
+            'schema/real-world-proof-request.schema.json',
             'tokenomics/tproof-tokenomics-v0.1.json',
             'docs/contracts/base-sepolia-v0.1.json',
             'examples/steel-cabinet-passport.json',
@@ -40,7 +41,7 @@ jobs:
           ]) {
             JSON.parse(readFileSync(file, 'utf8'));
           }
-          console.log('PASS: Passport, response, tokenomics, contracts and allocation JSON parse');
+          console.log('PASS: Passport, response, RWP request, tokenomics, contracts and allocation JSON parse');
           NODE
 
       - name: Validate steel cabinet Trade RWP example
@@ -48,6 +49,11 @@ jobs:
 
       - name: Validate RWP provenance, deterministic digest and viral card integrity
         run: node tools/verify-rwp-core.mjs
+
+      - name: Validate RWP recipient requests and follow-up lineage
+        run: |
+          node tools/verify-rwp-request.mjs
+          node tools/verify-passport.mjs /tmp/rwp-follow-up-passport.json
 
       - name: Validate RWP public narrative, privacy and useful viral surface
         run: node tools/validate-rwp-page.mjs
