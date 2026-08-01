@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Real-World Proof · TradeProof</title>
-  <meta name="description" content="Generate a privacy-bounded Real-World Proof Card locally from a Trade Proof Passport. Share proofs, not secrets.">
+  <meta name="description" content="Generate a privacy-bounded Real-World Proof Card, request authorized evidence, and create a lineage-linked follow-up RWP locally.">
   <meta property="og:title" content="Before Real-World Assets, there must be Real-World Proof">
   <meta property="og:description" content="Open-source, agent-native proof infrastructure starting with global trade.">
   <meta property="og:type" content="website">
@@ -12,7 +12,7 @@
   <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/rwp.html">
   <style>
     :root{color-scheme:dark;--bg:#050507;--panel:#10131b;--panel2:#151a25;--line:rgba(255,255,255,.12);--text:#f8f9fc;--muted:#a8afbd;--lime:#bcff4d;--cyan:#59ecff;--violet:#9478ff;--pink:#ff64ce;--amber:#ffc66d;--red:#ff788f;--shadow:0 28px 90px rgba(0,0,0,.5)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;overflow-x:hidden;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -12%,#1a1726 0,var(--bg) 40%);color:var(--text)}a{color:inherit}button,input,textarea{font:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line)}.brand{font-weight:950;text-decoration:none;letter-spacing:-.04em}.navlinks{display:flex;flex-wrap:wrap;gap:17px;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none}.hero{padding:82px 0 55px;display:grid;grid-template-columns:1.08fr .92fr;gap:42px;align-items:center}.kicker{color:var(--lime);font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.hero h1{font-size:clamp(52px,7.5vw,100px);line-height:.91;letter-spacing:-.07em;margin:14px 0 24px}.gradient{background:linear-gradient(100deg,var(--lime),var(--cyan) 42%,var(--violet) 76%,var(--pink));background-clip:text;-webkit-background-clip:text;color:transparent}.lead{color:var(--muted);font-size:clamp(18px,2vw,22px);max-width:760px}.manifesto{display:grid;gap:10px;padding:24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(18,21,32,.96),rgba(8,10,16,.96));box-shadow:var(--shadow)}.manifesto-row{padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)}.manifesto-row span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em}.manifesto-row strong{display:block;margin-top:5px}.notice{margin:0 0 32px;padding:16px 18px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:14px;background:rgba(89,236,255,.055)}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-bottom:85px}.panel{border:1px solid var(--line);border-radius:23px;background:rgba(16,19,27,.9);padding:23px}.panel h2{margin:0 0 7px;font-size:27px;letter-spacing:-.03em}.panel>p{margin-top:0;color:var(--muted)}label{display:grid;gap:7px;margin-top:15px;font-weight:750}small{color:var(--muted);font-weight:400}input[type=text],textarea,input[type=file]{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#090c12;color:var(--text)}textarea{min-height:310px;resize:vertical;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}input[type=file]{color:var(--muted);border-style:dashed}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button,.button{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:10px 15px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);font-weight:850;text-decoration:none;cursor:pointer}button.primary,.button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}.status{min-height:24px;margin-top:13px;color:var(--muted);font-size:13px}.status.error{color:var(--red)}.proof-card{position:relative;overflow:hidden;min-height:510px;border:1px solid rgba(255,255,255,.18);border-radius:27px;padding:26px;background:radial-gradient(circle at 95% 0,rgba(89,236,255,.16),transparent 28%),radial-gradient(circle at 0 100%,rgba(148,120,255,.18),transparent 31%),linear-gradient(145deg,#121621,#080a10);box-shadow:var(--shadow)}.proof-card:before{content:"RWP";position:absolute;right:-12px;top:0;font-size:128px;font-weight:950;letter-spacing:-.09em;color:rgba(255,255,255,.025)}.proof-card>*{position:relative}.card-top{display:flex;justify-content:space-between;gap:12px}.badge{padding:7px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}.badge.live{color:var(--lime);border-color:rgba(188,255,77,.3)}.proof-card h3{font-size:clamp(35px,5vw,55px);line-height:.98;letter-spacing:-.055em;margin:48px 0 10px}.digest{font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--cyan);overflow-wrap:anywhere}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:24px}.metric{padding:13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}.metric span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase}.metric strong{display:block;margin-top:4px;font-size:24px}.roles{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}.role{padding:6px 9px;border-radius:999px;background:rgba(188,255,77,.08);color:var(--lime);font-size:11px}.card-foot{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}.share-actions{display:none}.share-actions.show{display:flex}.empty{display:grid;place-items:center;min-height:450px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:20px;padding:25px}.story{padding:80px 0;border-top:1px solid var(--line)}.story h2{font-size:clamp(39px,5vw,68px);line-height:.98;letter-spacing:-.055em;margin:0 0 35px}.story-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.story-card{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025)}.story-card span{color:var(--cyan);font:700 11px ui-monospace,monospace}.story-card h3{margin:28px 0 7px}.story-card p{margin:0;color:var(--muted);font-size:14px}.boundary{padding:26px 0 55px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}@media(max-width:850px){.hero,.workspace{grid-template-columns:1fr}.story-grid{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr 1fr}}@media(max-width:560px){.story-grid,.metrics{grid-template-columns:1fr}.nav{align-items:flex-start;padding:20px 0}.hero{padding-top:55px}}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;overflow-x:hidden;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -12%,#1a1726 0,var(--bg) 40%);color:var(--text)}a{color:inherit}button,input,textarea,select{font:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line)}.brand{font-weight:950;text-decoration:none;letter-spacing:-.04em}.navlinks{display:flex;flex-wrap:wrap;gap:17px;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none}.hero{padding:82px 0 55px;display:grid;grid-template-columns:1.08fr .92fr;gap:42px;align-items:center}.kicker{color:var(--lime);font-size:12px;font-weight:900;letter-spacing:.2em;text-transform:uppercase}.hero h1{font-size:clamp(52px,7.5vw,100px);line-height:.91;letter-spacing:-.07em;margin:14px 0 24px}.gradient{background:linear-gradient(100deg,var(--lime),var(--cyan) 42%,var(--violet) 76%,var(--pink));background-clip:text;-webkit-background-clip:text;color:transparent}.lead{color:var(--muted);font-size:clamp(18px,2vw,22px);max-width:760px}.manifesto{display:grid;gap:10px;padding:24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(18,21,32,.96),rgba(8,10,16,.96));box-shadow:var(--shadow)}.manifesto-row{padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)}.manifesto-row span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em}.manifesto-row strong{display:block;margin-top:5px}.notice{margin:0 0 32px;padding:16px 18px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:14px;background:rgba(89,236,255,.055)}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-bottom:28px}.panel{border:1px solid var(--line);border-radius:23px;background:rgba(16,19,27,.9);padding:23px}.panel h2{margin:0 0 7px;font-size:27px;letter-spacing:-.03em}.panel>p{margin-top:0;color:var(--muted)}label{display:grid;gap:7px;margin-top:15px;font-weight:750}small{color:var(--muted);font-weight:400}input[type=text],textarea,input[type=file],select{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#090c12;color:var(--text)}textarea{min-height:170px;resize:vertical}#passportText{min-height:300px;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}input[type=file]{color:var(--muted);border-style:dashed}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button,.button{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:10px 15px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);font-weight:850;text-decoration:none;cursor:pointer}button.primary,.button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}.status{min-height:24px;margin-top:13px;color:var(--muted);font-size:13px}.status.error{color:var(--red)}.proof-card{position:relative;overflow:hidden;min-height:510px;border:1px solid rgba(255,255,255,.18);border-radius:27px;padding:26px;background:radial-gradient(circle at 95% 0,rgba(89,236,255,.16),transparent 28%),radial-gradient(circle at 0 100%,rgba(148,120,255,.18),transparent 31%),linear-gradient(145deg,#121621,#080a10);box-shadow:var(--shadow)}.proof-card:before{content:"RWP";position:absolute;right:-12px;top:0;font-size:128px;font-weight:950;letter-spacing:-.09em;color:rgba(255,255,255,.025)}.proof-card>*{position:relative}.card-top{display:flex;justify-content:space-between;gap:12px}.badge{padding:7px 10px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}.badge.live{color:var(--lime);border-color:rgba(188,255,77,.3)}.proof-card h3{font-size:clamp(35px,5vw,55px);line-height:.98;letter-spacing:-.055em;margin:48px 0 10px}.digest{font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--cyan);overflow-wrap:anywhere}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:24px}.metric{padding:13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}.metric span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase}.metric strong{display:block;margin-top:4px;font-size:24px}.roles{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}.role{padding:6px 9px;border-radius:999px;background:rgba(188,255,77,.08);color:var(--lime);font-size:11px}.card-foot{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}.share-actions{display:none}.share-actions.show{display:flex}.empty{display:grid;place-items:center;min-height:450px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:20px;padding:25px}.recipient{padding:28px 0 85px}.recipient-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.recipient-panel{border:1px solid rgba(188,255,77,.2);border-radius:23px;background:linear-gradient(145deg,rgba(188,255,77,.055),rgba(16,19,27,.93));padding:23px}.recipient-panel h2{margin:0 0 8px;font-size:31px}.recipient-panel>p{color:var(--muted)}.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.evidence-option{display:flex;gap:8px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:10px;color:var(--muted);font-size:13px}.evidence-option input{accent-color:var(--lime)}.request-summary{display:none;border:1px solid var(--line);border-radius:18px;padding:18px;background:rgba(255,255,255,.025)}.request-summary.show{display:block}.request-summary h3{margin:0 0 12px}.request-row{padding:9px 0;border-bottom:1px solid var(--line)}.request-row span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase}.request-row strong{display:block;margin-top:3px;overflow-wrap:anywhere}.public-warning{color:var(--amber);font-size:12px}.story{padding:80px 0;border-top:1px solid var(--line)}.story h2{font-size:clamp(39px,5vw,68px);line-height:.98;letter-spacing:-.055em;margin:0 0 35px}.story-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.story-card{padding:20px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.025)}.story-card span{color:var(--cyan);font:700 11px ui-monospace,monospace}.story-card h3{margin:28px 0 7px}.story-card p{margin:0;color:var(--muted);font-size:14px}.boundary{padding:26px 0 55px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}@media(max-width:850px){.hero,.workspace,.recipient-grid{grid-template-columns:1fr}.story-grid{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr 1fr}}@media(max-width:560px){.story-grid,.metrics,.evidence-grid{grid-template-columns:1fr}.nav{align-items:flex-start;padding:20px 0}.hero{padding-top:55px}}
   </style>
 </head>
 <body>
@@ -21,7 +21,7 @@
 
     <section class="hero">
       <div><div class="kicker">Real-World Proof Core · Community Draft v0.1</div><h1>Before RWA,<br><span class="gradient">prove reality.</span></h1><p class="lead">RWA represents value. RWP records how a claim was formed, what evidence supports it, where it came from and which responsible roles confirmed or disputed it. TradeProof starts with global trade.</p></div>
-      <div class="manifesto"><div class="manifesto-row"><span>Agents</span><strong>Compile candidate reality at scale.</strong></div><div class="manifesto-row"><span>RWP</span><strong>Makes claims, sources and responsibility verifiable.</strong></div><div class="manifesto-row"><span>DAO</span><strong>Owns the open protocol—not the truth.</strong></div><div class="manifesto-row"><span>Viral</span><strong>Share proof structure, never the holder's secrets.</strong></div></div>
+      <div class="manifesto"><div class="manifesto-row"><span>Agents</span><strong>Compile candidate reality at scale.</strong></div><div class="manifesto-row"><span>RWP</span><strong>Makes claims, sources and responsibility verifiable.</strong></div><div class="manifesto-row"><span>DAO</span><strong>Owns the open protocol—not the truth.</strong></div><div class="manifesto-row"><span>Viral</span><strong>Every shared proof can start a real recipient action.</strong></div></div>
     </section>
 
     <div class="notice"><strong>Your trade data stays with you.</strong> The complete Passport is processed locally. The share link contains only counts, role categories, lifecycle state and cryptographic digests—never organization names, party IDs, fact statements, document contents, evidence URIs or evidence digests.</div>
@@ -59,74 +59,98 @@
       </div>
     </section>
 
+    <section class="recipient" id="recipientAction">
+      <div class="recipient-grid">
+        <div class="recipient-panel">
+          <div class="kicker">Recipient action</div>
+          <h2>Turn the Proof Card into work.</h2>
+          <p>Generate a bounded, unsigned request that references only the public source digests. The holder still decides whether and how to disclose through an authorized channel.</p>
+          <label>Requested action<select id="requestedAction"><option value="request_authorized_evidence">Request authorized evidence</option><option value="request_responsible_confirmation">Request responsible-role confirmation</option><option value="request_change">Request change or clarification</option></select></label>
+          <label>Your role<select id="requesterRole"><option value="buyer">Buyer</option><option value="exporter">Exporter</option><option value="supplier">Supplier</option><option value="manufacturer">Manufacturer</option><option value="inspection">Inspection</option><option value="logistics">Logistics</option><option value="warehouse">Warehouse</option><option value="customs">Customs</option><option value="insurance">Insurance</option><option value="legal">Legal</option><option value="funder">Funder</option><option value="other">Other</option></select></label>
+          <label>Requested evidence categories</label>
+          <div class="evidence-grid" id="evidenceTypes">
+            <label class="evidence-option"><input type="checkbox" value="purchase_order">Purchase order</label>
+            <label class="evidence-option"><input type="checkbox" value="commercial_invoice">Commercial invoice</label>
+            <label class="evidence-option"><input type="checkbox" value="packing_list">Packing list</label>
+            <label class="evidence-option"><input type="checkbox" value="inspection_report">Inspection report</label>
+            <label class="evidence-option"><input type="checkbox" value="bill_of_lading">Bill of lading</label>
+            <label class="evidence-option"><input type="checkbox" value="warehouse_receipt">Warehouse receipt</label>
+            <label class="evidence-option"><input type="checkbox" value="logistics_event">Logistics event</label>
+            <label class="evidence-option"><input type="checkbox" value="customs_record">Customs record</label>
+            <label class="evidence-option"><input type="checkbox" value="insurance_record">Insurance record</label>
+            <label class="evidence-option"><input type="checkbox" value="other">Other</label>
+          </div>
+          <label>Public request note<textarea id="requestNote" maxlength="280" placeholder="Explain the minimum evidence or clarification needed."></textarea><small class="public-warning">This note enters the share link. Do not enter confidential information.</small></label>
+          <div class="actions"><button class="primary" id="generateRequest" type="button">Generate request JSON & link</button><button id="copyRequestLink" type="button" disabled>Copy request link</button><button id="downloadRequest" type="button" disabled>Download request JSON</button></div>
+          <div class="status" id="requestStatus" aria-live="polite"></div>
+        </div>
+
+        <div class="recipient-panel">
+          <div class="kicker">Verified request</div>
+          <div class="request-summary" id="requestSummary">
+            <h3>RWP Request</h3>
+            <div class="request-row"><span>Action</span><strong id="requestActionValue"></strong></div>
+            <div class="request-row"><span>Requester role</span><strong id="requestRoleValue"></strong></div>
+            <div class="request-row"><span>Evidence categories</span><strong id="requestEvidenceValue"></strong></div>
+            <div class="request-row"><span>Public note</span><strong id="requestNoteValue"></strong></div>
+            <div class="request-row"><span>Request digest</span><strong class="digest" id="requestDigestValue"></strong></div>
+            <p class="public-warning">Unsigned and self-declared. This request does not verify identity or authority, grant document access, or change the source proof.</p>
+          </div>
+          <div class="empty" id="emptyRequest"><div><strong>No request yet.</strong><p>Open a request link or generate a bounded request from the Proof Card.</p></div></div>
+          <div class="actions"><button class="primary" id="createFollowUp" type="button" disabled>Create the next RWP with lineage</button></div>
+          <div class="status" id="lineageStatus" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="story">
       <h2>The crypto playbook,<br>backed by useful proof.</h2>
       <div class="story-grid"><div class="story-card"><span>01 · TRADE</span><h3>Reality creates value</h3><p>Orders, production, inspection, shipment and acceptance happen before an asset exists.</p></div><div class="story-card"><span>02 · RWP</span><h3>Proof makes it credible</h3><p>Claims are linked to evidence, provenance, role responses, state and immutable history.</p></div><div class="story-card"><span>03 · AGENTS</span><h3>Coordination becomes scalable</h3><p>Agents extract, reconcile and route work while protocol invariants constrain their output.</p></div><div class="story-card"><span>04 · DAO</span><h3>The network belongs to contributors</h3><p>Open standards, connectors and proof liquidity replace a closed trade-data platform.</p></div></div>
     </section>
 
-    <p class="boundary">A Proof Card is not the complete Passport and is not legal, customs, insurance, financing or regulatory approval. It does not verify organizational identity, authority, ownership, title or absolute truth. TPROOF holdings and DAO votes cannot change evidence validity. No Token claim, sale, price, liquidity pool, payment, settlement, financing, custody, RWA issuance or mainnet action is activated here.</p>
+    <p class="boundary">A Proof Card or RWP Request is not the complete Passport and is not legal, customs, insurance, financing or regulatory approval. It does not verify organizational identity, authority, ownership, title or absolute truth. TPROOF holdings and DAO votes cannot change evidence validity. No Token claim, sale, price, liquidity pool, payment, settlement, financing, custody, RWA issuance or mainnet action is activated here.</p>
   </main>
 
   <script type="module">
     import { buildProofCard, buildProofCardUrl, readProofCardFromHash } from './rwp-card.mjs';
+    import { buildFollowUpLineage, buildRwpRequest, buildRwpRequestUrl, readRwpRequestFromHash } from './rwp-request.mjs';
 
     const byId=(id)=>document.getElementById(id);
-    const state={card:null,url:null};
+    const state={card:null,cardUrl:null,request:null,requestUrl:null};
     const setStatus=(id,message,error=false)=>{const element=byId(id);element.textContent=message;element.className=`status${error?' error':''}`;};
-    const short=(value)=>`${value.slice(0,10)}…${value.slice(-8)}`;
+    const actionLabels={request_authorized_evidence:'Request authorized evidence',request_responsible_confirmation:'Request responsible-role confirmation',request_change:'Request change or clarification'};
 
-    const render=(card,shareUrl)=>{
-      state.card=card;state.url=shareUrl;
-      byId('emptyCard').hidden=true;byId('proofCard').hidden=false;byId('shareActions').classList.add('show');
-      byId('cardStatus').textContent=card.lifecycleStatus.toUpperCase();
-      byId('cardLabel').textContent=card.publicLabel;
-      byId('sourceDigest').textContent=`Source Passport digest · ${card.sourceDigest}`;
-      byId('claimsTotal').textContent=card.claims.total;
-      byId('claimsBacked').textContent=card.claims.evidenceBacked;
-      byId('claimsConfirmed').textContent=card.claims.confirmed;
-      byId('evidenceTotal').textContent=card.evidence.total;
-      byId('provenanceReviewed').textContent=`${card.provenance.reviewed}/${card.provenance.total}`;
-      byId('confirmationsTotal').textContent=card.confirmations.total;
-      const roles=byId('roles');roles.replaceChildren();
-      const roleValues=card.confirmations.respondedRoles.length?card.confirmations.respondedRoles:['no public role response'];
-      for(const role of roleValues){const item=document.createElement('span');item.className='role';item.textContent=role;roles.append(item);}
-      byId('updatedAt').textContent=`Updated ${new Date(card.updatedAt).toLocaleString()}`;
-      byId('cardDigest').textContent=`Card integrity · ${card.cardDigest}`;
-      byId('assurance').textContent=card.assurance;
-      const text=`Before Real-World Assets, there must be Real-World Proof. ${card.publicLabel} · ${short(card.sourceDigest)}`;
-      byId('shareX').href=`https://twitter.com/intent/tweet?${new URLSearchParams({text,url:shareUrl})}`;
-      byId('shareLinkedIn').href=`https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({url:shareUrl})}`;
+    const renderCard=(card,shareUrl)=>{
+      state.card=card;state.cardUrl=shareUrl;
+      byId('emptyCard').hidden=true;byId('proofCard').hidden=false;byId('shareActions').classList.add('show');byId('createFollowUp').disabled=false;
+      byId('cardStatus').textContent=card.lifecycleStatus.toUpperCase();byId('cardLabel').textContent=card.publicLabel;byId('sourceDigest').textContent=`Source Passport digest · ${card.sourceDigest}`;
+      byId('claimsTotal').textContent=card.claims.total;byId('claimsBacked').textContent=card.claims.evidenceBacked;byId('claimsConfirmed').textContent=card.claims.confirmed;byId('evidenceTotal').textContent=card.evidence.total;byId('provenanceReviewed').textContent=card.provenance.reviewed;byId('confirmationsTotal').textContent=card.confirmations.total;
+      byId('roles').replaceChildren(...card.confirmations.respondedRoles.map((role)=>{const tag=document.createElement('span');tag.className='role';tag.textContent=role;return tag;}));
+      byId('updatedAt').textContent=`Source updated · ${new Date(card.updatedAt).toLocaleString()}`;byId('cardDigest').textContent=`Card digest · ${card.cardDigest}`;byId('assurance').textContent=card.assurance;
+      const text=`Before RWA, prove reality. ${card.publicLabel}`;byId('shareX').href=`https://twitter.com/intent/tweet?${new URLSearchParams({text,url:shareUrl})}`;byId('shareLinkedIn').href=`https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({url:shareUrl})}`;
     };
 
-    const generate=()=>{
-      try{
-        const passport=JSON.parse(byId('passportText').value);
-        const card=buildProofCard(passport,{publicLabel:byId('publicLabel').value});
-        const shareUrl=buildProofCardUrl(card,location.href);
-        history.replaceState(null,'',shareUrl);
-        render(card,shareUrl);
-        setStatus('builderStatus','PASS: the share link contains only the bounded Proof Card projection.');
-        setStatus('shareStatus','Ready to share. The complete Passport remains local.');
-      }catch(error){setStatus('builderStatus',error?.message||String(error),true);}
+    const renderRequest=(request,requestUrl)=>{
+      state.request=request;state.requestUrl=requestUrl;
+      byId('emptyRequest').hidden=true;byId('requestSummary').classList.add('show');byId('copyRequestLink').disabled=false;byId('downloadRequest').disabled=false;byId('createFollowUp').disabled=false;
+      byId('requestActionValue').textContent=actionLabels[request.requestedAction]||request.requestedAction;byId('requestRoleValue').textContent=request.requester.role;byId('requestEvidenceValue').textContent=request.evidenceTypes.length?request.evidenceTypes.join(', '):'No category specified';byId('requestNoteValue').textContent=request.note||'No public note';byId('requestDigestValue').textContent=request.requestDigest;
     };
 
-    byId('passportFile').addEventListener('change',async(event)=>{
-      const file=event.target.files?.[0];if(!file)return;
-      if(file.size>2_000_000){setStatus('builderStatus','File exceeds the 2 MB local browser limit.',true);return;}
-      byId('passportText').value=await file.text();generate();
-    });
-    byId('generateButton').addEventListener('click',generate);
-    byId('loadExample').addEventListener('click',async()=>{
-      try{const response=await fetch('https://raw.githubusercontent.com/moseszhu999/trade-proof-passport/main/examples/steel-cabinet-passport.json');if(!response.ok)throw new Error('Synthetic example could not be loaded.');byId('passportText').value=JSON.stringify(await response.json(),null,2);byId('publicLabel').value='Synthetic steel cabinet trade proof';generate();}catch(error){setStatus('builderStatus',error?.message||String(error),true);}
-    });
-    byId('copyLink').addEventListener('click',async()=>{await navigator.clipboard.writeText(state.url);setStatus('shareStatus','Proof link copied.');});
-    byId('copyDigest').addEventListener('click',async()=>{await navigator.clipboard.writeText(state.card.sourceDigest);setStatus('shareStatus','Source Passport digest copied.');});
-    byId('nativeShare').addEventListener('click',async()=>{
-      if(!navigator.share){await navigator.clipboard.writeText(state.url);setStatus('shareStatus','Native sharing is unavailable; the proof link was copied.');return;}
-      await navigator.share({title:'Real-World Proof',text:'Before Real-World Assets, there must be Real-World Proof.',url:state.url});
-    });
+    const generateCard=()=>{try{const passport=JSON.parse(byId('passportText').value);const card=buildProofCard(passport,{publicLabel:byId('publicLabel').value});const url=buildProofCardUrl(card,location.href);history.replaceState({},'',new URL(url).hash);renderCard(card,url);setStatus('builderStatus','Proof Card generated locally. The complete Passport was not added to the URL.');}catch(error){setStatus('builderStatus',error?.message||String(error),true);}};
+    const selectedEvidenceTypes=()=>[...byId('evidenceTypes').querySelectorAll('input:checked')].map((input)=>input.value);
+    const generateRequest=()=>{if(!state.card){setStatus('requestStatus','Generate or open a Proof Card first.',true);return;}try{const request=buildRwpRequest(state.card,{requestedAction:byId('requestedAction').value,requesterRole:byId('requesterRole').value,evidenceTypes:selectedEvidenceTypes(),note:byId('requestNote').value});const url=buildRwpRequestUrl(request,state.card,location.href);history.replaceState({},'',new URL(url).hash);renderRequest(request,url);setStatus('requestStatus','RWP Request generated. It contains source digests and the public request only.');}catch(error){setStatus('requestStatus',error?.message||String(error),true);}};
+    const copyText=async(value,statusId,message)=>{try{await navigator.clipboard.writeText(value);setStatus(statusId,message);}catch{setStatus(statusId,'Clipboard access failed.',true);}};
+    const downloadJson=(value,filename)=>{const blob=new Blob([`${JSON.stringify(value,null,2)}\n`],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=filename;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href);};
 
-    try{const shared=readProofCardFromHash(location.hash);if(shared){render(shared,location.href);setStatus('shareStatus','Shared Proof Card verified against its embedded card digest.');}}catch(error){setStatus('shareStatus',`Invalid Proof Card link: ${error?.message||String(error)}`,true);}
+    byId('passportFile').addEventListener('change',async(event)=>{const file=event.target.files?.[0];if(!file)return;if(file.size>2_000_000){setStatus('builderStatus','File exceeds the 2 MB local browser limit.',true);return;}byId('passportText').value=await file.text();generateCard();});
+    byId('generateButton').addEventListener('click',generateCard);
+    byId('loadExample').addEventListener('click',async()=>{try{const response=await fetch('https://raw.githubusercontent.com/moseszhu999/trade-proof-passport/main/examples/steel-cabinet-passport.json');if(!response.ok)throw new Error('Synthetic example could not be loaded.');byId('passportText').value=JSON.stringify(await response.json(),null,2);byId('publicLabel').value='Synthetic steel cabinet trade proof';generateCard();}catch(error){setStatus('builderStatus',error?.message||String(error),true);}});
+    byId('copyLink').addEventListener('click',()=>copyText(state.cardUrl,'shareStatus','Proof link copied.'));byId('copyDigest').addEventListener('click',()=>copyText(state.card.sourceDigest,'shareStatus','Source Passport digest copied.'));
+    byId('nativeShare').addEventListener('click',async()=>{if(!navigator.share){await copyText(state.cardUrl,'shareStatus','Native sharing is unavailable; the proof link was copied.');return;}await navigator.share({title:'Real-World Proof',text:'Before Real-World Assets, there must be Real-World Proof.',url:state.cardUrl});});
+    byId('generateRequest').addEventListener('click',generateRequest);byId('copyRequestLink').addEventListener('click',()=>copyText(state.requestUrl,'requestStatus','Request link copied.'));byId('downloadRequest').addEventListener('click',()=>downloadJson(state.request,`${state.request.requestId}-rwp-request.json`));
+    byId('createFollowUp').addEventListener('click',()=>{if(!state.card){setStatus('lineageStatus','Open a Proof Card first.',true);return;}try{const lineage=buildFollowUpLineage(state.card,{requestDigest:state.request?.requestDigest});sessionStorage.setItem('tradeProofRwpLineage',JSON.stringify(lineage));location.href='./create.html?source=rwp';}catch(error){setStatus('lineageStatus',error?.message||String(error),true);}});
+
+    try{const sharedCard=readProofCardFromHash(location.hash);if(sharedCard){renderCard(sharedCard,location.href);setStatus('shareStatus','Shared Proof Card verified against its embedded card digest.');}const sharedRequest=readRwpRequestFromHash(location.hash);if(sharedRequest){if(!sharedCard||sharedRequest.source.passportDigest!==sharedCard.sourceDigest||sharedRequest.source.cardDigest!==sharedCard.cardDigest)throw new Error('Request source does not match the Proof Card.');renderRequest(sharedRequest,location.href);setStatus('requestStatus','Shared RWP Request verified against its canonical request digest.');}}catch(error){setStatus('shareStatus',`Invalid RWP link: ${error?.message||String(error)}`,true);}
   </script>
 </body>
 </html>
