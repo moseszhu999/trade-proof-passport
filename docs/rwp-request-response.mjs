@@ -13,13 +13,11 @@ export const RWP_REQUEST_RESPONSE_DECISIONS = Object.freeze([
   'request_clarification',
   'decline'
 ]);
-
 export const RWP_REQUEST_RESPONSE_MODES = Object.freeze([
   'authorized_off_channel',
   'public_note_only',
   'none'
 ]);
-
 export const RWP_REQUEST_RESPONSE_CHANNEL_HINTS = Object.freeze([
   'existing_business_channel',
   'secure_data_room',
@@ -33,18 +31,7 @@ const DECISION_SET = new Set(RWP_REQUEST_RESPONSE_DECISIONS);
 const MODE_SET = new Set(RWP_REQUEST_RESPONSE_MODES);
 const CHANNEL_HINT_SET = new Set(RWP_REQUEST_RESPONSE_CHANNEL_HINTS);
 const ROLE_SET = new Set([
-  'exporter',
-  'buyer',
-  'supplier',
-  'manufacturer',
-  'inspection',
-  'logistics',
-  'warehouse',
-  'customs',
-  'insurance',
-  'legal',
-  'funder',
-  'other'
+  'exporter','buyer','supplier','manufacturer','inspection','logistics','warehouse','customs','insurance','legal','funder','other'
 ]);
 
 const isRecord = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -76,9 +63,7 @@ const fromBase64Url = (value) => {
 const normalizeNote = (value) => {
   const note = typeof value === 'string' ? value.trim() : '';
   if (note.length > MAX_NOTE_LENGTH) throw new Error(`Public response note must be at most ${MAX_NOTE_LENGTH} characters.`);
-  if (containsEndpointOrPrivateMarker(note)) {
-    throw new Error('Public response note contains a forbidden private or endpoint marker.');
-  }
+  if (containsEndpointOrPrivateMarker(note)) throw new Error('Public response note contains a forbidden private or endpoint marker.');
   return note;
 };
 
@@ -89,6 +74,17 @@ const normalizeEvidenceTypes = (values, request) => {
     if (!requested.has(value)) throw new Error(`Response evidence type was not requested: ${value}`);
   }
   return normalized;
+};
+
+const normalizeBuilderOptions = (options = {}) => {
+  const status = String(options.status ?? 'accept');
+  if (status === 'decline') {
+    return { ...options, status, mode: 'none', evidenceTypes: [], channelHint: undefined };
+  }
+  if (status === 'request_clarification') {
+    return { ...options, status, mode: 'public_note_only', evidenceTypes: [], channelHint: undefined };
+  }
+  return { ...options, status };
 };
 
 const unsignedResponsePayload = (card, request, options = {}) => {
@@ -111,15 +107,11 @@ const unsignedResponsePayload = (card, request, options = {}) => {
   if (channelHint && !CHANNEL_HINT_SET.has(channelHint)) throw new Error(`Unsupported channel hint: ${channelHint}`);
   const note = normalizeNote(options.note);
 
-  if (status === 'decline') {
-    if (mode !== 'none' || evidenceTypes.length > 0 || channelHint) {
-      throw new Error('A declined response must use mode none and offer no evidence category or channel hint.');
-    }
+  if (status === 'decline' && (mode !== 'none' || evidenceTypes.length > 0 || channelHint)) {
+    throw new Error('A declined response must use mode none and offer no evidence category or channel hint.');
   }
-  if (status === 'request_clarification') {
-    if (mode !== 'public_note_only' || note.length === 0 || evidenceTypes.length > 0 || channelHint) {
-      throw new Error('A clarification response requires a public note only and offers no evidence category or channel hint.');
-    }
+  if (status === 'request_clarification' && (mode !== 'public_note_only' || note.length === 0 || evidenceTypes.length > 0 || channelHint)) {
+    throw new Error('A clarification response requires a public note only and offers no evidence category or channel hint.');
   }
   if (status === 'partially_accept') {
     if (mode === 'none') throw new Error('A partially accepted response requires a fulfillment mode.');
@@ -150,11 +142,7 @@ const unsignedResponsePayload = (card, request, options = {}) => {
     },
     decision: { status },
     responder: { role: responderRole },
-    fulfillment: {
-      mode,
-      evidenceTypes,
-      ...(channelHint ? { channelHint } : {})
-    },
+    fulfillment: { mode, evidenceTypes, ...(channelHint ? { channelHint } : {}) },
     ...(note ? { note } : {}),
     createdAt: new Date(options.createdAt ?? Date.now()).toISOString(),
     assurance: RWP_REQUEST_RESPONSE_ASSURANCE
@@ -162,13 +150,9 @@ const unsignedResponsePayload = (card, request, options = {}) => {
 };
 
 export const buildRwpRequestResponse = (card, request, options = {}) => {
-  const payload = unsignedResponsePayload(card, request, options);
+  const payload = unsignedResponsePayload(card, request, normalizeBuilderOptions(options));
   const responseDigest = keccakUtf8(canonicalizeJson(payload));
-  return {
-    ...payload,
-    responseId: `rwprr:${responseDigest.slice(2, 18)}`,
-    responseDigest
-  };
+  return { ...payload, responseId: `rwprr:${responseDigest.slice(2, 18)}`, responseDigest };
 };
 
 export const validateRwpRequestResponse = (response, request) => {
@@ -189,9 +173,8 @@ export const validateRwpRequestResponse = (response, request) => {
   if (!isRecord(response.responder) || !ROLE_SET.has(response.responder?.role)) errors.push('responder.role is unsupported.');
   if (!isRecord(response.fulfillment) || !MODE_SET.has(response.fulfillment?.mode)) errors.push('fulfillment.mode is unsupported.');
   const evidenceTypes = response.fulfillment?.evidenceTypes;
-  if (!Array.isArray(evidenceTypes)) {
-    errors.push('fulfillment.evidenceTypes must be an array.');
-  } else if (new Set(evidenceTypes).size !== evidenceTypes.length || [...evidenceTypes].sort().join('|') !== evidenceTypes.join('|')) {
+  if (!Array.isArray(evidenceTypes)) errors.push('fulfillment.evidenceTypes must be an array.');
+  else if (new Set(evidenceTypes).size !== evidenceTypes.length || [...evidenceTypes].sort().join('|') !== evidenceTypes.join('|')) {
     errors.push('fulfillment.evidenceTypes must be unique and sorted.');
   }
   if (response.fulfillment?.channelHint !== undefined && !CHANNEL_HINT_SET.has(response.fulfillment.channelHint)) {
@@ -211,9 +194,7 @@ export const validateRwpRequestResponse = (response, request) => {
       response.source?.cardDigest !== request.source.cardDigest ||
       response.source?.requestId !== request.requestId ||
       response.source?.requestDigest !== request.requestDigest
-    ) {
-      errors.push('Response source does not match the RWP Request.');
-    }
+    ) errors.push('Response source does not match the RWP Request.');
     if (Array.isArray(evidenceTypes) && evidenceTypes.some((value) => !request.evidenceTypes.includes(value))) {
       errors.push('Response offers an evidence category that was not requested.');
     }
@@ -223,9 +204,7 @@ export const validateRwpRequestResponse = (response, request) => {
   const mode = response.fulfillment?.mode;
   const channelHint = response.fulfillment?.channelHint;
   if (status === 'decline' && (mode !== 'none' || evidenceTypes?.length > 0 || channelHint)) errors.push('Decline boundary is invalid.');
-  if (status === 'request_clarification' && (mode !== 'public_note_only' || !response.note || evidenceTypes?.length > 0 || channelHint)) {
-    errors.push('Clarification boundary is invalid.');
-  }
+  if (status === 'request_clarification' && (mode !== 'public_note_only' || !response.note || evidenceTypes?.length > 0 || channelHint)) errors.push('Clarification boundary is invalid.');
   if (status === 'partially_accept' && requestErrors.length === 0 && request.evidenceTypes.length > 0) {
     if (!Array.isArray(evidenceTypes) || evidenceTypes.length === 0 || evidenceTypes.length === request.evidenceTypes.length) {
       errors.push('Partial evidence acceptance must be a non-empty proper subset.');
@@ -240,10 +219,7 @@ export const validateRwpRequestResponse = (response, request) => {
   if (mode === 'authorized_off_channel' && !channelHint) errors.push('authorized_off_channel requires channelHint.');
   if (mode !== 'authorized_off_channel' && channelHint) errors.push('channelHint is only allowed for authorized_off_channel.');
   if (mode === 'public_note_only' && !response.note) errors.push('public_note_only requires note.');
-
-  if (containsEndpointOrPrivateMarker(canonicalizeJson(response))) {
-    errors.push('RWP Request Response contains a forbidden private or endpoint marker.');
-  }
+  if (containsEndpointOrPrivateMarker(canonicalizeJson(response))) errors.push('RWP Request Response contains a forbidden private or endpoint marker.');
 
   if (errors.length === 0) {
     const { responseId, responseDigest, ...payload } = response;
@@ -251,7 +227,6 @@ export const validateRwpRequestResponse = (response, request) => {
     if (responseDigest !== expectedDigest) errors.push('responseDigest does not match the canonical response payload.');
     if (responseId !== `rwprr:${expectedDigest.slice(2, 18)}`) errors.push('responseId does not match responseDigest.');
   }
-
   return errors;
 };
 
@@ -283,7 +258,6 @@ export const buildRwpRequestResponseUrl = (response, request, card, baseUrl) => 
   }
   const responseErrors = validateRwpRequestResponse(response, request);
   if (responseErrors.length > 0) throw new Error(responseErrors.join(' '));
-
   const url = new URL(baseUrl);
   url.search = '';
   url.pathname = url.pathname.replace(/[^/]*$/, 'rwp-respond.html');
