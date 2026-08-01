@@ -43,6 +43,7 @@ assert.match(page, /rwp-card\.mjs/);
 assert.match(page, /rwp-request\.mjs/);
 assert.match(page, /buildRwpRequestUrl/);
 assert.match(page, /buildFollowUpLineage/);
+assert.match(page, /pureCardUrl=buildProofCardUrl/);
 assert.match(page, /tradeProofRwpLineage/);
 assert.match(page, /raw\.githubusercontent\.com\/moseszhu999\/trade-proof-passport\/main\/examples\/steel-cabinet-passport\.json/);
 assert.doesNotMatch(page, /private\s*key/i);
