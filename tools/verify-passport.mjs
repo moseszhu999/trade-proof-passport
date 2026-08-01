@@ -17,51 +17,15 @@ const REQUIRED_TOP_LEVEL = [
   "disclosure"
 ];
 
-const FACT_STATUSES = new Set([
-  "asserted",
-  "confirmed",
-  "disputed",
-  "superseded",
-  "expired",
-  "revoked"
-]);
-
-const DECISIONS = new Set([
-  "confirm",
-  "reject",
-  "request_change",
-  "acknowledge"
-]);
-
-const PASSPORT_STATUSES = new Set([
-  "draft",
-  "active",
-  "superseded",
-  "expired",
-  "revoked"
-]);
-
-const DISCLOSURE_PROFILES = new Set([
-  "private",
-  "shared",
-  "public_summary"
-]);
-
-const PROVENANCE_METHODS = new Set([
-  "manual",
-  "document_parser",
-  "system_event",
-  "agent_assisted"
-]);
-
+const FACT_STATUSES = new Set(["asserted", "confirmed", "disputed", "superseded", "expired", "revoked"]);
+const DECISIONS = new Set(["confirm", "reject", "request_change", "acknowledge"]);
+const PASSPORT_STATUSES = new Set(["draft", "active", "superseded", "expired", "revoked"]);
+const DISCLOSURE_PROFILES = new Set(["private", "shared", "public_summary"]);
+const PROVENANCE_METHODS = new Set(["manual", "document_parser", "system_event", "agent_assisted"]);
 const PROVENANCE_LOCATORS = ["page", "field", "cell", "jsonPointer", "eventId"];
-
-const DIGEST_LENGTHS = {
-  sha256: 64,
-  sha384: 96,
-  sha512: 128,
-  keccak256: 64
-};
+const LINEAGE_RELATIONS = new Set(["derived_from", "responds_to", "reuses_pattern_from"]);
+const LINEAGE_SOURCE_TYPES = new Set(["TradeProofPassport", "RealWorldProofCard", "RealWorldProofRequest"]);
+const DIGEST_LENGTHS = { sha256: 64, sha384: 96, sha512: 128, keccak256: 64 };
 
 function duplicateValues(values) {
   const seen = new Set();
@@ -77,6 +41,10 @@ function isDateTime(value) {
   return typeof value === "string" && !Number.isNaN(Date.parse(value));
 }
 
+function isBytes32(value) {
+  return typeof value === "string" && /^0x[0-9a-f]{64}$/.test(value);
+}
+
 function validate(passport) {
   const errors = [];
   const warnings = [];
@@ -89,10 +57,7 @@ function validate(passport) {
     if (!(field in passport)) errors.push(`Missing required top-level field: ${field}`);
   }
 
-  if (passport.schemaVersion !== "0.1") {
-    errors.push('schemaVersion must equal "0.1".');
-  }
-
+  if (passport.schemaVersion !== "0.1") errors.push('schemaVersion must equal "0.1".');
   for (const field of ["createdAt", "updatedAt"]) {
     if (!isDateTime(passport[field])) errors.push(`${field} must be a valid date-time.`);
   }
@@ -110,12 +75,18 @@ function validate(passport) {
   if (passport.provenance !== undefined && !Array.isArray(passport.provenance)) {
     errors.push("provenance must be an array when present.");
   }
+  if (passport.lineage !== undefined && !Array.isArray(passport.lineage)) {
+    errors.push("lineage must be an array when present.");
+  }
 
   const parties = Array.isArray(passport.parties) ? passport.parties : [];
   const facts = Array.isArray(passport.facts) ? passport.facts : [];
   const evidence = Array.isArray(passport.evidence) ? passport.evidence : [];
   const provenance = Array.isArray(passport.provenance) ? passport.provenance : [];
   const confirmations = Array.isArray(passport.confirmations) ? passport.confirmations : [];
+  const lineage = Array.isArray(passport.lineage) ? passport.lineage : [];
+
+  if (lineage.length > 16) errors.push("lineage may contain at most 16 records.");
 
   const partyIds = parties.map((item) => item?.partyId).filter(Boolean);
   const factIds = facts.map((item) => item?.factId).filter(Boolean);
@@ -130,9 +101,7 @@ function validate(passport) {
     ["provenanceId", provenanceIds],
     ["confirmationId", confirmationIds]
   ]) {
-    for (const duplicate of duplicateValues(values)) {
-      errors.push(`Duplicate ${label}: ${duplicate}`);
-    }
+    for (const duplicate of duplicateValues(values)) errors.push(`Duplicate ${label}: ${duplicate}`);
   }
 
   const partySet = new Set(partyIds);
@@ -151,9 +120,7 @@ function validate(passport) {
     if (!item?.evidenceId) errors.push(`evidence[${index}].evidenceId is required.`);
     if (!item?.type) errors.push(`evidence[${index}].type is required.`);
     if (!item?.title) errors.push(`evidence[${index}].title is required.`);
-    if (!DISCLOSURE_PROFILES.has(item?.disclosure)) {
-      errors.push(`evidence[${index}].disclosure is invalid.`);
-    }
+    if (!DISCLOSURE_PROFILES.has(item?.disclosure)) errors.push(`evidence[${index}].disclosure is invalid.`);
 
     const algorithm = item?.digest?.algorithm;
     const value = item?.digest?.value;
@@ -162,9 +129,7 @@ function validate(passport) {
     } else if (typeof value !== "string" || !/^[a-fA-F0-9]+$/.test(value)) {
       errors.push(`evidence[${index}].digest.value must be hexadecimal.`);
     } else if (value.length !== DIGEST_LENGTHS[algorithm]) {
-      errors.push(
-        `evidence[${index}].digest.value must be ${DIGEST_LENGTHS[algorithm]} hex characters for ${algorithm}.`
-      );
+      errors.push(`evidence[${index}].digest.value must be ${DIGEST_LENGTHS[algorithm]} hex characters for ${algorithm}.`);
     }
 
     if (item?.issuedBy && !partySet.has(item.issuedBy)) {
@@ -174,21 +139,15 @@ function validate(passport) {
 
   provenance.forEach((item, index) => {
     if (!item?.provenanceId) errors.push(`provenance[${index}].provenanceId is required.`);
-    if (!factMap.has(item?.factId)) {
-      errors.push(`provenance[${index}] references unknown fact: ${item?.factId}`);
-    }
-    if (!evidenceSet.has(item?.evidenceId)) {
-      errors.push(`provenance[${index}] references unknown evidence: ${item?.evidenceId}`);
-    }
+    if (!factMap.has(item?.factId)) errors.push(`provenance[${index}] references unknown fact: ${item?.factId}`);
+    if (!evidenceSet.has(item?.evidenceId)) errors.push(`provenance[${index}] references unknown evidence: ${item?.evidenceId}`);
 
     const locator = item?.locator;
     if (!locator || typeof locator !== "object" || Array.isArray(locator)) {
       errors.push(`provenance[${index}].locator must be an object.`);
     } else {
       const populated = PROVENANCE_LOCATORS.filter((key) => locator[key] !== undefined);
-      if (populated.length === 0) {
-        errors.push(`provenance[${index}].locator must contain at least one locator field.`);
-      }
+      if (populated.length === 0) errors.push(`provenance[${index}].locator must contain at least one locator field.`);
       if (locator.page !== undefined && (!Number.isInteger(locator.page) || locator.page < 1)) {
         errors.push(`provenance[${index}].locator.page must be a positive integer.`);
       }
@@ -203,9 +162,7 @@ function validate(passport) {
     if (!extraction || typeof extraction !== "object" || Array.isArray(extraction)) {
       errors.push(`provenance[${index}].extraction must be an object.`);
     } else {
-      if (!PROVENANCE_METHODS.has(extraction.method)) {
-        errors.push(`provenance[${index}].extraction.method is invalid.`);
-      }
+      if (!PROVENANCE_METHODS.has(extraction.method)) errors.push(`provenance[${index}].extraction.method is invalid.`);
       if (
         extraction.confidence !== undefined &&
         (typeof extraction.confidence !== "number" || extraction.confidence < 0 || extraction.confidence > 1)
@@ -221,12 +178,8 @@ function validate(passport) {
       if (!item.review || typeof item.review !== "object" || Array.isArray(item.review)) {
         errors.push(`provenance[${index}].review must be an object.`);
       } else {
-        if (!partySet.has(item.review.reviewedBy)) {
-          errors.push(`provenance[${index}] references unknown reviewer: ${item.review.reviewedBy}`);
-        }
-        if (!isDateTime(item.review.reviewedAt)) {
-          errors.push(`provenance[${index}].review.reviewedAt is invalid.`);
-        }
+        if (!partySet.has(item.review.reviewedBy)) errors.push(`provenance[${index}] references unknown reviewer: ${item.review.reviewedBy}`);
+        if (!isDateTime(item.review.reviewedAt)) errors.push(`provenance[${index}].review.reviewedAt is invalid.`);
       }
     }
   });
@@ -236,21 +189,15 @@ function validate(passport) {
     if (!fact?.type) errors.push(`facts[${index}].type is required.`);
     if (!fact?.statement) errors.push(`facts[${index}].statement is required.`);
     if (!FACT_STATUSES.has(fact?.status)) errors.push(`facts[${index}].status is invalid.`);
-    if (!Number.isInteger(fact?.version) || fact.version < 1) {
-      errors.push(`facts[${index}].version must be a positive integer.`);
-    }
-    if (!partySet.has(fact?.assertedBy)) {
-      errors.push(`facts[${index}] references unknown assertedBy party: ${fact?.assertedBy}`);
-    }
+    if (!Number.isInteger(fact?.version) || fact.version < 1) errors.push(`facts[${index}].version must be a positive integer.`);
+    if (!partySet.has(fact?.assertedBy)) errors.push(`facts[${index}] references unknown assertedBy party: ${fact?.assertedBy}`);
     if (!isDateTime(fact?.assertedAt)) errors.push(`facts[${index}].assertedAt is invalid.`);
 
     if (!Array.isArray(fact?.evidenceRefs)) {
       errors.push(`facts[${index}].evidenceRefs must be an array.`);
     } else {
       for (const evidenceRef of fact.evidenceRefs) {
-        if (!evidenceSet.has(evidenceRef)) {
-          errors.push(`facts[${index}] references unknown evidence: ${evidenceRef}`);
-        }
+        if (!evidenceSet.has(evidenceRef)) errors.push(`facts[${index}] references unknown evidence: ${evidenceRef}`);
       }
       if (fact.status === "confirmed" && fact.evidenceRefs.length === 0) {
         errors.push(`facts[${index}] is confirmed but has no evidence reference.`);
@@ -268,9 +215,7 @@ function validate(passport) {
             continue;
           }
           referencedProvenance.add(provenanceRef);
-          if (source.factId !== fact.factId) {
-            errors.push(`facts[${index}] references provenance for another fact: ${provenanceRef}`);
-          }
+          if (source.factId !== fact.factId) errors.push(`facts[${index}] references provenance for another fact: ${provenanceRef}`);
           if (Array.isArray(fact.evidenceRefs) && !fact.evidenceRefs.includes(source.evidenceId)) {
             errors.push(`facts[${index}] provenance ${provenanceRef} uses evidence not cited by the fact.`);
           }
@@ -279,11 +224,8 @@ function validate(passport) {
     }
 
     if (fact?.supersedesFactId) {
-      if (fact.supersedesFactId === fact.factId) {
-        errors.push(`facts[${index}] cannot supersede itself.`);
-      } else if (!factMap.has(fact.supersedesFactId)) {
-        errors.push(`facts[${index}] supersedes unknown fact: ${fact.supersedesFactId}`);
-      }
+      if (fact.supersedesFactId === fact.factId) errors.push(`facts[${index}] cannot supersede itself.`);
+      else if (!factMap.has(fact.supersedesFactId)) errors.push(`facts[${index}] supersedes unknown fact: ${fact.supersedesFactId}`);
     }
   });
 
@@ -294,37 +236,49 @@ function validate(passport) {
   }
 
   confirmations.forEach((confirmation, index) => {
-    if (!confirmation?.confirmationId) {
-      errors.push(`confirmations[${index}].confirmationId is required.`);
-    }
-
+    if (!confirmation?.confirmationId) errors.push(`confirmations[${index}].confirmationId is required.`);
     const fact = factMap.get(confirmation?.factId);
     if (!fact) {
       errors.push(`confirmations[${index}] references unknown fact: ${confirmation?.factId}`);
     } else if (confirmation.factVersion !== fact.version) {
-      errors.push(
-        `confirmations[${index}] addresses fact version ${confirmation.factVersion}, but ${confirmation.factId} is version ${fact.version}.`
-      );
+      errors.push(`confirmations[${index}] addresses fact version ${confirmation.factVersion}, but ${confirmation.factId} is version ${fact.version}.`);
     }
-
-    if (!partySet.has(confirmation?.partyId)) {
-      errors.push(`confirmations[${index}] references unknown party: ${confirmation?.partyId}`);
-    }
-    if (!DECISIONS.has(confirmation?.decision)) {
-      errors.push(`confirmations[${index}].decision is invalid.`);
-    }
-    if (!isDateTime(confirmation?.decidedAt)) {
-      errors.push(`confirmations[${index}].decidedAt is invalid.`);
-    }
+    if (!partySet.has(confirmation?.partyId)) errors.push(`confirmations[${index}] references unknown party: ${confirmation?.partyId}`);
+    if (!DECISIONS.has(confirmation?.decision)) errors.push(`confirmations[${index}].decision is invalid.`);
+    if (!isDateTime(confirmation?.decidedAt)) errors.push(`confirmations[${index}].decidedAt is invalid.`);
   });
 
-  if (!PASSPORT_STATUSES.has(passport.lifecycle?.status)) {
-    errors.push("lifecycle.status is invalid.");
-  }
+  const lineageKeys = [];
+  lineage.forEach((item, index) => {
+    if (!item || typeof item !== "object" || Array.isArray(item)) {
+      errors.push(`lineage[${index}] must be an object.`);
+      return;
+    }
+    if (!LINEAGE_RELATIONS.has(item.relation)) errors.push(`lineage[${index}].relation is invalid.`);
+    if (!LINEAGE_SOURCE_TYPES.has(item.sourceArtifactType)) errors.push(`lineage[${index}].sourceArtifactType is invalid.`);
+    if (!isBytes32(item.sourceDigest)) errors.push(`lineage[${index}].sourceDigest must be lowercase bytes32 hex.`);
+    if (item.sourceCardDigest !== undefined && !isBytes32(item.sourceCardDigest)) {
+      errors.push(`lineage[${index}].sourceCardDigest must be lowercase bytes32 hex.`);
+    }
+    if (item.sourceRequestDigest !== undefined && !isBytes32(item.sourceRequestDigest)) {
+      errors.push(`lineage[${index}].sourceRequestDigest must be lowercase bytes32 hex.`);
+    }
+    if (item.sourceArtifactType === "RealWorldProofCard" && !isBytes32(item.sourceCardDigest)) {
+      errors.push(`lineage[${index}] from RealWorldProofCard requires sourceCardDigest.`);
+    }
+    if (!isDateTime(item.recordedAt)) errors.push(`lineage[${index}].recordedAt is invalid.`);
+    lineageKeys.push([
+      item.relation,
+      item.sourceArtifactType,
+      item.sourceDigest,
+      item.sourceCardDigest ?? "",
+      item.sourceRequestDigest ?? ""
+    ].join("|"));
+  });
+  for (const duplicate of duplicateValues(lineageKeys)) errors.push(`Duplicate lineage record: ${duplicate}`);
 
-  if (!DISCLOSURE_PROFILES.has(passport.disclosure?.profile)) {
-    errors.push("disclosure.profile is invalid.");
-  }
+  if (!PASSPORT_STATUSES.has(passport.lifecycle?.status)) errors.push("lifecycle.status is invalid.");
+  if (!DISCLOSURE_PROFILES.has(passport.disclosure?.profile)) errors.push("disclosure.profile is invalid.");
 
   if (passport.lifecycle?.status === "revoked") {
     if (!passport.lifecycle.revokedAt) warnings.push("Revoked passport has no revokedAt timestamp.");
@@ -340,7 +294,6 @@ function validate(passport) {
 
 async function main() {
   const filePath = process.argv[2];
-
   if (!filePath) {
     console.error("Usage: node tools/verify-passport.mjs <passport.json>");
     process.exit(2);
@@ -369,6 +322,7 @@ async function main() {
   console.log(`Evidence records: ${passport.evidence.length}`);
   console.log(`Provenance records: ${Array.isArray(passport.provenance) ? passport.provenance.length : 0}`);
   console.log(`Confirmations: ${passport.confirmations.length}`);
+  console.log(`Lineage records: ${Array.isArray(passport.lineage) ? passport.lineage.length : 0}`);
 }
 
 await main();
