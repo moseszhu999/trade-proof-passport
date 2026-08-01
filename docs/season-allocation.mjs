@@ -304,6 +304,7 @@ export const compileSeasonAllocation = (input) => {
   if (eligible.length === 0) throw new Error('No eligible accounts');
 
   eligible.sort((left, right) => compareHex(left.account, right.account));
+  excluded.sort((left, right) => compareHex(left.account, right.account));
   const totalWeight = eligible.reduce((sum, entry) => sum + entry.sqrtWeightScaled, 0n);
   let allocated = 0n;
   for (const entry of eligible) {

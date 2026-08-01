@@ -10,6 +10,7 @@ TradeProof combines a useful portable trade-proof format, a browser-native multi
 
 - Project site: `https://moseszhu999.github.io/trade-proof-passport/`
 - Token economics: `https://moseszhu999.github.io/trade-proof-passport/tokenomics.html`
+- Genesis Proof simulator: `https://moseszhu999.github.io/trade-proof-passport/genesis.html`
 - Create a Passport: `https://moseszhu999.github.io/trade-proof-passport/create.html`
 - Import and share: `https://moseszhu999.github.io/trade-proof-passport/view.html`
 - Respond: `https://moseszhu999.github.io/trade-proof-passport/respond.html`
@@ -61,7 +62,11 @@ Verify it locally:
 
 ```bash
 node tools/verify-tokenomics.mjs
+node tools/verify-season-allocation.mjs
+node tools/compile-season-allocation.mjs examples/genesis-proof-allocation-input.json
 ```
+
+The allocation compiler is dependency-free and runs in both Node.js and the browser. It converts public closed-season Points into a deterministic square-root allocation, Solidity-compatible claim leaves, Merkle proofs, a Merkle root and a canonical dataset digest. It does not require a private eligibility database and does not activate a claim.
 
 The model separates three assets:
 
@@ -204,10 +209,17 @@ schema/trade-proof-passport.schema.json
 schema/trade-proof-response.schema.json
 tokenomics/tproof-tokenomics-v0.1.json
 examples/steel-cabinet-passport.json
+examples/genesis-proof-allocation-input.json
+examples/genesis-proof-allocation-output.json
 tools/verify-passport.mjs
 tools/verify-tokenomics.mjs
+tools/compile-season-allocation.mjs
+tools/verify-season-allocation.mjs
+tools/verify-season-allocation-cast.mjs
+docs/season-allocation.mjs
 docs/index.html
 docs/tokenomics.html
+docs/genesis.html
 docs/create.html
 docs/view.html
 docs/respond.html
@@ -220,10 +232,11 @@ docs/example.html
 2. **Viral through workflow** — every useful response naturally invites another organization.
 3. **Economics as code** — supply, allocations, scoring boundaries and launch gates are machine-verifiable.
 4. **Contribution before liquidity** — non-transferable Proof Points and receipts precede Token distribution.
-5. **Privacy-bounded** — source files, evidence URIs and private party identifiers do not need to be public.
-6. **Onchain integrity, not automatic truth** — the Registry proves chronology and exact digest identity.
-7. **Contributor ownership** — future incentives reward measurable network value.
-8. **Portable and open** — the same objects can move across websites, Agents, ERP systems and wallets.
+5. **Public allocation data, not a private eligibility database** — deterministic inputs produce independently reproducible rewards, leaves, roots and digests.
+6. **Privacy-bounded** — source files, evidence URIs and private party identifiers do not need to be public.
+7. **Onchain integrity, not automatic truth** — the Registry proves chronology and exact digest identity.
+8. **Contributor ownership** — future incentives reward measurable network value.
+9. **Portable and open** — the same objects can move across websites, Agents, ERP systems and wallets.
 
 ## Permanent boundaries
 
