@@ -24,7 +24,7 @@ requireValues(simulator, [
   'Genesis Proof Simulator',
   'SIMULATION ONLY · TOKEN NOT LIVE',
   '10,000,000 TPROOF',
-  '0 database dependency',
+  '<b>0</b> database dependency',
   'Compile allocation →',
   'Download dataset JSON',
   'No eligibility or claim is created here.',
