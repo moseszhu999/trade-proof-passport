@@ -4,11 +4,12 @@
 
 **Proof for trade. Ownership for contributors.**
 
-TradeProof combines a useful portable trade-proof format, a browser-native multi-party response loop, and an onchain integrity layer. A future community token, `$TPROOF`, is planned to reward measurable ecosystem contribution rather than empty traffic.
+TradeProof combines a useful portable trade-proof format, a browser-native multi-party response loop, an onchain integrity layer, and a machine-verifiable economic model for future contributor ownership.
 
 ## Live product
 
 - Project site: `https://moseszhu999.github.io/trade-proof-passport/`
+- Token economics: `https://moseszhu999.github.io/trade-proof-passport/tokenomics.html`
 - Create a Passport: `https://moseszhu999.github.io/trade-proof-passport/create.html`
 - Import and share: `https://moseszhu999.github.io/trade-proof-passport/view.html`
 - Respond: `https://moseszhu999.github.io/trade-proof-passport/respond.html`
@@ -45,34 +46,125 @@ https://github.com/moseszhu999/chaintrace-contracts
 
 The Registry records canonical Passport and Response digests, issuer wallet, block timestamp, schema/profile hashes, supersession links and revocation state. It does not store source documents or prove that a real-world assertion is true.
 
-## `$TPROOF` direction
+## TPROOF economic constitution
 
-`$TPROOF` is **not live**. There is no public sale, price, listing, revenue share or return promise.
+`TPROOF` is **not live**. There is no public sale, claim, price, listing, revenue share, yield, redemption promise or guaranteed return.
 
-The current draft utility direction is:
-
-- contribution receipts;
-- standards governance;
-- ecosystem and developer incentives;
-- access to future network capabilities;
-- rewards for accepted integrations, useful cross-organization responses, security findings and repeat adoption.
-
-Token state must never determine whether a Passport or Response is valid, current, revoked or superseded.
-
-Draft allocation displayed on the project site:
+The economic model is now published in two synchronized forms:
 
 ```text
-45% community contributions
-20% ecosystem and developer fund
-15% core team with long vesting
-10% real adoption incentives
- 5% liquidity bootstrapping reserve
- 5% security and standards reserve
+standard/tproof-token-economics-v0.1.md
+tokenomics/tproof-tokenomics-v0.1.json
 ```
 
-Final supply, rights, distribution and launch remain subject to technical, legal and community review.
+Verify it locally:
 
-## Try the verifier
+```bash
+node tools/verify-tokenomics.mjs
+```
+
+The model separates three assets:
+
+```text
+Proof Points
+  non-transferable seasonal contribution accounting
+
+Contribution Receipts
+  future non-transferable onchain contribution history
+
+TPROOF
+  future transferable utility and governance token
+```
+
+The economic loop is:
+
+```text
+useful trade-proof action
+→ independent counterparty response
+→ verified contribution receipt
+→ seasonal Proof Points
+→ seasonal TPROOF allocation
+→ governance and sponsored public goods
+→ more integrations, adoption and useful actions
+```
+
+Draft parameters:
+
+```text
+Maximum supply: 1,000,000,000 TPROOF
+Supply policy: fixed at genesis
+Post-genesis minting: disabled
+Community emissions: 45% over eight years
+Season length: 90 days
+Genesis Proof pool: 1% / 10,000,000 TPROOF
+Genesis status: reserved in draft, not claimable
+Core-team vesting: 12-month cliff + 48-month linear vesting
+```
+
+Draft seasonal reward curve:
+
+```text
+wallet reward
+=
+season pool
+× sqrt(wallet verified points)
+÷ sum(sqrt(all eligible wallets' verified points))
+```
+
+The square-root curve reduces reward concentration while retaining an incentive to contribute.
+
+No points are awarded for:
+
+- page views;
+- wallet connections;
+- empty social posts;
+- self-responses;
+- duplicate artifacts;
+- repeated wash activity between the same wallet pair.
+
+The highest-value economic event is viral reuse: a recipient responds to a Passport and later becomes the creator of a distinct Passport for another workflow.
+
+## Draft allocation
+
+```text
+45% community contributions             450,000,000
+20% ecosystem and developer fund        200,000,000
+15% core team with long vesting         150,000,000
+10% real adoption incentives            100,000,000
+ 5% liquidity bootstrapping reserve      50,000,000
+ 5% security and standards reserve       50,000,000
+                                        -----------
+                                      1,000,000,000
+```
+
+The machine-readable verifier rejects allocation drift, a hidden post-genesis mint path, an active-sale claim, rights over trade assets, or Token control over Passport validity.
+
+## Planned TPROOF utility
+
+- standards and canonicalization-profile governance;
+- ecosystem, integration, security and public-goods grants;
+- refundable proposal bonds;
+- challenge bonds under published rules;
+- sponsored contribution pools;
+- public-goods matching.
+
+Token state must never determine whether a Passport or Response is valid, current, revoked or superseded. Basic Passport creation, local verification and public Registry reading remain available without TPROOF.
+
+## Launch gates
+
+No public offer, claim, liquidity action or admission to trading should begin until the published gates pass, including:
+
+- reviewed `TradeProofContribution` contract;
+- fixed-supply Token and vesting contracts with no hidden mint;
+- source-verified testnet deployments;
+- external security review;
+- canonical public disclosure;
+- target-jurisdiction legal review;
+- published anti-Sybil and appeal rules;
+- treasury multisig and timelock policy;
+- community approval of final launch parameters.
+
+## Try the Passport verifier
 
 ```bash
 git clone https://github.com/moseszhu999/trade-proof-passport.git
@@ -107,11 +199,15 @@ TradeProof packages those relationships into portable JSON objects that can be r
 ```text
 standard/trade-proof-passport-v0.1.md
 standard/trade-proof-response-v0.1.md
+standard/tproof-token-economics-v0.1.md
 schema/trade-proof-passport.schema.json
 schema/trade-proof-response.schema.json
+tokenomics/tproof-tokenomics-v0.1.json
 examples/steel-cabinet-passport.json
 tools/verify-passport.mjs
+tools/verify-tokenomics.mjs
 docs/index.html
+docs/tokenomics.html
 docs/create.html
 docs/view.html
 docs/respond.html
@@ -122,17 +218,19 @@ docs/example.html
 
 1. **Useful before the token** — the product performs real work now.
 2. **Viral through workflow** — every useful response naturally invites another organization.
-3. **Privacy-bounded** — source files, evidence URIs and private party identifiers do not need to be public.
-4. **Onchain integrity, not automatic truth** — the Registry proves chronology and exact digest identity.
-5. **Contributor ownership** — future incentives reward measurable network value.
-6. **Portable and open** — the same objects can move across websites, Agents, ERP systems and wallets.
+3. **Economics as code** — supply, allocations, scoring boundaries and launch gates are machine-verifiable.
+4. **Contribution before liquidity** — non-transferable Proof Points and receipts precede Token distribution.
+5. **Privacy-bounded** — source files, evidence URIs and private party identifiers do not need to be public.
+6. **Onchain integrity, not automatic truth** — the Registry proves chronology and exact digest identity.
+7. **Contributor ownership** — future incentives reward measurable network value.
+8. **Portable and open** — the same objects can move across websites, Agents, ERP systems and wallets.
 
-## Current boundaries
+## Permanent boundaries
 
 TradeProof does not currently perform:
 
 - token issuance or movement;
-- a public token sale;
+- a public token sale or claim;
 - payments or settlement;
 - financing approval;
 - custody or asset tokenization;
@@ -141,10 +239,12 @@ TradeProof does not currently perform:
 - automatic truth or reputation scoring;
 - public disclosure of private commercial documents.
 
+TPROOF provides no ownership of trade goods, invoices, receivables or payments, and no revenue share, dividend, guaranteed yield, redemption promise or guaranteed price support.
+
 ## Status
 
-The Passport and Response formats are community draft `v0.1`. The Registry is an experimental, unaudited Base Sepolia deployment. Explorer source verification is still pending.
+The Passport, Response and Token Economics documents are community draft `v0.1`. The Registry is an experimental, unaudited Base Sepolia deployment. Explorer source verification is still pending. TPROOF is not live.
 
 ## License
 
-MIT for the public draft, examples, site and helper tools.
+MIT for the public drafts, examples, site and helper tools.
