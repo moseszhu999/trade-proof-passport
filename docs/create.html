@@ -25,9 +25,9 @@
 </head>
 <body>
   <main class="wrap">
-    <nav class="toplinks"><a class="back brand" href="./">← TRADEPROOF</a><a class="back" href="./example.html">View the example</a><a class="back" href="./view.html">Import an existing Passport</a><a class="back" href="./onchain.html">Anchor or verify</a></nav>
+    <nav class="toplinks"><a class="back brand" href="./">← TRADEPROOF</a><a class="back" href="./rwp.html">Real-World Proof</a><a class="back" href="./example.html">View the example</a><a class="back" href="./view.html">Import an existing Passport</a><a class="back" href="./onchain.html">Anchor or verify</a></nav>
     <h1>Create a draft Passport</h1>
-    <p class="lead">Enter a few basic trade facts and download a standards-shaped JSON file. This is the first step toward a portable proof package.</p>
+    <p class="lead">Enter a few basic trade facts and download the first trade-domain Real-World Proof carrier. Evidence, provenance and responsible-role confirmations can be added later.</p>
     <div class="notice"><strong>Local-only:</strong> this page does not upload, transmit, or store the information you enter.</div>
     <form id="passportForm">
       <div class="grid">
@@ -48,8 +48,8 @@
     </form>
     <section class="result" id="result" aria-live="polite">
       <strong>Draft generated.</strong>
-      <p>Your file was downloaded as <code id="filename"></code>. It contains one asserted fact and no evidence or confirmations yet.</p>
-      <div class="actions"><a class="button" id="previewLink" href="./view.html?source=draft">Preview and create public summary link</a><a class="button secondary" href="./onchain.html">Compute digest or anchor</a><a class="button secondary" href="./view.html">Import another Passport</a></div>
+      <p>Your file was downloaded as <code id="filename"></code>. It contains one asserted fact and empty evidence, provenance and confirmation collections.</p>
+      <div class="actions"><a class="button" id="previewLink" href="./view.html?source=draft">Preview and create public summary link</a><a class="button secondary" href="./rwp.html">Create Viral Proof Card</a><a class="button secondary" href="./onchain.html">Compute digest or anchor</a><a class="button secondary" href="./view.html">Import another Passport</a></div>
     </section>
     <p class="boundary">This generator does not verify identity, authority, evidence, legal validity, customs status, financing, payment, settlement, ownership, or the truth of any assertion. Do not enter confidential data unless you are comfortable storing it in the downloaded local file.</p>
   </main>
@@ -58,7 +58,7 @@
     const safeFilename=(value)=>value.trim().replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/^-|-$/g,'')||'trade-passport';
     document.getElementById('passportForm').addEventListener('submit',(event)=>{
       event.preventDefault();const form=new FormData(event.currentTarget);const now=new Date().toISOString();const caseReference=form.get('caseReference').trim();const partyName=form.get('assertingParty').trim();const partyId=`party:${form.get('role')}:${slug(partyName)}`;
-      const passport={schemaVersion:'0.1',passportId:`tpp:draft:${slug(caseReference)}:${Date.now()}`,createdAt:now,updatedAt:now,tradeCase:{caseReference,goodsDescription:form.get('goodsDescription').trim(),...(form.get('batchReference').trim()?{batchReference:form.get('batchReference').trim()}:{}),quantity:Number(form.get('quantity')),unit:form.get('unit').trim()},parties:[{partyId,role:form.get('role'),displayName:partyName}],facts:[{factId:'fact:initial:v1',type:'initial_trade_assertion',statement:form.get('statement').trim(),status:'asserted',version:1,assertedBy:partyId,assertedAt:now,evidenceRefs:[]}],evidence:[],confirmations:[],lifecycle:{status:'draft'},disclosure:{profile:'private',permittedAudience:[]}};
+      const passport={schemaVersion:'0.1',passportId:`tpp:draft:${slug(caseReference)}:${Date.now()}`,createdAt:now,updatedAt:now,tradeCase:{caseReference,goodsDescription:form.get('goodsDescription').trim(),...(form.get('batchReference').trim()?{batchReference:form.get('batchReference').trim()}:{}),quantity:Number(form.get('quantity')),unit:form.get('unit').trim()},parties:[{partyId,role:form.get('role'),displayName:partyName}],facts:[{factId:'fact:initial:v1',type:'initial_trade_assertion',statement:form.get('statement').trim(),status:'asserted',version:1,assertedBy:partyId,assertedAt:now,evidenceRefs:[],provenanceRefs:[]}],evidence:[],provenance:[],confirmations:[],lifecycle:{status:'draft'},disclosure:{profile:'private',permittedAudience:[]}};
       sessionStorage.setItem('tradeProofPassportDraft',JSON.stringify(passport));
       const filename=`${safeFilename(caseReference)}-trade-proof-passport.json`;const blob=new Blob([JSON.stringify(passport,null,2)+'\n'],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=filename;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href);document.getElementById('filename').textContent=filename;document.getElementById('result').classList.add('show');
     });
