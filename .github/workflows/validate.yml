@@ -26,11 +26,12 @@ jobs:
           const { readFileSync } = require('node:fs');
           for (const file of [
             'schema/trade-proof-passport.schema.json',
-            'schema/trade-proof-response.schema.json'
+            'schema/trade-proof-response.schema.json',
+            'tokenomics/tproof-tokenomics-v0.1.json'
           ]) {
             JSON.parse(readFileSync(file, 'utf8'));
           }
-          console.log('PASS: Passport and response schema JSON parse');
+          console.log('PASS: Passport, response and tokenomics JSON parse');
           NODE
 
       - name: Validate steel cabinet example
@@ -38,3 +39,9 @@ jobs:
 
       - name: Validate browser product, sharing, responses, Registry facts and token boundaries
         run: node tools/validate-public-product.mjs
+
+      - name: Validate TPROOF machine-readable economics
+        run: node tools/verify-tokenomics.mjs
+
+      - name: Validate TPROOF public economics surface
+        run: node tools/validate-tokenomics-page.mjs

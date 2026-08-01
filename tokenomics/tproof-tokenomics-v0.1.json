@@ -1,0 +1,300 @@
+{
+  "specVersion": "0.1",
+  "status": "draft-not-live",
+  "networkName": "TradeProof Network",
+  "token": {
+    "name": "TradeProof",
+    "symbol": "TPROOF",
+    "decimals": 18,
+    "maxSupplyTokens": "1000000000",
+    "supplyPolicy": "fixed-at-genesis",
+    "postGenesisMinting": false,
+    "publicSaleActive": false,
+    "pricePromise": false,
+    "profitOrRevenueRights": false,
+    "tradeAssetOwnershipRights": false,
+    "passportValidityControl": false
+  },
+  "economicLoop": [
+    "create_useful_trade_proof",
+    "receive_independent_counterparty_response",
+    "record_verified_contribution",
+    "earn_seasonal_proof_points",
+    "receive_seasonal_token_allocation",
+    "govern_and_fund_more_network_utility",
+    "bring_next_trade_party_into_the_network"
+  ],
+  "economicAssets": {
+    "proofPoints": {
+      "type": "non-transferable-seasonal-accounting-unit",
+      "marketValue": false,
+      "transferable": false,
+      "resetAfterSeasonSettlement": true,
+      "purpose": "Measure verified useful activity without turning every action into an immediately tradable reward."
+    },
+    "contributionReceipts": {
+      "type": "onchain-non-transferable-receipt",
+      "transferable": false,
+      "purpose": "Record the category, actor, reference digest, season, reviewer state and anti-Sybil outcome of a contribution."
+    },
+    "tproof": {
+      "type": "transferable-community-utility-and-governance-token",
+      "transferableAfterLaunch": true,
+      "purpose": "Coordinate standards governance, public-goods funding, proposal bonds, challenge bonds and sponsored contribution pools."
+    }
+  },
+  "allocations": [
+    {
+      "id": "community_contributions",
+      "basisPoints": 4500,
+      "tokens": "450000000",
+      "purpose": "Seasonal rewards for verified product use, network expansion and public-goods contribution."
+    },
+    {
+      "id": "ecosystem_developer_fund",
+      "basisPoints": 2000,
+      "tokens": "200000000",
+      "purpose": "Open-source integrations, developer grants, infrastructure and ecosystem public goods."
+    },
+    {
+      "id": "core_team",
+      "basisPoints": 1500,
+      "tokens": "150000000",
+      "purpose": "Long-term core protocol and product stewardship."
+    },
+    {
+      "id": "real_adoption_incentives",
+      "basisPoints": 1000,
+      "tokens": "100000000",
+      "purpose": "Milestone-based incentives for real organizations, connectors and repeat trade usage."
+    },
+    {
+      "id": "liquidity_bootstrapping_reserve",
+      "basisPoints": 500,
+      "tokens": "50000000",
+      "purpose": "Potential post-launch liquidity subject to legal review, governance approval and transparent lock terms."
+    },
+    {
+      "id": "security_standards_reserve",
+      "basisPoints": 500,
+      "tokens": "50000000",
+      "purpose": "Security bounties, independent audits, standards research and emergency public-goods work."
+    }
+  ],
+  "communityEmission": {
+    "allocationId": "community_contributions",
+    "durationYears": 8,
+    "seasonLengthDays": 90,
+    "seasonReviewDelayDays": 30,
+    "rewardCurve": "square-root-of-verified-points",
+    "rewardFormula": "seasonPool * sqrt(walletVerifiedPoints) / sum(sqrt(allEligibleWalletVerifiedPoints))",
+    "minimumEligibilityPoints": 25,
+    "genesisSeason": {
+      "name": "Season 0: Genesis Proof",
+      "poolBasisPointsOfTotalSupply": 100,
+      "poolTokens": "10000000",
+      "sourceAllocationId": "community_contributions",
+      "status": "reserved-in-draft-not-claimable",
+      "eligibilityPrinciple": "Reward verified early utility, integrations, security work and genuine cross-wallet trade-response loops; never reward page views or wallet connection alone."
+    }
+  },
+  "automaticUsageTrack": {
+    "status": "draft",
+    "events": [
+      {
+        "id": "anchor_unique_passport",
+        "actorPoints": 5,
+        "conditions": [
+          "artifact digest is new",
+          "issuer wallet is the transaction sender",
+          "Passport remains current through the review delay"
+        ]
+      },
+      {
+        "id": "independent_external_response",
+        "passportIssuerPoints": 10,
+        "responderPoints": 20,
+        "conditions": [
+          "responder wallet differs from Passport issuer",
+          "Response references a current Passport",
+          "wallet pair has not exceeded its seasonal cap"
+        ]
+      },
+      {
+        "id": "third_distinct_responder_role",
+        "passportIssuerPoints": 30,
+        "conditions": [
+          "three distinct responder wallets exist",
+          "roles are self-declared until organizational attestations exist",
+          "responses reference the same current Passport lineage"
+        ]
+      },
+      {
+        "id": "viral_reuse",
+        "inviterPoints": 50,
+        "newCreatorPoints": 25,
+        "conditions": [
+          "a prior responder wallet later anchors its own distinct Passport",
+          "the reuse occurs within 30 days",
+          "the new Passport digest is not a duplicate"
+        ]
+      },
+      {
+        "id": "repeat_trade_usage",
+        "actorPoints": 20,
+        "conditions": [
+          "wallet participates in a second distinct Passport lineage",
+          "the second lineage has at least one independent external response",
+          "the event occurs in the same or following season"
+        ]
+      }
+    ],
+    "caps": {
+      "automaticPointsPerWalletPerDay": 200,
+      "automaticPointsPerWalletPairPerSeason": 300,
+      "identicalArtifactPoints": 0,
+      "selfResponsePoints": 0,
+      "pageViewPoints": 0,
+      "walletConnectPoints": 0,
+      "socialPostWithoutVerifiedActionPoints": 0
+    }
+  },
+  "reviewedPublicGoodsTrack": {
+    "status": "draft",
+    "contributionClasses": [
+      {
+        "id": "accepted_standard_change",
+        "minimumPoints": 500,
+        "maximumPoints": 3000
+      },
+      {
+        "id": "production_connector_or_agent_integration",
+        "minimumPoints": 1500,
+        "maximumPoints": 10000
+      },
+      {
+        "id": "security_finding_or_fix",
+        "minimumPoints": 500,
+        "maximumPoints": 15000
+      },
+      {
+        "id": "verified_repeat_adoption_case",
+        "minimumPoints": 1000,
+        "maximumPoints": 10000
+      },
+      {
+        "id": "documentation_translation_or_education",
+        "minimumPoints": 100,
+        "maximumPoints": 2000
+      }
+    ],
+    "requirements": [
+      "public evidence or independently reviewable evidence",
+      "named reviewer decision or governed review process",
+      "conflict-of-interest disclosure",
+      "duplicate and plagiarism checks",
+      "seasonal publication of accepted grants"
+    ]
+  },
+  "antiSybil": {
+    "principles": [
+      "No reward for wallet creation, wallet connection, page views or raw social impressions.",
+      "Self-responses and duplicate artifacts earn zero points.",
+      "Repeated activity between the same wallet pair is capped.",
+      "Claims settle only after a review delay.",
+      "Suspicious funding, timing and transaction-graph clusters may be excluded.",
+      "High-value public-goods rewards require human or governed review.",
+      "Contribution receipts may be revoked for proven spam, duplication or deception."
+    ],
+    "appealWindowDays": 14,
+    "claimDelayAfterFinalizationDays": 7
+  },
+  "tokenUtility": [
+    {
+      "id": "standards_governance",
+      "description": "Vote on supported schemas, canonicalization profiles and protocol standards; governance cannot declare a real-world trade fact true."
+    },
+    {
+      "id": "treasury_and_grant_governance",
+      "description": "Direct ecosystem, integration, security and standards funding."
+    },
+    {
+      "id": "proposal_bond",
+      "status": "future",
+      "draftAmountTokens": "1000",
+      "description": "Refundable bond for formal standards or treasury proposals; forfeitable only under published spam rules."
+    },
+    {
+      "id": "challenge_bond",
+      "status": "future",
+      "draftAmountTokens": "250",
+      "description": "Bond for challenging a contribution allocation or receipt; returned when the challenge is upheld."
+    },
+    {
+      "id": "sponsored_contribution_pools",
+      "status": "future",
+      "description": "Organizations or community members may lock tokens into transparent pools that reward predefined integrations or adoption outcomes."
+    },
+    {
+      "id": "public_goods_matching",
+      "status": "future",
+      "description": "Token holders may signal or allocate matching budgets toward open-source ecosystem work."
+    }
+  ],
+  "vestingAndControls": {
+    "coreTeam": {
+      "cliffMonths": 12,
+      "linearVestingMonths": 48,
+      "transferBeforeCliff": false
+    },
+    "ecosystemDeveloperFund": {
+      "minimumBudgetHorizonMonths": 48,
+      "control": "multisig-then-timelocked-governance",
+      "publicReporting": true
+    },
+    "realAdoptionIncentives": {
+      "distribution": "milestone-based",
+      "minimumVestingMonths": 24,
+      "upfrontFullyLiquidGrants": false
+    },
+    "liquidityReserve": {
+      "usableBeforeLaunchApproval": false,
+      "minimumInitialLockMonths": 12,
+      "transparentWalletRequired": true
+    },
+    "securityStandardsReserve": {
+      "distribution": "verified-bounties-and-governed-grants",
+      "publicReporting": true
+    }
+  },
+  "permanentBoundaries": [
+    "Holding or staking TPROOF never makes a Passport, Response, evidence record or real-world assertion valid.",
+    "Basic Passport creation, local verification and public Registry reading do not require TPROOF.",
+    "TPROOF provides no ownership of trade goods, receivables, invoices, payments or other real-world assets.",
+    "TPROOF provides no revenue share, dividend, guaranteed yield, redemption promise or guaranteed price support.",
+    "No private source document is required to be stored onchain.",
+    "Governance cannot rewrite historical Registry records or silently change fixed-supply allocation."
+  ],
+  "launchGates": [
+    "TradeProofContribution contract implemented and independently reviewed",
+    "TradeProofToken and vesting contracts implemented with fixed supply and no hidden mint path",
+    "all contracts deployed and source-verified on testnet",
+    "external security review completed",
+    "public token economics and crypto-asset disclosure published from one canonical source",
+    "target-jurisdiction legal review completed before any public offer or admission to trading",
+    "Genesis anti-Sybil, review and appeal rules published",
+    "treasury multisig, signer policy and timelock published",
+    "community approval of final launch parameters",
+    "no public sale, liquidity action or claim activation before all gates pass"
+  ],
+  "northStarMetrics": [
+    "weekly_verified_cross_wallet_responses",
+    "responder_to_new_passport_conversion_rate",
+    "passports_with_three_or_more_distinct_responder_wallets",
+    "repeat_trade_usage_rate",
+    "accepted_integrations_and_public_goods",
+    "seasonal_reward_concentration",
+    "sybil_exclusion_rate",
+    "thirty_and_ninety_day_contributor_retention"
+  ]
+}
