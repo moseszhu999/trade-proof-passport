@@ -59,6 +59,9 @@ jobs:
       - name: Validate holder-side RWP Request Responses
         run: node tools/verify-rwp-request-response.mjs
 
+      - name: Validate holder-side RWP response public surface
+        run: node tools/validate-rwp-response-page.mjs
+
       - name: Validate RWP public narrative, privacy and useful viral surface
         run: node tools/validate-rwp-page.mjs
 
