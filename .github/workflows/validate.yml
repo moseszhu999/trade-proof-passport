@@ -34,6 +34,7 @@ jobs:
             'schema/trade-proof-response.schema.json',
             'tokenomics/tproof-tokenomics-v0.1.json',
             'docs/contracts/base-sepolia-v0.1.json',
+            'examples/steel-cabinet-passport.json',
             'examples/genesis-proof-allocation-input.json',
             'examples/genesis-proof-allocation-output.json'
           ]) {
@@ -42,8 +43,14 @@ jobs:
           console.log('PASS: Passport, response, tokenomics, contracts and allocation JSON parse');
           NODE
 
-      - name: Validate steel cabinet example
+      - name: Validate steel cabinet Trade RWP example
         run: node tools/verify-passport.mjs examples/steel-cabinet-passport.json
+
+      - name: Validate RWP provenance, deterministic digest and viral card integrity
+        run: node tools/verify-rwp-core.mjs
+
+      - name: Validate RWP public narrative, privacy and useful viral surface
+        run: node tools/validate-rwp-page.mjs
 
       - name: Validate browser product, sharing, responses, Registry facts and token boundaries
         run: node tools/validate-public-product.mjs
