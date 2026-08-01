@@ -48,7 +48,7 @@ The Registry records canonical Passport and Response digests, issuer wallet, blo
 
 ## TPROOF economic constitution
 
-`TPROOF` is **not live**. There is no public sale, claim, price, listing, revenue share, yield, redemption promise or guaranteed return.
+`$TPROOF` is **not live**. There is no public sale, claim, price, listing, revenue share, yield, redemption promise or guaranteed return.
 
 The economic model is now published in two synchronized forms:
 
