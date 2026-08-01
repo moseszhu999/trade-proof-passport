@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { computeArtifactHashes } from '../docs/registry-client.mjs';
 import {
   RWP_CARD_ASSURANCE,
   buildProofCard,
@@ -29,6 +30,7 @@ assert.equal(canonicalizeJson({ z: 1, a: { y: 2, b: 3 } }), '{"a":{"b":3,"y":2},
 const digest = computePassportDigest(passport);
 assert.match(digest, /^0x[0-9a-f]{64}$/);
 assert.equal(digest, computePassportDigest(JSON.parse(JSON.stringify(passport))));
+assert.equal(digest, computeArtifactHashes(passport).digest, 'RWP card and Registry digest profiles diverged');
 
 const card = buildProofCard(passport, { publicLabel: 'Synthetic export proof' });
 assert.equal(card.publicLabel, 'Synthetic export proof');
@@ -77,4 +79,4 @@ assert.throws(() => decodeProofCard(Buffer.from(JSON.stringify(tampered)).toStri
 assert.throws(() => buildProofCard(passport, { publicLabel: 'x'.repeat(97) }), /96/);
 assert.throws(() => canonicalizeJson({ value: Number.POSITIVE_INFINITY }), /non-finite/);
 
-console.log('PASS: RWP provenance, privacy-bounded projection, deterministic digest and viral card integrity');
+console.log('PASS: RWP provenance, privacy-bounded projection, Registry-aligned digest and viral card integrity');
