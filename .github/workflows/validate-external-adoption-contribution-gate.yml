@@ -1,0 +1,40 @@
+name: Validate External Adoption Contribution Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/verify-rwp-external-adoption-contribution.mjs'
+      - '.github/workflows/validate-external-adoption-contribution-gate.yml'
+      - '.github/workflows/validate-external-adoption-submission.yml'
+      - 'docs/guides/rwp-external-adoption-contribution-gate-v0.1.md'
+      - '.github/PULL_REQUEST_TEMPLATE/rwp-adoption-pilot.md'
+      - 'examples/rwp-adoption-pilots/README.md'
+      - 'tools/build-rwp-external-adoption-pilot.mjs'
+  pull_request:
+    paths:
+      - 'tools/verify-rwp-external-adoption-contribution.mjs'
+      - '.github/workflows/validate-external-adoption-contribution-gate.yml'
+      - '.github/workflows/validate-external-adoption-submission.yml'
+      - 'docs/guides/rwp-external-adoption-contribution-gate-v0.1.md'
+      - '.github/PULL_REQUEST_TEMPLATE/rwp-adoption-pilot.md'
+      - 'examples/rwp-adoption-pilots/README.md'
+      - 'tools/build-rwp-external-adoption-pilot.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate external-fork contribution gate contracts
+        run: node tools/verify-rwp-external-adoption-contribution.mjs --self-test
