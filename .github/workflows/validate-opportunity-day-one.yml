@@ -40,10 +40,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Collect five current TED notices
+      - name: Collect five recent open TED contract notices
         run: |
           node tools/collect-ted-opportunities.mjs \
-            --since "$(date -u -d '14 days ago' +%Y%m%d)" \
+            --since "$(date -u -d '5 days ago' +%Y%m%d)" \
             --limit 5 \
             --out artifacts/opportunity-day-one/ted-live.json \
             --report artifacts/opportunity-day-one/ted-live.md
