@@ -7,11 +7,17 @@ on:
       - 'docs/operations.css'
       - 'docs/operations.mjs'
       - 'docs/trade-case-core.mjs'
+      - 'docs/document-intake.html'
+      - 'docs/document-intake.css'
+      - 'docs/document-intake-ui.mjs'
+      - 'docs/local-document-intake.mjs'
       - 'docs/data/opportunity-radar-latest.json'
       - 'docs/guides/trade-daily-operations-hub-v0.1.md'
       - 'docs/guides/trade-case-intake-v0.2.md'
+      - 'docs/guides/local-document-intake-v0.3.md'
       - 'schema/trade-case.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
+      - 'tools/verify-local-document-intake.mjs'
       - '.github/workflows/validate-trade-operations-hub.yml'
   push:
     branches: [main]
@@ -20,9 +26,15 @@ on:
       - 'docs/operations.css'
       - 'docs/operations.mjs'
       - 'docs/trade-case-core.mjs'
+      - 'docs/document-intake.html'
+      - 'docs/document-intake.css'
+      - 'docs/document-intake-ui.mjs'
+      - 'docs/local-document-intake.mjs'
       - 'docs/data/opportunity-radar-latest.json'
+      - 'docs/guides/local-document-intake-v0.3.md'
       - 'schema/trade-case.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
+      - 'tools/verify-local-document-intake.mjs'
 
 permissions:
   contents: read
@@ -43,5 +55,9 @@ jobs:
         run: |
           node --check docs/trade-case-core.mjs
           node --check docs/operations.mjs
+          node --check docs/local-document-intake.mjs
+          node --check docs/document-intake-ui.mjs
       - name: Validate Trade Daily Operations Hub
         run: node tools/verify-trade-operations-hub.mjs
+      - name: Validate controlled local document intake
+        run: node tools/verify-local-document-intake.mjs

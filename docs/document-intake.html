@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · 本地文件解析</title>
+  <meta name="description" content="在持有者浏览器中受控读取文本类贸易文件，生成内容摘要和候选要求，并写回本地 Trade Case。">
+  <link rel="stylesheet" href="./document-intake.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./operations.html">← 今日运营</a>
+      <div class="topbar__actions">
+        <span data-page-status>正在读取本地 Trade Case</span>
+        <label class="file-button">导入 Trade Case JSON<input id="case-import-file" type="file" accept="application/json"></label>
+        <button id="export-case" type="button">导出当前案件</button>
+        <a href="./index.html">公开主页</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <p>HOLDER-CONTROLLED LOCAL DOCUMENT INTAKE</p>
+        <h1>本地文件解析</h1>
+        <span>文本在当前浏览器读取，不上传；机器只生成候选要求或待办，仍需人工确认。</span>
+      </div>
+      <aside>
+        <strong>当前边界</strong>
+        <span>TXT / Markdown / CSV / JSON / EML / XML：允许本地文本读取</span>
+        <span>PDF / Word / Excel / 图片：仅登记元数据</span>
+        <small>无网络请求 · 无 OCR · 无二进制解析 · 无外部发送</small>
+      </aside>
+    </header>
+
+    <section id="case-state" class="panel" aria-live="polite"></section>
+
+    <section class="panel">
+      <header class="panel__header">
+        <div><small>A · CLASSIFY</small><h2>选择本地文件</h2></div>
+        <span id="classification-state" class="state">等待文件</span>
+      </header>
+      <form id="document-intake-form" class="intake-form">
+        <label>
+          文件用途
+          <select name="kind">
+            <option value="auto">自动判断</option>
+            <option value="official_notice_text">正式通知 / 规格 / 要求</option>
+            <option value="email_or_message_text">邮件 / 消息 / 沟通记录</option>
+          </select>
+        </label>
+        <label>
+          案件内标题
+          <input name="title" placeholder="可选，例如 Buyer clarification 2026-08-03">
+        </label>
+        <label class="file-drop">
+          <strong>选择一个文件</strong>
+          <span>.txt .md .csv .json .eml .xml 可本地读取；其他格式只登记元数据</span>
+          <input id="document-file" name="file" type="file" required accept=".txt,.md,.markdown,.csv,.json,.eml,.xml,.pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg">
+        </label>
+        <div id="classification-detail" class="classification-detail">尚未选择文件。</div>
+        <button id="process-document" type="submit">处理并写回本地 Trade Case</button>
+      </form>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <header class="panel__header">
+          <div><small>B · RESULT</small><h2>最近一次处理结果</h2></div>
+        </header>
+        <div id="intake-result" class="empty">尚未处理文件。</div>
+      </article>
+      <article class="panel">
+        <header class="panel__header">
+          <div><small>C · FILES</small><h2>案件文件记录</h2></div>
+        </header>
+        <div id="file-history" class="empty">当前案件尚无文件记录。</div>
+      </article>
+    </section>
+
+    <section class="panel boundary-panel">
+      <header class="panel__header"><div><small>BOUNDARY</small><h2>这一步没有做什么</h2></div></header>
+      <ul>
+        <li>没有把文件上传到 TradeProof、GitHub 或任何第三方服务器。</li>
+        <li>没有读取 PDF、Word、Excel、图片等二进制文件内容。</li>
+        <li>没有 OCR、压缩包解压、宏执行、外链下载或恶意文件扫描。</li>
+        <li>没有把机器抽取结果直接认定为正式要求、买方承诺或合同义务。</li>
+        <li>没有发送邮件、披露联系人、决定供应商资格或执行交易动作。</li>
+      </ul>
+    </section>
+  </main>
+  <script type="module" src="./document-intake-ui.mjs"></script>
+</body>
+</html>
