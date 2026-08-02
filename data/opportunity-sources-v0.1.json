@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "tradeproof.opportunity-source-registry.v0.1",
+  "updatedAt": "2026-08-02T11:30:00.000Z",
+  "sources": [
+    {
+      "sourceId": "ted-search-api",
+      "name": "Tenders Electronic Daily Search API",
+      "sourceType": "official_api",
+      "jurisdiction": "European Union",
+      "riskTier": "green",
+      "status": "active",
+      "access": {
+        "endpoint": "https://api.ted.europa.eu/v3/notices/search",
+        "authentication": "none_for_published_notice_search",
+        "method": "POST",
+        "recommendedIntervalMinutes": 1440
+      },
+      "rights": {
+        "allowedUse": "published procurement notice search, analysis and reuse",
+        "publicProjection": "minimum factual fields plus source link and TradeProof analysis",
+        "prohibited": [
+          "claiming TED or a contracting authority endorses TradeProof",
+          "guessing supplier eligibility not present in the notice"
+        ]
+      },
+      "evidence": [
+        "https://docs.ted.europa.eu/api/latest/search.html"
+      ]
+    },
+    {
+      "sourceId": "een-public-opportunities",
+      "name": "Enterprise Europe Network public cooperation opportunities",
+      "sourceType": "public_web_discovery",
+      "jurisdiction": "European Union and partner network",
+      "riskTier": "yellow",
+      "status": "planned",
+      "access": {
+        "endpoint": "https://een.ec.europa.eu/partnering-opportunities",
+        "authentication": "none_for_public_pages",
+        "method": "controlled_discovery_connector",
+        "recommendedIntervalMinutes": 1440
+      },
+      "rights": {
+        "allowedUse": "discover minimal opportunity facts and retain the original source link",
+        "publicProjection": "reference number, title, country, dates, minimal summary and source link",
+        "prohibited": [
+          "bulk republishing complete profiles",
+          "circumventing access controls",
+          "presenting an opportunity as currently active without a fresh status observation"
+        ]
+      },
+      "evidence": [
+        "https://een.ec.europa.eu/partnering-opportunities"
+      ]
+    },
+    {
+      "sourceId": "user-authorized-inbox",
+      "name": "User-authorized buyer email and RFQ intake",
+      "sourceType": "authorized_private_input",
+      "jurisdiction": "source dependent",
+      "riskTier": "green",
+      "status": "planned",
+      "access": {
+        "endpoint": "holder-controlled mailbox or uploaded file",
+        "authentication": "explicit_user_authorization",
+        "method": "connector_or_upload",
+        "recommendedIntervalMinutes": 60
+      },
+      "rights": {
+        "allowedUse": "private case creation for the authorizing holder",
+        "publicProjection": "none unless the holder explicitly authorizes a bounded projection",
+        "prohibited": [
+          "publishing private message contents by default",
+          "using unrelated mailbox content",
+          "treating sender identity as independently verified"
+        ]
+      },
+      "evidence": []
+    }
+  ]
+}
