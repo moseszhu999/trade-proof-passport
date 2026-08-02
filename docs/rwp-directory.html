@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Open RWP Pool Directory · TradeProof</title>
+  <meta name="description" content="Publish and fork open, digest-bound Trade Pool directories without a central registry or ranking service.">
+  <meta property="og:title" content="Fork discovery, not authority">
+  <meta property="og:description" content="Open, self-declared and verifiable directories for RWP Trade Pools.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/rwp-directory.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/rwp-directory.html">
+  <style>
+    :root{color-scheme:dark;--bg:#050507;--panel:#10131b;--panel2:#171b26;--line:rgba(255,255,255,.12);--text:#f8f9fc;--muted:#a8afbd;--lime:#bcff4d;--cyan:#59ecff;--violet:#9478ff;--pink:#ff64ce;--amber:#ffc66d;--red:#ff788f;--shadow:0 28px 90px rgba(0,0,0,.5)}*{box-sizing:border-box}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -12%,#231a36 0,var(--bg) 44%);color:var(--text)}a{color:inherit}button,input,textarea,select{font:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line)}.brand{font-weight:950;text-decoration:none;letter-spacing:-.04em}.navlinks{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none}.hero{padding:76px 0 42px;display:grid;grid-template-columns:1.16fr .84fr;gap:34px;align-items:center}.kicker{color:var(--lime);font-size:12px;font-weight:900;letter-spacing:.19em;text-transform:uppercase}.hero h1{font-size:clamp(48px,7vw,92px);line-height:.91;letter-spacing:-.07em;margin:13px 0 22px}.gradient{background:linear-gradient(100deg,var(--lime),var(--cyan) 44%,var(--violet) 76%,var(--pink));background-clip:text;-webkit-background-clip:text;color:transparent}.lead{color:var(--muted);font-size:clamp(18px,2vw,22px);max-width:760px}.manifesto{padding:24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(18,20,32,.96),rgba(8,10,16,.96));box-shadow:var(--shadow)}.manifesto div{padding:13px 0;border-bottom:1px solid var(--line)}.manifesto div:last-child{border-bottom:0}.manifesto span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em}.manifesto strong{display:block;margin-top:4px}.notice{margin-bottom:24px;padding:16px 18px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:14px;background:rgba(89,236,255,.055)}.workspace{display:grid;grid-template-columns:.88fr 1.12fr;gap:16px;padding-bottom:80px}.panel{border:1px solid var(--line);border-radius:23px;background:rgba(16,19,27,.92);padding:23px}.panel h2{margin:0 0 8px;font-size:29px;letter-spacing:-.035em}.panel>p{margin-top:0;color:var(--muted)}label{display:grid;gap:7px;margin-top:14px;font-weight:760}small{color:var(--muted);font-weight:400}textarea,input[type=file],input[type=text],select{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#090c12;color:var(--text)}textarea{min-height:205px;resize:vertical;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}button,.button{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:10px 15px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);font-weight:850;text-decoration:none;cursor:pointer}button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}.status{min-height:24px;margin-top:12px;color:var(--muted);font-size:13px}.status.error{color:var(--red)}.directory{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.17);border-radius:27px;padding:25px;background:radial-gradient(circle at 100% 0,rgba(188,255,77,.14),transparent 30%),radial-gradient(circle at 0 100%,rgba(148,120,255,.18),transparent 34%),linear-gradient(145deg,#121621,#080a10);box-shadow:var(--shadow)}.directory:before{content:"DIR";position:absolute;right:-8px;top:-12px;font-size:112px;font-weight:950;color:rgba(255,255,255,.025)}.directory>*{position:relative}.badges{display:flex;flex-wrap:wrap;gap:7px}.badge{padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}.badge.live{color:var(--lime);border-color:rgba(188,255,77,.3)}.directory h3{font-size:clamp(34px,5vw,54px);line-height:.98;letter-spacing:-.055em;margin:42px 0 10px}.summary{color:var(--muted)}.digest{font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--cyan);overflow-wrap:anywhere}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:20px}.metric{padding:12px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.03)}.metric span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase}.metric strong{font-size:24px}.entries{margin-top:18px;border-top:1px solid var(--line);padding-top:10px}.entry{padding:14px 0;border-bottom:1px solid var(--line)}.entry-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.entry h4{margin:0;font-size:18px}.entry p{margin:5px 0;color:var(--muted);font-size:12px}.tokens{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.token{padding:5px 8px;border-radius:999px;background:rgba(89,236,255,.07);color:var(--cyan);font-size:10px}.token.liquid{background:rgba(188,255,77,.08);color:var(--lime)}.empty{display:grid;place-items:center;min-height:520px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:20px;padding:25px}.boundary{padding:26px 0 50px;color:var(--muted);border-top:1px solid var(--line);font-size:13px}@media(max-width:900px){.hero,.workspace{grid-template-columns:1fr}}@media(max-width:640px){.metrics{grid-template-columns:1fr 1fr}.entry-head{display:block}.nav{align-items:flex-start;padding:20px 0}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="brand" href="./">TRADEPROOF</a><div class="navlinks"><a href="./rwp-pool.html">Trade Pools</a><a href="./rwp-liquidity.html">Proof Liquidity</a><a href="./rwp-adopt.html">Adopt Pool</a><a href="https://github.com/moseszhu999/trade-proof-passport/blob/main/standard/real-world-proof-pool-directory-v0.1.md">Open standard</a></div></nav>
+    <section class="hero"><div><div class="kicker">Open discovery · Directory v0.1</div><h1>Fork discovery.<br><span class="gradient">Not authority.</span></h1><p class="lead">Publish a digest-bound list of Trade Pools and optional Proof Liquidity summaries. Anyone can fork the Directory; no official registry gets to own discovery.</p></div><div class="manifesto"><div><span>Open</span><strong>Complete Pools remain independently verifiable.</strong></div><div><span>Curated</span><strong>Inclusion is explicit and self-declared.</strong></div><div><span>Forkable</span><strong>Every fork records its parent Directory digest.</strong></div><div><span>Unranked</span><strong>Canonical digest order, never a hidden score.</strong></div></div></section>
+    <div class="notice"><strong>A Directory is a discovery manifest—not an endorsement list.</strong> Position, inclusion, Liquidity units, DAO vote and Token balance do not prove Pool quality, compliance or real-world truth.</div>
+    <section class="workspace">
+      <div class="panel" id="builderPanel">
+        <h2>Publish or fork a Directory</h2><p>Import a JSON array of entries. Each entry contains a complete public Pool, an optional matching Liquidity Card and an optional public curator note.</p>
+        <label>Directory label<input id="directoryLabel" type="text" maxlength="96" value="Open RWP Pool Directory"></label>
+        <label>Scope<select id="directoryScope"><option value="community">Community</option><option value="trade_corridor">Trade corridor</option><option value="industry">Industry</option><option value="workflow">Workflow</option><option value="other">Other</option></select></label>
+        <label>Public description<input id="directoryDescription" type="text" maxlength="280" placeholder="What discovery context does this Directory serve?"></label>
+        <label>Entries or complete Directory JSON<input id="sourceFile" type="file" accept="application/json,.json"><textarea id="entriesText" spellcheck="false" placeholder='[{"pool":{"format":"real-world-proof-trade-pool",...},"liquidityCard":{...},"curatorNote":"..."}]'></textarea><small>Importing a complete Directory enables a verifiable fork. The full Manifest stays local and never enters the share URL.</small></label>
+        <div class="actions"><button class="primary" id="generateButton" type="button">Generate Directory</button><button id="forkButton" type="button" hidden>Fork imported Directory</button></div><div class="status" id="builderStatus" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <div class="empty" id="empty"><div><strong>No Directory loaded.</strong><p>Generate one locally or open a shared Directory Card link.</p></div></div>
+        <article class="directory" id="directoryCard" hidden><div class="badges"><span class="badge live">OPEN DIRECTORY</span><span class="badge" id="scopeBadge"></span><span class="badge" id="generationBadge"></span></div><h3 id="cardLabel"></h3><p class="summary" id="cardDescription"></p><div class="digest" id="directoryDigest"></div><div class="metrics"><div class="metric"><span>Pools</span><strong id="poolCount">0</strong></div><div class="metric"><span>With liquidity</span><strong id="liquidityPoolCount">0</strong></div><div class="metric"><span>Verified units</span><strong id="unitCount">0</strong></div><div class="metric"><span>Fork generation</span><strong id="forkGeneration">0</strong></div></div><div class="entries" id="entries"></div><p class="summary" id="assurance"></p></article>
+        <div class="actions" id="directoryActions" hidden><button class="primary" id="copyLink" type="button">Copy Directory Card link</button><button id="downloadDirectory" type="button">Download complete Directory</button><button id="downloadCard" type="button">Download Directory Card</button></div><div class="status" id="shareStatus" aria-live="polite"></div>
+      </div>
+    </section>
+    <footer class="boundary"><strong>Governance boundary:</strong> a DAO may publish or fork a Directory, but no DAO can turn inclusion into endorsement or vote an invalid Pool, Adoption or trade fact into validity.</footer>
+  </main>
+  <script type="module">
+    import {
+      buildRwpPoolDirectory,
+      buildRwpPoolDirectoryCard,
+      buildRwpPoolDirectoryCardUrl,
+      forkRwpPoolDirectory,
+      readRwpPoolDirectoryCardFromHash,
+      validateRwpPoolDirectory
+    } from './rwp-pool-directory.mjs';
+
+    const $ = (id) => document.getElementById(id);
+    let currentDirectory = null;
+    let currentCard = null;
+    let importedParent = null;
+    const setStatus = (id, message, error = false) => { $(id).textContent = message; $(id).classList.toggle('error', error); };
+    const downloadJson = (value, name) => {
+      const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement('a'); anchor.href = url; anchor.download = name; anchor.click(); URL.revokeObjectURL(url);
+    };
+    const copy = async (value) => navigator.clipboard.writeText(value);
+
+    const renderCard = (card) => {
+      currentCard = card; $('empty').hidden = true; $('directoryCard').hidden = false; $('directoryActions').hidden = false;
+      $('scopeBadge').textContent = card.directory.scope.replaceAll('_', ' '); $('generationBadge').textContent = `generation ${card.directory.generation}`;
+      $('cardLabel').textContent = card.directory.label; $('cardDescription').textContent = card.directory.description || 'Open, self-declared RWP Pool discovery manifest.'; $('directoryDigest').textContent = card.source.directoryDigest;
+      $('poolCount').textContent = card.summary.entryCount; $('liquidityPoolCount').textContent = card.summary.poolsWithLiquidity; $('unitCount').textContent = card.summary.verifiedAdoptionUnits; $('forkGeneration').textContent = card.directory.generation;
+      $('entries').innerHTML = card.entries.map((entry) => `<div class="entry"><div class="entry-head"><div><h4>${entry.label}</h4><p>${entry.curatorNote || 'No curator note.'}</p></div><code class="digest">${entry.poolDigest}</code></div><div class="tokens"><span class="token">${entry.scope.replaceAll('_', ' ')}</span><span class="token">pool generation ${entry.generation}</span><span class="token">pattern ${entry.patternDigest.slice(0, 14)}…</span>${entry.liquidity ? `<span class="token liquid">${entry.liquidity.verifiedAdoptionUnits} verified adoption units</span><span class="token">${entry.liquidity.excludedDuplicates} duplicate exclusions</span>` : '<span class="token">no Liquidity Card attached</span>'}</div></div>`).join('');
+      $('assurance').textContent = card.assurance;
+    };
+
+    const renderDirectory = (directory) => {
+      currentDirectory = directory;
+      renderCard(buildRwpPoolDirectoryCard(directory));
+    };
+
+    const loadSource = (value) => {
+      if (value?.format === 'real-world-proof-pool-directory') {
+        const errors = validateRwpPoolDirectory(value);
+        if (errors.length > 0) throw new Error(errors.join(' '));
+        importedParent = value;
+        $('directoryLabel').value = `${value.label} fork`; $('directoryScope').value = value.scope; $('directoryDescription').value = value.description || '';
+        $('entriesText').value = JSON.stringify(value.entries, null, 2); $('forkButton').hidden = false;
+        renderDirectory(value);
+        setStatus('builderStatus', 'Complete Directory verified. You may modify the entries and create a digest-linked fork.');
+        return;
+      }
+      const entries = Array.isArray(value) ? value : [value];
+      importedParent = null; $('forkButton').hidden = true; $('entriesText').value = JSON.stringify(entries, null, 2);
+      setStatus('builderStatus', `${entries.length} Directory entries loaded locally.`);
+    };
+
+    $('sourceFile').addEventListener('change', async (event) => {
+      try { const file = event.target.files?.[0]; if (file) loadSource(JSON.parse(await file.text())); }
+      catch (error) { setStatus('builderStatus', error.message, true); }
+    });
+    $('generateButton').addEventListener('click', () => {
+      try {
+        const entries = JSON.parse($('entriesText').value);
+        const directory = buildRwpPoolDirectory(entries, { label: $('directoryLabel').value, scope: $('directoryScope').value, summary: $('directoryDescription').value });
+        importedParent = null; $('forkButton').hidden = true; renderDirectory(directory);
+        setStatus('builderStatus', `PASS: ${directory.summary.entryCount} validated Pools published in an unranked open Directory.`);
+      } catch (error) { setStatus('builderStatus', error.message, true); }
+    });
+    $('forkButton').addEventListener('click', () => {
+      try {
+        if (!importedParent) throw new Error('Import a complete Directory Manifest before forking.');
+        const entries = JSON.parse($('entriesText').value);
+        const directory = forkRwpPoolDirectory(importedParent, { entries, label: $('directoryLabel').value, scope: $('directoryScope').value, summary: $('directoryDescription').value });
+        renderDirectory(directory);
+        setStatus('builderStatus', `PASS: generation ${directory.lineage.generation} fork created from ${importedParent.directoryDigest}.`);
+      } catch (error) { setStatus('builderStatus', error.message, true); }
+    });
+    $('copyLink').addEventListener('click', async () => {
+      try { await copy(buildRwpPoolDirectoryCardUrl(currentCard, location.href)); setStatus('shareStatus', 'Directory Card link copied. Complete Pool rules remain in the downloadable Manifest, not the URL.'); }
+      catch (error) { setStatus('shareStatus', error.message, true); }
+    });
+    $('downloadDirectory').addEventListener('click', () => {
+      if (!currentDirectory) return setStatus('shareStatus', 'A shared Card is only a projection. Import the complete Manifest before downloading or forking.', true);
+      downloadJson(currentDirectory, `${currentDirectory.directoryId.replace(':', '-')}.json`);
+    });
+    $('downloadCard').addEventListener('click', () => currentCard && downloadJson(currentCard, `${currentCard.cardId.replace(':', '-')}.json`));
+
+    try {
+      const shared = readRwpPoolDirectoryCardFromHash(location.hash);
+      if (shared) {
+        currentDirectory = null; renderCard(shared); $('builderPanel').hidden = true;
+        setStatus('shareStatus', 'Shared Directory Card verified. It is a discovery projection; a complete Manifest is required to inspect Pool rules or create a verifiable fork.');
+      }
+    } catch (error) { setStatus('shareStatus', error.message, true); }
+  </script>
+</body>
+</html>
