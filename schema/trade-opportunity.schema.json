@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/trade-opportunity.v0.1.json",
+  "title": "TradeProof Canonical Opportunity v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "opportunityId",
+    "source",
+    "observedAt",
+    "title",
+    "buyer",
+    "classification",
+    "dates",
+    "participation",
+    "state",
+    "unknowns",
+    "provenance",
+    "opportunityDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "tradeproof.trade-opportunity.v0.1" },
+    "opportunityId": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceId", "recordId", "authorityClass", "url"],
+      "properties": {
+        "sourceId": { "type": "string", "minLength": 1 },
+        "recordId": { "type": "string", "minLength": 1 },
+        "authorityClass": {
+          "enum": ["official_public_procurement", "public_business_opportunity", "authorized_private_input"]
+        },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "title": { "type": ["string", "null"], "maxLength": 2000 },
+    "buyer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "country"],
+      "properties": {
+        "name": { "type": ["string", "null"], "maxLength": 1000 },
+        "country": { "type": ["string", "null"], "maxLength": 8 }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["opportunityType", "codes"],
+      "properties": {
+        "opportunityType": { "type": ["string", "null"], "maxLength": 160 },
+        "codes": {
+          "type": "array",
+          "items": { "type": "string", "maxLength": 64 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "dates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publishedAt", "deadlineAt"],
+      "properties": {
+        "publishedAt": { "type": ["string", "null"], "maxLength": 40 },
+        "deadlineAt": { "type": ["string", "null"], "maxLength": 40 }
+      }
+    },
+    "participation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["foreignSupplierEligibility", "chinaSupplierEligibility"],
+      "properties": {
+        "foreignSupplierEligibility": { "enum": ["unknown", "possible", "restricted", "not_applicable"] },
+        "chinaSupplierEligibility": { "enum": ["unknown", "possible", "restricted", "not_applicable"] }
+      }
+    },
+    "state": {
+      "enum": [
+        "observed_active_source",
+        "observed_status_unknown",
+        "withdrawn",
+        "closed",
+        "buyer_claimed",
+        "response_in_progress"
+      ]
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 240 },
+      "uniqueItems": true
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "sourceField", "extraction"],
+        "properties": {
+          "field": { "type": "string", "minLength": 1 },
+          "sourceField": { "type": "string", "minLength": 1 },
+          "extraction": { "enum": ["direct_field", "bounded_normalization", "holder_supplied"] }
+        }
+      }
+    },
+    "opportunityDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}
