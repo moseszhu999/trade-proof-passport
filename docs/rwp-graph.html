@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RWP Case Graph · TradeProof</title>
+  <meta name="description" content="Build a deterministic Real-World Proof case graph locally and share a privacy-bounded public timeline.">
+  <meta property="og:title" content="Real-World Proof Case Graph">
+  <meta property="og:description" content="A verifiable artifact timeline without public trade secrets.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/rwp-graph.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/rwp-graph.html">
+  <style>
+    :root{color-scheme:dark;--bg:#050507;--panel:#0f1219;--line:rgba(255,255,255,.12);--text:#f7f9fd;--muted:#9fa8b8;--lime:#bcff4d;--cyan:#59ecff;--amber:#ffc66d;--red:#ff788f;--violet:#ae87ff}
+    *{box-sizing:border-box}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 48% -10%,#22172e 0,#08070c 37%,var(--bg) 70%);color:var(--text)}a{color:inherit}button,input,textarea{font:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto;padding-bottom:76px}.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line)}.brand{font-weight:950;letter-spacing:-.03em;text-decoration:none}.navlinks{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none}.hero{padding:68px 0 34px}.kicker{color:var(--lime);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.18em}.hero h1{font-size:clamp(47px,7.5vw,88px);line-height:.91;letter-spacing:-.065em;margin:13px 0 18px}.hero p{max-width:850px;color:var(--muted);font-size:19px}.notice{padding:15px 17px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:13px;background:rgba(89,236,255,.055);margin-bottom:22px}.grid{display:grid;grid-template-columns:.86fr 1.14fr;gap:16px}.panel{border:1px solid var(--line);border-radius:22px;background:rgba(15,18,25,.94);padding:22px}.panel h2{margin:0 0 8px;font-size:28px}.panel>p{color:var(--muted)}label{display:grid;gap:7px;margin-top:14px;font-weight:780}textarea,input[type=file]{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#090b10;color:var(--text)}textarea{min-height:270px;resize:vertical;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}button{min-height:42px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:#151a25;color:var(--text);font-weight:850;cursor:pointer}button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}button:disabled{opacity:.45;cursor:not-allowed}.status{min-height:24px;margin-top:12px;color:var(--muted);font-size:13px}.status.error{color:var(--red)}.summary{display:none;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}.summary.show{display:grid}.stat{padding:13px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025)}.stat span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase}.stat strong{display:block;font-size:21px;margin-top:3px;overflow-wrap:anywhere}.digest{font:11px/1.45 ui-monospace,monospace;color:var(--cyan)}.timeline{display:grid;gap:0;margin-top:15px}.event{position:relative;margin-left:12px;padding:0 0 21px 30px;border-left:1px solid rgba(255,255,255,.18)}.event:last-child{padding-bottom:0}.dot{position:absolute;left:-7px;top:4px;width:13px;height:13px;border-radius:50%;background:var(--violet);box-shadow:0 0 0 4px #0f1219}.event.resolved .dot,.event.received .dot,.event.complete .dot{background:var(--lime)}.event.mismatch .dot,.event.decline .dot{background:var(--red)}.event.incomplete .dot,.event.request_more .dot,.event.partial .dot{background:var(--amber)}.event-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.event h3{margin:0;font-size:18px}.event time{color:var(--muted);font-size:12px;white-space:nowrap}.badge{display:inline-flex;margin-top:6px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}.event .digest{display:block;margin-top:7px}.empty{padding:24px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);text-align:center}.boundary{margin-top:25px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}@media(max-width:830px){.grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr 1fr}.event-head{display:block}.event time{display:block;margin-top:3px}}@media(max-width:480px){.summary{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="brand" href="./">TRADEPROOF</a><div class="navlinks"><a href="./rwp.html">RWP</a><a href="./rwp-receive.html">Receipts</a><a href="./rwp-resolve.html">Resolution</a><a href="./onchain.html">Anchor & verify</a></div></nav>
+    <section class="hero"><div class="kicker">RWP Case Graph · v0.1</div><h1>Prove the sequence.<br>Not the secrets.</h1><p>Import holder-controlled RWP artifacts locally. TradeProof verifies each object, reconstructs digest-bound relationships, preserves failed and resolved states, and produces a public timeline that contains no commercial documents.</p></section>
+    <div class="notice"><strong>Local graph, public projection.</strong> Imported JSON stays in this browser session. The complete Case Graph is a local download. Only the privacy-bounded Timeline Card can enter a public URL.</div>
+
+    <section class="grid">
+      <article class="panel" id="builderPanel">
+        <h2>Build a Case Graph</h2>
+        <p>Select multiple JSON objects or paste a JSON array. Include exactly one Passport and one Proof Card. Requests, Responses, Packages, Receipts and Resolutions may branch.</p>
+        <label>RWP JSON files<input id="artifactFiles" type="file" accept="application/json,.json" multiple></label>
+        <label>Artifact JSON array<textarea id="artifactText" spellcheck="false" placeholder='[{"schemaVersion":"0.1","passportId":"..."},{"format":"real-world-proof-card","version":"0.1"}]'></textarea></label>
+        <div class="actions"><button class="primary" id="buildGraph" type="button">Verify and build graph</button><button id="downloadGraph" type="button" disabled>Download Case Graph</button><button id="downloadTimeline" type="button" disabled>Download Timeline Card</button><button id="copyTimeline" type="button" disabled>Copy public timeline</button></div>
+        <div class="status" id="builderStatus" aria-live="polite"></div>
+        <p class="boundary">The graph rejects unsupported artifacts, mixed Passport roots, dangling source references, duplicate nodes, digest tampering and child events that predate their declared parents.</p>
+      </article>
+
+      <article class="panel">
+        <h2 id="timelineHeading">Verified timeline</h2>
+        <p id="timelineIntro">Build a local graph or open a shared Timeline Card.</p>
+        <section class="summary" id="summary">
+          <div class="stat"><span>Current state</span><strong id="currentState">—</strong></div>
+          <div class="stat"><span>Events</span><strong id="eventCount">0</strong></div>
+          <div class="stat"><span>Edges</span><strong id="edgeCount">0</strong></div>
+          <div class="stat"><span>First event</span><strong id="firstEvent">—</strong></div>
+          <div class="stat"><span>Last event</span><strong id="lastEvent">—</strong></div>
+          <div class="stat"><span>Projection digest</span><strong class="digest" id="projectionDigest">—</strong></div>
+        </section>
+        <div class="timeline" id="timeline"><div class="empty">No verified timeline loaded.</div></div>
+        <div class="status" id="timelineStatus" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <p class="boundary">A Case Graph proves canonical object identity, declared source relationships and chronology. It does not authenticate organizations, validate document meaning, establish legal authority or ownership, create an RWA, or execute payment, settlement, financing, custody, Token distribution, liquidity or a mainnet action.</p>
+  </main>
+
+  <script type="module">
+    import {
+      buildRwpCaseGraph,
+      buildRwpTimelineCard,
+      buildRwpTimelineCardUrl,
+      readRwpTimelineCardFromHash
+    } from './rwp-case-graph.mjs';
+
+    const byId=(id)=>document.getElementById(id);
+    const state={graph:null,timeline:null,timelineUrl:null};
+    const labels={passport:'Trade RWP Passport',proof_card:'Viral Proof Card',request:'RWP Request',request_response:'Holder Response',evidence_package:'Evidence Package',evidence_receipt:'Evidence Receipt',evidence_resolution:'Evidence Resolution',evidence_resolution_receipt:'Resolution Receipt'};
+    const setStatus=(id,message,error=false)=>{const element=byId(id);element.textContent=message;element.className=`status${error?' error':''}`;};
+    const downloadJson=(value,filename)=>{const blob=new Blob([`${JSON.stringify(value,null,2)}\n`],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=filename;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href);};
+    const copyText=async(value,message)=>{try{await navigator.clipboard.writeText(value);setStatus('builderStatus',message);}catch{setStatus('builderStatus','Clipboard access failed.',true);}};
+    const formatTime=(value)=>new Intl.DateTimeFormat(undefined,{dateStyle:'medium',timeStyle:'short'}).format(new Date(value));
+
+    const renderTimeline=(timeline,source='local')=>{
+      state.timeline=timeline;
+      byId('summary').classList.add('show');
+      byId('currentState').textContent=timeline.currentState.replaceAll('_',' ');
+      byId('eventCount').textContent=String(timeline.counts.events);
+      byId('edgeCount').textContent=String(timeline.counts.edges);
+      byId('firstEvent').textContent=formatTime(timeline.firstEventAt);
+      byId('lastEvent').textContent=formatTime(timeline.lastEventAt);
+      byId('projectionDigest').textContent=timeline.timelineDigest;
+      const holder=byId('timeline');holder.replaceChildren();
+      for(const event of timeline.events){
+        const article=document.createElement('article');article.className=`event ${event.status}`;
+        const dot=document.createElement('span');dot.className='dot';
+        const head=document.createElement('div');head.className='event-head';
+        const title=document.createElement('h3');title.textContent=labels[event.type]||event.type;
+        const time=document.createElement('time');time.dateTime=event.at;time.textContent=formatTime(event.at);
+        head.append(title,time);
+        const badge=document.createElement('span');badge.className='badge';badge.textContent=event.status.replaceAll('_',' ');
+        const digest=document.createElement('span');digest.className='digest';digest.textContent=event.digest;
+        article.append(dot,head,badge,digest);holder.append(article);
+      }
+      byId('timelineHeading').textContent=source==='shared'?'Shared RWP Timeline':'Verified Case Timeline';
+      byId('timelineIntro').textContent=source==='shared'?'Privacy-bounded public projection. Source artifacts are not included in this link.':'Derived locally from validated source artifacts.';
+      setStatus('timelineStatus',`${timeline.counts.events} canonical events verified · ${timeline.currentState.replaceAll('_',' ')}`);
+    };
+
+    const flattenJson=(value)=>Array.isArray(value)?value:[value];
+    const readFiles=async()=>{
+      const artifacts=[];
+      for(const file of [...byId('artifactFiles').files]){
+        const parsed=JSON.parse(await file.text());artifacts.push(...flattenJson(parsed));
+      }
+      const pasted=byId('artifactText').value.trim();
+      if(pasted)artifacts.push(...flattenJson(JSON.parse(pasted)));
+      return artifacts;
+    };
+
+    byId('artifactFiles').addEventListener('change',async()=>{
+      try{
+        const values=[];for(const file of [...byId('artifactFiles').files])values.push(...flattenJson(JSON.parse(await file.text())));
+        byId('artifactText').value=JSON.stringify(values,null,2);setStatus('builderStatus',`${values.length} local artifact objects loaded.`);
+      }catch(error){setStatus('builderStatus',error?.message||String(error),true);}
+    });
+
+    byId('buildGraph').addEventListener('click',async()=>{
+      try{
+        const artifacts=await readFiles();
+        const graph=buildRwpCaseGraph(artifacts);
+        const timeline=buildRwpTimelineCard(graph);
+        state.graph=graph;state.timelineUrl=buildRwpTimelineCardUrl(timeline,location.href);
+        renderTimeline(timeline,'local');
+        byId('downloadGraph').disabled=false;byId('downloadTimeline').disabled=false;byId('copyTimeline').disabled=false;
+        setStatus('builderStatus',`Case Graph verified locally: ${graph.graphDigest}`);
+      }catch(error){state.graph=null;state.timeline=null;state.timelineUrl=null;byId('downloadGraph').disabled=true;byId('downloadTimeline').disabled=true;byId('copyTimeline').disabled=true;setStatus('builderStatus',error?.message||String(error),true);}
+    });
+    byId('downloadGraph').addEventListener('click',()=>downloadJson(state.graph,`${state.graph.graphId}-rwp-case-graph.json`));
+    byId('downloadTimeline').addEventListener('click',()=>downloadJson(state.timeline,`${state.timeline.timelineId}-rwp-timeline-card.json`));
+    byId('copyTimeline').addEventListener('click',()=>copyText(state.timelineUrl,'Public Timeline Card link copied.'));
+
+    try{
+      const shared=readRwpTimelineCardFromHash(location.hash);
+      if(shared){renderTimeline(shared,'shared');setStatus('timelineStatus','Shared Timeline Card digest verified. No source artifact is present in this URL.');}
+    }catch(error){setStatus('timelineStatus',`Invalid shared Timeline Card: ${error?.message||String(error)}`,true);}
+  </script>
+</body>
+</html>
