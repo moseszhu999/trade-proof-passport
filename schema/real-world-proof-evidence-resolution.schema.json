@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/real-world-proof-evidence-resolution.schema.json",
+  "title": "Real-World Proof Evidence Resolution v0.1",
+  "oneOf": [
+    { "$ref": "#/$defs/resolution" },
+    { "$ref": "#/$defs/receipt" },
+    { "$ref": "#/$defs/card" }
+  ],
+  "$defs": {
+    "bytes32": {
+      "type": "string",
+      "pattern": "^0x[0-9a-f]{64}$"
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "matched", "mismatch", "missing", "notChecked", "unsupportedAlgorithm"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "matched": { "type": "integer", "minimum": 0 },
+        "mismatch": { "type": "integer", "minimum": 0 },
+        "missing": { "type": "integer", "minimum": 0 },
+        "notChecked": { "type": "integer", "minimum": 0 },
+        "unsupportedAlgorithm": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "resolutionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidenceId", "relation", "category", "type", "digest", "disclosure", "fileVerification"],
+      "properties": {
+        "evidenceId": { "type": "string", "minLength": 1 },
+        "relation": { "enum": ["redelivery", "supplemental"] },
+        "category": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "digest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": { "type": "string", "minLength": 1 },
+            "value": { "type": "string", "pattern": "^[0-9a-f]+$" }
+          }
+        },
+        "disclosure": { "enum": ["private", "shared", "public_summary"] },
+        "issuedAt": { "type": "string", "format": "date-time" },
+        "issuerRole": { "type": "string", "minLength": 1 },
+        "fileVerification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "algorithm", "computedDigest"],
+          "properties": {
+            "status": { "const": "matched" },
+            "algorithm": { "type": "string", "minLength": 1 },
+            "computedDigest": { "type": "string", "pattern": "^[0-9a-f]+$" }
+          }
+        }
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "source", "resolution", "evidence", "createdAt", "assurance", "resolutionId", "resolutionDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-evidence-resolution" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["packageId", "packageDigest", "receiptId", "receiptDigest", "passportDigest", "cardDigest", "requestId", "requestDigest", "responseId", "responseDigest"],
+          "properties": {
+            "packageId": { "type": "string", "pattern": "^rwpep:[0-9a-f]{16}$" },
+            "packageDigest": { "$ref": "#/$defs/bytes32" },
+            "receiptId": { "type": "string", "pattern": "^rwper:[0-9a-f]{16}$" },
+            "receiptDigest": { "$ref": "#/$defs/bytes32" },
+            "passportDigest": { "$ref": "#/$defs/bytes32" },
+            "cardDigest": { "$ref": "#/$defs/bytes32" },
+            "requestId": { "type": "string", "pattern": "^rwpr:[0-9a-f]{16}$" },
+            "requestDigest": { "$ref": "#/$defs/bytes32" },
+            "responseId": { "type": "string", "pattern": "^rwprr:[0-9a-f]{16}$" },
+            "responseDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "resolution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "priorOutcome", "priorDeterministicStatus", "issueCount", "addressedIssueKeys", "unresolvedIssueKeys", "complete"],
+          "properties": {
+            "mode": { "enum": ["redelivery", "supplemental", "combined"] },
+            "priorOutcome": { "enum": ["incomplete", "mismatch", "request_more"] },
+            "priorDeterministicStatus": { "enum": ["received", "incomplete", "mismatch"] },
+            "issueCount": { "type": "integer", "minimum": 1 },
+            "addressedIssueKeys": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "unresolvedIssueKeys": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "complete": { "type": "boolean" }
+          }
+        },
+        "evidence": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/resolutionEvidence" } },
+        "note": { "type": "string", "minLength": 1, "maxLength": 280 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "resolutionId": { "type": "string", "pattern": "^rwperes:[0-9a-f]{16}$" },
+        "resolutionDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "receiptItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidenceId", "relation", "category", "status", "algorithm"],
+      "properties": {
+        "evidenceId": { "type": "string", "minLength": 1 },
+        "relation": { "enum": ["redelivery", "supplemental"] },
+        "category": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["matched", "mismatch", "missing", "not_checked", "unsupported_algorithm"] },
+        "algorithm": { "type": "string", "minLength": 1 },
+        "computedDigest": { "type": "string", "pattern": "^[0-9a-f]+$" }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "source", "receiver", "outcome", "evidenceResults", "createdAt", "assurance", "receiptId", "receiptDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-evidence-resolution-receipt" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": { "type": "object" },
+        "receiver": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["role"],
+          "properties": { "role": { "type": "string", "minLength": 1 } }
+        },
+        "outcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "deterministicStatus", "priorIssuesFullyAddressed", "counts"],
+          "properties": {
+            "status": { "enum": ["resolved", "unresolved", "request_more"] },
+            "deterministicStatus": { "enum": ["resolved", "unresolved"] },
+            "priorIssuesFullyAddressed": { "type": "boolean" },
+            "counts": { "$ref": "#/$defs/counts" }
+          }
+        },
+        "evidenceResults": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/receiptItem" } },
+        "note": { "type": "string", "minLength": 1, "maxLength": 280 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "receiptId": { "type": "string", "pattern": "^rwperr:[0-9a-f]{16}$" },
+        "receiptDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "source", "receipt", "createdAt", "assurance", "cardId", "cardDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-evidence-resolution-card" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["resolutionDigest", "priorReceiptDigest"],
+          "properties": {
+            "resolutionDigest": { "$ref": "#/$defs/bytes32" },
+            "priorReceiptDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "receipt": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["receiptId", "receiptDigest", "receiverRole", "outcome", "deterministicStatus", "priorIssuesFullyAddressed", "counts"],
+          "properties": {
+            "receiptId": { "type": "string", "pattern": "^rwperr:[0-9a-f]{16}$" },
+            "receiptDigest": { "$ref": "#/$defs/bytes32" },
+            "receiverRole": { "type": "string", "minLength": 1 },
+            "outcome": { "enum": ["resolved", "unresolved", "request_more"] },
+            "deterministicStatus": { "enum": ["resolved", "unresolved"] },
+            "priorIssuesFullyAddressed": { "type": "boolean" },
+            "counts": { "$ref": "#/$defs/counts" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "cardId": { "type": "string", "pattern": "^rwperrc:[0-9a-f]{16}$" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    }
+  }
+}
