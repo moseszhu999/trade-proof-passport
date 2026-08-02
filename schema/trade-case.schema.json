@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/trade-case.schema.json",
+  "title": "TradeProof Holder-Controlled Trade Case v0.2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "title",
+    "stage",
+    "state",
+    "createdAt",
+    "updatedAt",
+    "formalWritePerformed",
+    "sourceOpportunity",
+    "requirementCandidates",
+    "communications",
+    "fileReferences",
+    "decisions",
+    "nextActions",
+    "boundaries",
+    "caseDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "tradeproof.trade-case.v0.2" },
+    "caseId": { "type": "string", "pattern": "^trade-case:" },
+    "title": { "type": ["string", "null"] },
+    "stage": { "const": "qualification_review" },
+    "state": { "const": "holder_controlled_draft" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "formalWritePerformed": { "const": false },
+    "sourceOpportunity": {
+      "type": "object",
+      "required": ["opportunityId", "sourceId", "recordId", "url", "classificationCodes"],
+      "properties": {
+        "opportunityId": { "type": "string" },
+        "sourceId": { "type": "string" },
+        "recordId": { "type": "string" },
+        "url": { "type": "string", "pattern": "^https://" },
+        "opportunityDigest": { "type": ["string", "null"] },
+        "buyerName": { "type": ["string", "null"] },
+        "buyerCountry": { "type": ["string", "null"] },
+        "deadlineAt": { "type": ["string", "null"] },
+        "classificationCodes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "requirementCandidates": { "type": "array" },
+    "communications": { "type": "array" },
+    "fileReferences": { "type": "array" },
+    "decisions": { "type": "array" },
+    "nextActions": { "type": "array", "items": { "type": "string" } },
+    "boundaries": {
+      "type": "object",
+      "required": ["holderControlled", "serverPersistence", "externalMessageSent", "fileContentRead", "buyerIdentityVerified", "supplierEligibilityDecided"],
+      "properties": {
+        "holderControlled": { "const": true },
+        "serverPersistence": { "const": false },
+        "externalMessageSent": { "const": false },
+        "fileContentRead": { "const": false },
+        "buyerIdentityVerified": { "const": false },
+        "supplierEligibilityDecided": { "const": false }
+      }
+    },
+    "caseDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+  }
+}
