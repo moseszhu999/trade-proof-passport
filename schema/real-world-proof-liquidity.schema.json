@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/real-world-proof-liquidity.schema.json",
+  "title": "Real-World Proof Liquidity Snapshot or Card",
+  "oneOf": [
+    { "$ref": "#/$defs/snapshot" },
+    { "$ref": "#/$defs/card" }
+  ],
+  "$defs": {
+    "bytes32": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+    "dateTime": { "type": "string", "format": "date-time" },
+    "pool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["poolId", "poolDigest", "label", "scope", "generation"],
+      "properties": {
+        "poolId": { "type": "string", "pattern": "^rwppool:[0-9a-f]{16}$" },
+        "poolDigest": { "$ref": "#/$defs/bytes32" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 96 },
+        "scope": { "enum": ["trade_corridor", "industry", "workflow", "other"] },
+        "generation": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "adoptionCard": {
+      "type": "object",
+      "required": ["format", "version", "domain", "cardId", "cardDigest", "source", "pool", "adoptionStatus", "proofLiquidityEligible", "observability", "currentState", "checks", "createdAt", "assurance"],
+      "properties": {
+        "format": { "const": "real-world-proof-pool-adoption-card" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "cardId": { "type": "string", "pattern": "^rwpadoptcard:[0-9a-f]{16}$" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["submittedCards", "uniqueCards", "verifiedAdoptionUnits", "partialAdoptions", "notAdopted", "excludedDuplicates", "fullArtifactVerified", "firstAdoptionAt", "lastAdoptionAt"],
+      "properties": {
+        "submittedCards": { "type": "integer", "minimum": 1 },
+        "uniqueCards": { "type": "integer", "minimum": 1 },
+        "verifiedAdoptionUnits": { "type": "integer", "minimum": 0 },
+        "partialAdoptions": { "type": "integer", "minimum": 0 },
+        "notAdopted": { "type": "integer", "minimum": 0 },
+        "excludedDuplicates": { "type": "integer", "minimum": 0 },
+        "fullArtifactVerified": { "type": "integer", "minimum": 0 },
+        "firstAdoptionAt": { "$ref": "#/$defs/dateTime" },
+        "lastAdoptionAt": { "$ref": "#/$defs/dateTime" }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "pool", "inputs", "included", "excluded", "summary", "projectedAt", "assurance", "snapshotId", "snapshotDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-liquidity-snapshot" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "pool": { "$ref": "#/$defs/pool" },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["adoptionCards"],
+          "properties": { "adoptionCards": { "type": "array", "minItems": 1, "maxItems": 50, "items": { "$ref": "#/$defs/adoptionCard" } } }
+        },
+        "included": { "type": "array" },
+        "excluded": { "type": "array" },
+        "summary": { "$ref": "#/$defs/summary" },
+        "projectedAt": { "$ref": "#/$defs/dateTime" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "snapshotId": { "type": "string", "pattern": "^rwppls:[0-9a-f]{16}$" },
+        "snapshotDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "source", "pool", "units", "firstAdoptionAt", "lastAdoptionAt", "assurance", "cardId", "cardDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-liquidity-snapshot-card" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": { "type": "object" },
+        "pool": { "type": "object" },
+        "units": { "type": "object" },
+        "firstAdoptionAt": { "$ref": "#/$defs/dateTime" },
+        "lastAdoptionAt": { "$ref": "#/$defs/dateTime" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "cardId": { "type": "string", "pattern": "^rwpplcard:[0-9a-f]{16}$" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    }
+  }
+}
