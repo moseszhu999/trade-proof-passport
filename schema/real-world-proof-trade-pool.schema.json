@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/real-world-proof-trade-pool.schema.json",
+  "title": "Real-World Proof Pattern and Trade Pool v0.1",
+  "oneOf": [
+    { "$ref": "#/$defs/proofPattern" },
+    { "$ref": "#/$defs/tradePool" }
+  ],
+  "$defs": {
+    "bytes32": {
+      "type": "string",
+      "pattern": "^0x[0-9a-f]{64}$"
+    },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["exporter", "buyer", "supplier", "manufacturer", "inspection", "logistics", "warehouse", "customs", "insurance", "legal", "funder", "other"]
+      }
+    },
+    "evidenceCategories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["bill_of_lading", "commercial_invoice", "customs_record", "inspection_report", "insurance_record", "logistics_event", "packing_list", "purchase_order", "warehouse_receipt", "other"]
+      }
+    },
+    "statusGates": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["proof_available", "awaiting_response", "awaiting_evidence_package", "awaiting_evidence_receipt", "evidence_received", "awaiting_resolution_receipt", "action_required", "resolved", "declined"]
+      }
+    },
+    "proofPattern": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "source", "derivedWorkflow", "declaredRequirements", "derivedAt", "assurance", "patternId", "patternDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-pattern" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifactType", "artifactId", "artifactDigest", "passportDigest", "cardDigest"],
+          "properties": {
+            "artifactType": { "enum": ["case_graph", "timeline_card"] },
+            "artifactId": { "type": "string", "minLength": 1 },
+            "artifactDigest": { "$ref": "#/$defs/bytes32" },
+            "passportDigest": { "$ref": "#/$defs/bytes32" },
+            "cardDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "derivedWorkflow": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["steps", "requiredNodeTypes", "relations", "relationCoverage", "terminalStateObserved", "branchingObserved"],
+          "properties": {
+            "steps": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["order", "type", "observedStatus"],
+                "properties": {
+                  "order": { "type": "integer", "minimum": 1 },
+                  "type": { "type": "string", "minLength": 1 },
+                  "observedStatus": { "type": "string", "minLength": 1, "maxLength": 64 }
+                }
+              }
+            },
+            "requiredNodeTypes": {
+              "type": "array",
+              "minItems": 2,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "relations": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["fromType", "toType", "relation"],
+                "properties": {
+                  "fromType": { "type": "string", "minLength": 1 },
+                  "toType": { "type": "string", "minLength": 1 },
+                  "relation": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "relationCoverage": { "enum": ["explicit_graph", "sequence_only"] },
+            "terminalStateObserved": { "type": "string", "minLength": 1 },
+            "branchingObserved": { "type": "boolean" }
+          }
+        },
+        "declaredRequirements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provenance", "roles", "evidenceCategories", "statusGates"],
+          "properties": {
+            "provenance": { "const": "operator_declared" },
+            "roles": { "$ref": "#/$defs/roles" },
+            "evidenceCategories": { "$ref": "#/$defs/evidenceCategories" },
+            "statusGates": { "$ref": "#/$defs/statusGates" }
+          }
+        },
+        "derivedAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "patternId": { "type": "string", "pattern": "^rwppat:[0-9a-f]{16}$" },
+        "patternDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "tradePool": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "label", "scope", "proofPattern", "publicRules", "lineage", "createdAt", "assurance", "poolId", "poolDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-trade-pool" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 96 },
+        "scope": { "enum": ["trade_corridor", "industry", "workflow", "other"] },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 280 },
+        "proofPattern": { "$ref": "#/$defs/proofPattern" },
+        "publicRules": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provenance", "roles", "evidenceCategories", "statusGates", "reuseMode"],
+          "properties": {
+            "provenance": { "const": "pool_operator_declared" },
+            "roles": { "$ref": "#/$defs/roles" },
+            "evidenceCategories": { "$ref": "#/$defs/evidenceCategories" },
+            "statusGates": { "$ref": "#/$defs/statusGates" },
+            "reuseMode": { "const": "independent_rwp_only" }
+          }
+        },
+        "lineage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["generation"],
+          "properties": {
+            "generation": { "type": "integer", "minimum": 0 },
+            "forkedFromPoolDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "poolId": { "type": "string", "pattern": "^rwppool:[0-9a-f]{16}$" },
+        "poolDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    }
+  }
+}
