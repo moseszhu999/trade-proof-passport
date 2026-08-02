@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prepare an Authorized Evidence Package · TradeProof</title>
+  <meta name="description" content="Verify a complete Trade Proof Passport locally and generate an authorized evidence manifest without uploading source files.">
+  <meta property="og:title" content="Prepare an Authorized RWP Evidence Package">
+  <meta property="og:description" content="Local-only evidence selection and digest verification for an accepted RWP Request Response.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/rwp-evidence.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/rwp-evidence.html">
+  <style>
+    :root{color-scheme:dark;--bg:#050507;--panel:#10131b;--line:rgba(255,255,255,.12);--text:#f8f9fc;--muted:#a8afbd;--lime:#bcff4d;--cyan:#59ecff;--amber:#ffc66d;--red:#ff788f}
+    *{box-sizing:border-box}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -12%,#1a1726 0,var(--bg) 42%);color:var(--text)}a{color:inherit}button,input,textarea{font:inherit}.wrap{width:min(1120px,calc(100% - 32px));margin:auto;padding-bottom:70px}.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line)}.brand{font-weight:950;text-decoration:none}.navlinks{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none}.hero{padding:68px 0 34px}.kicker{color:var(--lime);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.18em}.hero h1{font-size:clamp(45px,7vw,82px);line-height:.94;letter-spacing:-.06em;margin:13px 0 18px}.hero p{max-width:820px;color:var(--muted);font-size:19px}.notice{padding:15px 17px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:13px;background:rgba(89,236,255,.055);margin-bottom:22px}.grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:16px}.panel{border:1px solid var(--line);border-radius:22px;background:rgba(16,19,27,.92);padding:22px}.panel h2{margin:0 0 9px;font-size:28px}.panel>p{color:var(--muted)}.row{padding:12px 0;border-bottom:1px solid var(--line)}.row span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase}.row strong{display:block;margin-top:4px;overflow-wrap:anywhere}.digest{font:11px/1.5 ui-monospace,monospace;color:var(--cyan)}label{display:grid;gap:7px;margin-top:14px;font-weight:750}textarea,input[type=file]{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:#090c12;color:var(--text)}textarea{min-height:230px;resize:vertical;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}.evidence-list{display:grid;gap:10px;margin-top:16px}.evidence-item{padding:14px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025)}.evidence-head{display:flex;gap:10px;align-items:flex-start}.evidence-head input{margin-top:5px;accent-color:var(--lime)}.evidence-head strong{display:block}.evidence-head small{display:block;color:var(--muted);margin-top:3px}.file-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:10px}.file-state{font-size:12px;color:var(--muted)}.file-state.matched{color:var(--lime)}.file-state.mismatch{color:var(--red)}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}button,.button{min-height:42px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:#151a25;color:var(--text);font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}button:disabled{opacity:.45;cursor:not-allowed}.status{min-height:24px;margin-top:12px;color:var(--muted);font-size:13px}.status.error{color:var(--red)}.warning{color:var(--amber);font-size:12px}.result{display:none;margin-top:18px;padding:17px;border:1px solid rgba(188,255,77,.25);border-radius:16px;background:rgba(188,255,77,.045)}.result.show{display:block}.boundary{margin-top:25px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}@media(max-width:820px){.grid{grid-template-columns:1fr}.file-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="brand" href="./">TRADEPROOF</a><div class="navlinks"><a href="./rwp.html">RWP</a><a href="./rwp-respond.html">Request responses</a><a href="./onchain.html">Anchor & verify</a></div></nav>
+    <section class="hero"><div class="kicker">Authorized Evidence Package · RWP v0.1</div><h1>Deliver evidence,<br>not public secrets.</h1><p>Verify the accepted Request Response, import the complete Passport locally, select only authorized evidence records, optionally recompute local file digests, and download a portable manifest.</p></section>
+    <div class="notice"><strong>Local-only package builder.</strong> Passport JSON and selected files stay in this browser session. The Evidence Package is downloaded as JSON and is never encoded into the page URL. Transfer the manifest and source files separately through the authorized business channel.</div>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Verified authorization chain</h2>
+        <div id="missingChain"><p>Open this page from a valid accepted RWP Request Response link.</p></div>
+        <div id="chainView" hidden>
+          <div class="row"><span>Proof Card</span><strong id="cardLabel"></strong></div>
+          <div class="row"><span>Requester role</span><strong id="requesterRole"></strong></div>
+          <div class="row"><span>Responder role</span><strong id="responderRole"></strong></div>
+          <div class="row"><span>Response decision</span><strong id="responseDecision"></strong></div>
+          <div class="row"><span>Authorized channel</span><strong id="channelHint"></strong></div>
+          <div class="row"><span>Allowed evidence categories</span><strong id="allowedCategories"></strong></div>
+          <div class="row"><span>Response digest</span><strong class="digest" id="responseDigest"></strong></div>
+        </div>
+        <div class="status" id="chainStatus" aria-live="polite"></div>
+
+        <h2 style="margin-top:28px">Import complete Passport</h2>
+        <p>The imported Passport must reproduce the Proof Card source digest exactly.</p>
+        <label>Passport JSON file<input id="passportFile" type="file" accept="application/json,.json"></label>
+        <label>Complete Passport JSON<textarea id="passportText" spellcheck="false" placeholder='{"schemaVersion":"0.1","passportId":"..."}'></textarea></label>
+        <div class="actions"><button class="primary" id="verifyPassport" type="button" disabled>Verify Passport and list evidence</button></div>
+        <div class="status" id="passportStatus" aria-live="polite"></div>
+      </article>
+
+      <article class="panel">
+        <h2>Authorized evidence records</h2>
+        <p>Select the minimum records needed. A local file is optional; when selected, its digest is recomputed without uploading it.</p>
+        <div class="evidence-list" id="evidenceList"><span class="warning">Verify the complete Passport first.</span></div>
+        <div class="actions"><button class="primary" id="generatePackage" type="button" disabled>Generate Evidence Package Manifest</button><button id="downloadPackage" type="button" disabled>Download manifest JSON</button><button id="copyPackageDigest" type="button" disabled>Copy package digest</button></div>
+        <div class="status" id="packageStatus" aria-live="polite"></div>
+        <section class="result" id="packageView">
+          <h3>Evidence Package ready</h3>
+          <div class="row"><span>Package ID</span><strong id="packageId"></strong></div>
+          <div class="row"><span>Package digest</span><strong class="digest" id="packageDigest"></strong></div>
+          <div class="row"><span>Coverage</span><strong id="packageCoverage"></strong></div>
+          <div class="row"><span>Included records</span><strong id="packageRecords"></strong></div>
+          <p class="warning">The manifest does not contain the source files and does not prove that delivery occurred.</p>
+        </section>
+      </article>
+    </section>
+
+    <p class="boundary">An Evidence Package records a holder-selected manifest under an accepted Response. It does not authenticate either party, expand authorization, prove delivery, prove document validity, establish ownership or title, create an RWA, or activate payment, settlement, financing, custody, Token distribution, liquidity or a mainnet action.</p>
+  </main>
+
+  <script type="module">
+    import { computePassportDigest, readProofCardFromHash } from './rwp-card.mjs';
+    import { readRwpRequestFromHash } from './rwp-request.mjs';
+    import { readRwpRequestResponseFromHash } from './rwp-request-response.mjs';
+    import { buildRwpEvidencePackage, evidenceCategoryForType, verifyEvidenceFileBytes } from './rwp-evidence-package.mjs';
+
+    const byId=(id)=>document.getElementById(id);
+    const state={card:null,request:null,response:null,passport:null,eligible:new Map(),verifications:{},package:null};
+    const setStatus=(id,message,error=false)=>{const element=byId(id);element.textContent=message;element.className=`status${error?' error':''}`;};
+    const downloadJson=(value,filename)=>{const blob=new Blob([`${JSON.stringify(value,null,2)}\n`],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=filename;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href);};
+
+    const renderChain=(card,request,response)=>{
+      state.card=card;state.request=request;state.response=response;
+      byId('missingChain').hidden=true;byId('chainView').hidden=false;byId('verifyPassport').disabled=false;
+      byId('cardLabel').textContent=card.publicLabel;
+      byId('requesterRole').textContent=request.requester.role;
+      byId('responderRole').textContent=response.responder.role;
+      byId('responseDecision').textContent=response.decision.status;
+      byId('channelHint').textContent=response.fulfillment.channelHint;
+      byId('allowedCategories').textContent=response.fulfillment.evidenceTypes.join(', ');
+      byId('responseDigest').textContent=response.responseDigest;
+    };
+
+    const setFileState=(evidenceId,result)=>{
+      state.verifications[evidenceId]=result;
+      const target=document.querySelector(`[data-file-state="${CSS.escape(evidenceId)}"]`);
+      if(!target)return;
+      target.textContent=result.status==='matched'?'Digest matched':result.status==='mismatch'?'Digest mismatch':result.status==='unsupported_algorithm'?'Digest algorithm not supported in Web Crypto':'Not checked';
+      target.className=`file-state ${result.status}`;
+    };
+
+    const renderEvidence=(passport)=>{
+      state.eligible.clear();state.verifications={};state.package=null;
+      byId('generatePackage').disabled=true;byId('downloadPackage').disabled=true;byId('copyPackageDigest').disabled=true;byId('packageView').classList.remove('show');
+      const allowed=new Set(state.response.fulfillment.evidenceTypes);
+      const eligible=(Array.isArray(passport.evidence)?passport.evidence:[]).filter((item)=>allowed.has(evidenceCategoryForType(item.type)));
+      const holder=byId('evidenceList');holder.replaceChildren();
+      if(eligible.length===0){const message=document.createElement('span');message.className='warning';message.textContent='The Passport contains no evidence record matching the Response authorization.';holder.append(message);return;}
+      for(const item of eligible){
+        state.eligible.set(item.evidenceId,item);state.verifications[item.evidenceId]={status:'not_checked',algorithm:item.digest.algorithm};
+        const article=document.createElement('article');article.className='evidence-item';
+        const head=document.createElement('div');head.className='evidence-head';
+        const select=document.createElement('input');select.type='checkbox';select.value=item.evidenceId;select.checked=true;select.addEventListener('change',()=>{byId('generatePackage').disabled=document.querySelectorAll('#evidenceList input[type=checkbox]:checked').length===0;});
+        const copy=document.createElement('div');const title=document.createElement('strong');title.textContent=item.title||item.evidenceId;const meta=document.createElement('small');meta.textContent=`${evidenceCategoryForType(item.type)} · ${item.type} · ${item.digest.algorithm}`;copy.append(title,meta);head.append(select,copy);
+        const fileRow=document.createElement('div');fileRow.className='file-row';const file=document.createElement('input');file.type='file';file.setAttribute('aria-label',`Verify local file for ${item.evidenceId}`);const fileState=document.createElement('span');fileState.className='file-state';fileState.dataset.fileState=item.evidenceId;fileState.textContent='Not checked';
+        file.addEventListener('change',async()=>{const selected=file.files?.[0];if(!selected){setFileState(item.evidenceId,{status:'not_checked',algorithm:item.digest.algorithm});return;}file.disabled=true;fileState.textContent='Computing digest locally…';try{setFileState(item.evidenceId,await verifyEvidenceFileBytes(item,await selected.arrayBuffer()));}catch(error){setFileState(item.evidenceId,{status:'not_checked',algorithm:item.digest.algorithm});setStatus('packageStatus',error?.message||String(error),true);}finally{file.disabled=false;}});
+        fileRow.append(file,fileState);article.append(head,fileRow);holder.append(article);
+      }
+      byId('generatePackage').disabled=false;
+    };
+
+    const verifyPassport=()=>{
+      if(!state.card||!state.response){setStatus('passportStatus','A verified accepted Response is required.',true);return;}
+      try{const passport=JSON.parse(byId('passportText').value);const digest=computePassportDigest(passport);if(digest!==state.card.sourceDigest)throw new Error('Imported Passport digest does not match the Proof Card sourceDigest.');state.passport=passport;renderEvidence(passport);setStatus('passportStatus',`Passport verified locally: ${digest}`);}catch(error){state.passport=null;byId('generatePackage').disabled=true;setStatus('passportStatus',error?.message||String(error),true);}
+    };
+
+    const selectedEvidenceIds=()=>[...document.querySelectorAll('#evidenceList input[type=checkbox]:checked')].map((input)=>input.value);
+    const generatePackage=()=>{
+      if(!state.passport){setStatus('packageStatus','Verify the complete Passport first.',true);return;}
+      try{const pkg=buildRwpEvidencePackage(state.passport,state.card,state.request,state.response,{evidenceIds:selectedEvidenceIds(),fileVerifications:state.verifications});state.package=pkg;byId('packageView').classList.add('show');byId('packageId').textContent=pkg.packageId;byId('packageDigest').textContent=pkg.packageDigest;byId('packageCoverage').textContent=pkg.coverage.complete?'Complete for authorized categories':`Partial · missing ${pkg.coverage.missingCategories.join(', ')}`;byId('packageRecords').textContent=String(pkg.evidence.length);byId('downloadPackage').disabled=false;byId('copyPackageDigest').disabled=false;setStatus('packageStatus','Manifest generated locally. It was not added to the URL or uploaded.');}catch(error){setStatus('packageStatus',error?.message||String(error),true);}
+    };
+
+    byId('passportFile').addEventListener('change',async(event)=>{const file=event.target.files?.[0];if(!file)return;if(file.size>5_000_000){setStatus('passportStatus','Passport JSON exceeds the 5 MB local limit.',true);return;}byId('passportText').value=await file.text();verifyPassport();});
+    byId('verifyPassport').addEventListener('click',verifyPassport);
+    byId('generatePackage').addEventListener('click',generatePackage);
+    byId('downloadPackage').addEventListener('click',()=>downloadJson(state.package,`${state.package.packageId}-evidence-package.json`));
+    byId('copyPackageDigest').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(state.package.packageDigest);setStatus('packageStatus','Package digest copied.');}catch{setStatus('packageStatus','Clipboard access failed.',true);}});
+
+    try{
+      const card=readProofCardFromHash(location.hash);const request=readRwpRequestFromHash(location.hash);if(!card||!request)throw new Error('The link must contain a Proof Card and RWP Request.');const response=readRwpRequestResponseFromHash(location.hash,request);if(!response)throw new Error('The link must contain an RWP Request Response.');if(request.source.passportDigest!==card.sourceDigest||request.source.cardDigest!==card.cardDigest)throw new Error('RWP Request source does not match the Proof Card.');if(response.source.passportDigest!==card.sourceDigest||response.source.cardDigest!==card.cardDigest||response.source.requestDigest!==request.requestDigest)throw new Error('RWP Request Response source chain is invalid.');if(!['accept','partially_accept'].includes(response.decision.status))throw new Error('Only accepted or partially accepted Responses can prepare an Evidence Package.');if(response.fulfillment.mode!=='authorized_off_channel')throw new Error('The Response does not authorize an off-channel evidence workflow.');if(response.fulfillment.evidenceTypes.length===0)throw new Error('The Response authorizes no evidence category.');renderChain(card,request,response);setStatus('chainStatus','Card, Request and Response digests verified. Import the matching complete Passport locally.');
+    }catch(error){setStatus('chainStatus',`Invalid authorization chain: ${error?.message||String(error)}`,true);}
+  </script>
+</body>
+</html>
