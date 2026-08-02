@@ -182,24 +182,24 @@ export async function ingestLocalDocument(caseRecord, file, options = {}, now = 
   const eml = classification.extension === 'eml' || classification.mimeType === 'message/rfc822'
     ? parseEml(storedText)
     : { text: storedText, headers: {} };
+  const intakeTextDigest = await sha256Text(eml.text);
   const requestedKind = options.kind;
   const kind = ['official_notice_text', 'email_or_message_text'].includes(requestedKind)
     ? requestedKind
     : classification.recommendedKind;
   const title = safeText(options.title, classification.name);
+  const beforeRequirementCount = caseRecord.requirementCandidates?.length ?? 0;
+  const beforeActionCount = (caseRecord.communications ?? [])
+    .flatMap((item) => item.actionCandidates ?? []).length;
 
   let next = await ingestText(caseRecord, {
     kind,
     title,
     text: eml.text
   }, now);
-  const beforeRequirementCount = caseRecord.requirementCandidates?.length ?? 0;
-  const beforeActionCount = (caseRecord.communications ?? [])
-    .flatMap((item) => item.actionCandidates ?? []).length;
-
   next = await addFileMetadata(next, [file], now);
   const enriched = clone(next);
-  const intake = enriched.communications.find((item) => item.textDigest === await sha256Text(eml.text));
+  const intake = enriched.communications.find((item) => item.textDigest === intakeTextDigest);
   if (intake) {
     intake.sourceMethod = 'holder_authorized_local_text_file';
     intake.sourceFile = {
