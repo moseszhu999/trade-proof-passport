@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RWP Pool Adoption · TradeProof</title>
+  <meta name="description" content="Verify an independent Real-World Proof against an open Trade Pool and create a privacy-bounded Proof Liquidity adoption card.">
+  <meta property="og:title" content="Proof Liquidity means verified adoption—not views">
+  <meta property="og:description" content="Locally verify an independent RWP against a public Trade Pool.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/rwp-adopt.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/rwp-adopt.html">
+  <style>
+    :root{color-scheme:dark;--bg:#050507;--panel:#10131b;--panel2:#151a25;--line:rgba(255,255,255,.12);--text:#f8f9fc;--muted:#a8afbd;--lime:#bcff4d;--cyan:#59ecff;--violet:#9478ff;--pink:#ff64ce;--amber:#ffc66d;--red:#ff788f;--shadow:0 28px 90px rgba(0,0,0,.5)}*{box-sizing:border-box}body{margin:0;font:16px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -10%,#1d1930 0,var(--bg) 42%);color:var(--text)}a{color:inherit}button,input,textarea{font:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:auto}.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line)}.brand{font-weight:950;text-decoration:none;letter-spacing:-.04em}.navlinks{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px}.navlinks a{text-decoration:none}.hero{padding:78px 0 42px;display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center}.kicker{color:var(--lime);font-size:12px;font-weight:900;letter-spacing:.19em;text-transform:uppercase}.hero h1{font-size:clamp(50px,7vw,94px);line-height:.91;letter-spacing:-.07em;margin:13px 0 22px}.gradient{background:linear-gradient(100deg,var(--lime),var(--cyan) 43%,var(--violet) 76%,var(--pink));background-clip:text;-webkit-background-clip:text;color:transparent}.lead{color:var(--muted);font-size:clamp(18px,2vw,22px)}.manifesto{padding:24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(18,21,32,.96),rgba(8,10,16,.96));box-shadow:var(--shadow)}.manifesto div{padding:13px 0;border-bottom:1px solid var(--line)}.manifesto div:last-child{border-bottom:0}.manifesto span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em}.manifesto strong{display:block;margin-top:4px}.notice{margin-bottom:24px;padding:16px 18px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:14px;background:rgba(89,236,255,.055)}.workspace{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-bottom:80px}.panel{border:1px solid var(--line);border-radius:23px;background:rgba(16,19,27,.92);padding:23px}.panel h2{margin:0 0 8px;font-size:29px;letter-spacing:-.035em}.panel>p{margin-top:0;color:var(--muted)}label{display:grid;gap:7px;margin-top:14px;font-weight:760}small{color:var(--muted);font-weight:400}textarea,input[type=file]{width:100%;border:1px solid var(--line);border-radius:11px;padding:12px;background:#090c12;color:var(--text)}textarea{min-height:145px;resize:vertical;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}input[type=file]{border-style:dashed;color:var(--muted)}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}button,.button{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:10px 15px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);font-weight:850;text-decoration:none;cursor:pointer}button.primary,.button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}.status{min-height:24px;margin-top:12px;color:var(--muted);font-size:13px}.status.error{color:var(--red)}.adoption-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.17);border-radius:27px;padding:25px;background:radial-gradient(circle at 100% 0,rgba(188,255,77,.14),transparent 30%),radial-gradient(circle at 0 100%,rgba(148,120,255,.18),transparent 34%),linear-gradient(145deg,#121621,#080a10);box-shadow:var(--shadow)}.adoption-card:before{content:"ADOPT";position:absolute;right:-8px;top:-5px;font-size:86px;font-weight:950;color:rgba(255,255,255,.025)}.adoption-card>*{position:relative}.badges{display:flex;flex-wrap:wrap;gap:7px}.badge{padding:6px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:11px}.badge.live{color:var(--lime);border-color:rgba(188,255,77,.3)}.badge.warn{color:var(--amber);border-color:rgba(255,198,109,.3)}.badge.fail{color:var(--red);border-color:rgba(255,120,143,.3)}.adoption-card h3{font-size:clamp(34px,5vw,54px);line-height:.98;letter-spacing:-.055em;margin:42px 0 10px}.digest{font:11px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--cyan);overflow-wrap:anywhere}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:20px}.metric{padding:12px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.03)}.metric span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase}.metric strong{font-size:22px}.checks{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}.check{display:grid;grid-template-columns:1fr auto;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.check span{color:var(--muted);font-size:12px}.check b.ok{color:var(--lime)}.check b.warn{color:var(--amber)}.check b.fail{color:var(--red)}.empty{display:grid;place-items:center;min-height:520px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:20px;padding:25px}.boundary{padding:26px 0 50px;color:var(--muted);border-top:1px solid var(--line);font-size:13px}@media(max-width:880px){.hero,.workspace{grid-template-columns:1fr}}@media(max-width:560px){.metrics{grid-template-columns:1fr 1fr}.nav{align-items:flex-start;padding:20px 0}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="brand" href="./">TRADEPROOF</a><div class="navlinks"><a href="./rwp-pool.html">Trade Pools</a><a href="./rwp-graph.html">Proof Graph</a><a href="./rwp.html">RWP Card</a><a href="https://github.com/moseszhu999/trade-proof-passport/blob/main/standard/real-world-proof-pool-adoption-v0.1.md">Open standard</a></div></nav>
+    <section class="hero"><div><div class="kicker">Proof Liquidity · Adoption Receipt v0.1</div><h1>Count adoption.<br><span class="gradient">Not attention.</span></h1><p class="lead">A view, wallet connection, copied link or empty Pool fork proves nothing. Verify an independently created RWP against the Pool rules and publish only the bounded result.</p></div><div class="manifesto"><div><span>Independent</span><strong>The adopting Passport root must differ from the Pool source.</strong></div><div><span>Deterministic</span><strong>Every rule is satisfied, rejected or not observable.</strong></div><div><span>Scarce</span><strong>Only verified adoption is Proof Liquidity eligible.</strong></div><div><span>Private</span><strong>Full business artifacts stay in the browser.</strong></div></div></section>
+    <div class="notice"><strong>Views and empty forks do not count.</strong> Proof Liquidity eligibility requires a valid public Pool, an independent Case Graph and—when role or evidence rules exist—a local source bundle that reproduces the exact Graph digest.</div>
+    <section class="workspace">
+      <div class="panel" id="builderPanel">
+        <h2>Verify Pool adoption</h2><p>Import the public Pool and an independently produced Case Graph. Add the complete local source objects for full role and matched-evidence observability.</p>
+        <label>Trade Pool JSON<input id="poolFile" type="file" accept="application/json,.json"><textarea id="poolText" spellcheck="false" placeholder='{"format":"real-world-proof-trade-pool",...}'></textarea></label>
+        <label>Independent Case Graph JSON<input id="graphFile" type="file" accept="application/json,.json"><textarea id="graphText" spellcheck="false" placeholder='{"format":"real-world-proof-case-graph",...}'></textarea></label>
+        <label>Optional complete source artifact bundle<input id="artifactFiles" type="file" accept="application/json,.json" multiple><small>Select the independent Passport, Proof Card, Requests, Responses, Packages, Receipts and Resolutions used to create this Graph. Files never leave the browser.</small></label>
+        <div class="actions"><button class="primary" id="verifyButton" type="button">Generate Adoption Receipt</button><a class="button" href="./create.html">Start independent RWP</a></div><div class="status" id="builderStatus" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <div class="empty" id="empty"><div><strong>No adoption result yet.</strong><p>Import a Pool and an independent Case Graph, or open a shared Adoption Card.</p></div></div>
+        <article class="adoption-card" id="card" hidden><div class="badges"><span class="badge live">POOL ADOPTION</span><span class="badge" id="statusBadge"></span><span class="badge" id="liquidityBadge"></span></div><h3 id="poolLabel"></h3><div class="digest" id="sourceDigests"></div><div class="metrics"><div class="metric"><span>Satisfied</span><strong id="satisfied">0</strong></div><div class="metric"><span>Failed</span><strong id="failed">0</strong></div><div class="metric"><span>Unobservable</span><strong id="unobservable">0</strong></div><div class="metric"><span>Total checks</span><strong id="total">0</strong></div></div><div class="checks" id="checkList"></div><p id="assurance" class="status"></p></article>
+        <div class="actions" id="resultActions" hidden><button class="primary" id="copyCard" type="button">Copy Adoption Card</button><button id="downloadReceipt" type="button">Download private Receipt</button></div><div class="status" id="shareStatus" aria-live="polite"></div>
+      </div>
+    </section>
+    <footer class="boundary"><strong>Truth boundary:</strong> verified adoption means the imported objects structurally satisfy the referenced Pool rules. It is not authenticated identity, legal compliance, credit quality, financial liquidity, RWA approval, Token entitlement or proof of absolute truth.</footer>
+  </main>
+  <script type="module">
+    import { readRwpTradePoolFromHash } from './rwp-proof-pool.mjs';
+    import {
+      buildRwpPoolAdoptionCard,
+      buildRwpPoolAdoptionCardUrl,
+      buildRwpPoolAdoptionReceipt,
+      readRwpPoolAdoptionCardFromHash
+    } from './rwp-pool-adoption.mjs';
+
+    const $ = (id) => document.getElementById(id);
+    let currentReceipt = null;
+    let currentCard = null;
+    let currentPool = null;
+    let currentGraph = null;
+    let sourceArtifacts = [];
+    const setStatus = (id, message, error = false) => { $(id).textContent = message; $(id).classList.toggle('error', error); };
+    const downloadJson = (value, name) => {
+      const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: 'application/json' });
+      const url = URL.createObjectURL(blob); const anchor = document.createElement('a');
+      anchor.href = url; anchor.download = name; anchor.click(); URL.revokeObjectURL(url);
+    };
+    const bindFile = (fileId, textId) => $(fileId).addEventListener('change', async (event) => {
+      const file = event.target.files?.[0]; if (file) $(textId).value = await file.text();
+    });
+    bindFile('poolFile', 'poolText'); bindFile('graphFile', 'graphText');
+    $('artifactFiles').addEventListener('change', async (event) => {
+      try {
+        sourceArtifacts = await Promise.all([...event.target.files].map(async (file) => JSON.parse(await file.text())));
+        setStatus('builderStatus', `${sourceArtifacts.length} local source artifacts loaded. They will not be uploaded or encoded into the public URL.`);
+      } catch (error) { sourceArtifacts = []; setStatus('builderStatus', error.message, true); }
+    });
+
+    const statusClass = (status) => status === 'satisfied' ? 'ok' : status === 'not_observable' ? 'warn' : 'fail';
+    const renderChecks = (receipt) => {
+      const rows = [];
+      for (const item of receipt.evaluation.workflow.requiredNodeTypes) rows.push([`node:${item.value}`, item.status]);
+      for (const item of receipt.evaluation.workflow.requiredRelations) rows.push([`${item.fromType} ${item.relation} ${item.toType}`, item.status]);
+      rows.push(['ordered workflow sequence', receipt.evaluation.workflow.stepSequence.status]);
+      rows.push(['required branching', receipt.evaluation.workflow.branching.status]);
+      rows.push([`status gate:${receipt.evaluation.statusGate.currentState}`, receipt.evaluation.statusGate.status]);
+      for (const item of receipt.evaluation.roles) rows.push([`role:${item.value}`, item.status]);
+      for (const item of receipt.evaluation.evidenceCategories) rows.push([`matched evidence:${item.value}`, item.status]);
+      $('checkList').innerHTML = rows.map(([label, status]) => `<div class="check"><span>${label.replaceAll('_', ' ')}</span><b class="${statusClass(status)}">${status.replaceAll('_', ' ')}</b></div>`).join('');
+    };
+    const renderCard = (card, receipt = null) => {
+      currentCard = card; $('empty').hidden = true; $('card').hidden = false; $('resultActions').hidden = false;
+      $('poolLabel').textContent = card.pool.label; $('statusBadge').textContent = card.adoptionStatus.replaceAll('_', ' ');
+      $('statusBadge').className = `badge ${card.adoptionStatus === 'verified_adoption' ? 'live' : card.adoptionStatus === 'partial_adoption' ? 'warn' : 'fail'}`;
+      $('liquidityBadge').textContent = card.proofLiquidityEligible ? 'PROOF LIQUIDITY ELIGIBLE' : 'NOT ELIGIBLE';
+      $('liquidityBadge').className = `badge ${card.proofLiquidityEligible ? 'live' : 'warn'}`;
+      $('sourceDigests').textContent = `Pool ${card.source.poolDigest} · Graph ${card.source.graphDigest} · Receipt ${card.source.receiptDigest}`;
+      $('satisfied').textContent = card.checks.satisfied; $('failed').textContent = card.checks.notSatisfied; $('unobservable').textContent = card.checks.notObservable; $('total').textContent = card.checks.total;
+      $('assurance').textContent = card.assurance;
+      if (receipt) renderChecks(receipt); else $('checkList').innerHTML = `<div class="check"><span>Public aggregate only</span><b class="${card.proofLiquidityEligible ? 'ok' : 'warn'}">${card.observability.replaceAll('_', ' ')}</b></div>`;
+      $('downloadReceipt').hidden = !receipt;
+    };
+
+    $('verifyButton').addEventListener('click', () => {
+      try {
+        currentPool = JSON.parse($('poolText').value); currentGraph = JSON.parse($('graphText').value);
+        currentReceipt = buildRwpPoolAdoptionReceipt(currentPool, currentGraph, { artifacts: sourceArtifacts });
+        const card = buildRwpPoolAdoptionCard(currentReceipt, currentPool, currentGraph); renderCard(card, currentReceipt);
+        setStatus('builderStatus', `PASS: ${currentReceipt.evaluation.adoptionStatus}. Proof Liquidity eligible: ${currentReceipt.evaluation.proofLiquidityEligible}.`);
+      } catch (error) { currentReceipt = null; setStatus('builderStatus', error.message, true); }
+    });
+    $('copyCard').addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(buildRwpPoolAdoptionCardUrl(currentCard, location.href)); setStatus('shareStatus', 'Adoption Card link copied. The full Receipt and source artifacts were not encoded.'); }
+      catch (error) { setStatus('shareStatus', error.message, true); }
+    });
+    $('downloadReceipt').addEventListener('click', () => currentReceipt && downloadJson(currentReceipt, `${currentReceipt.receiptId.replace(':', '-')}.json`));
+
+    try {
+      const sharedCard = readRwpPoolAdoptionCardFromHash(location.hash);
+      if (sharedCard) { $('builderPanel').hidden = true; renderCard(sharedCard); setStatus('shareStatus', 'Shared privacy-bounded Adoption Card verified locally.'); }
+      else {
+        const sharedPool = readRwpTradePoolFromHash(location.hash);
+        if (sharedPool) { $('poolText').value = JSON.stringify(sharedPool, null, 2); setStatus('builderStatus', 'Shared Pool verified. Import an independent Case Graph to evaluate adoption.'); }
+      }
+    } catch (error) { setStatus('builderStatus', error.message, true); }
+  </script>
+</body>
+</html>
