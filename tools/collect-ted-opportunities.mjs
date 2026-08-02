@@ -18,8 +18,7 @@ const DEFAULT_FIELDS = [
   'buyer-country',
   'notice-type',
   'classification-cpv',
-  'deadline-receipt-tender-date-lot',
-  'links'
+  'deadline-receipt-tender-date-lot'
 ];
 
 function parseArgs(argv) {
@@ -101,7 +100,7 @@ async function writeText(path, content) {
 
 export async function collectTedOpportunities(options) {
   const since = normalizeTedDate(options.since);
-  const query = options.query ?? `publication-date >= ${since}`;
+  const query = options.query ?? `publication-date >= ${since} AND notice-type=cn-standard`;
   const payload = {
     query,
     fields: DEFAULT_FIELDS,
