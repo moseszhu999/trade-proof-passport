@@ -44,7 +44,7 @@ assert.equal(moduleSource.includes('adoptionCards: snapshot.inputs.adoptionCards
 for (const required of [
   'One verified proof-liquidity unit',
   'unique Passport root',
-  'duplicate submissions never increase',
+  'Duplicate submissions never increase',
   'does not require a central index',
   'Snapshot proves only the exact card set',
   'page view',
