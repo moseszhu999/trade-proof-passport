@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/real-world-proof-case-graph.schema.json",
+  "title": "Real-World Proof Case Graph v0.1",
+  "oneOf": [
+    { "$ref": "#/$defs/graph" },
+    { "$ref": "#/$defs/timelineCard" }
+  ],
+  "$defs": {
+    "bytes32": {
+      "type": "string",
+      "pattern": "^0x[0-9a-f]{64}$"
+    },
+    "metrics": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "digest", "at", "status", "metrics"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 96 },
+        "type": {
+          "enum": [
+            "passport",
+            "proof_card",
+            "request",
+            "request_response",
+            "evidence_package",
+            "evidence_receipt",
+            "evidence_resolution",
+            "evidence_resolution_receipt"
+          ]
+        },
+        "digest": { "$ref": "#/$defs/bytes32" },
+        "at": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "metrics": { "$ref": "#/$defs/metrics" }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "relation"],
+      "properties": {
+        "from": { "type": "string", "minLength": 1 },
+        "to": { "type": "string", "minLength": 1 },
+        "relation": {
+          "enum": [
+            "projects_to",
+            "requests_from",
+            "responds_to",
+            "packages_for",
+            "receives",
+            "resolves_package",
+            "resolves_receipt",
+            "verifies_resolution"
+          ]
+        }
+      }
+    },
+    "typeCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passport",
+        "proof_card",
+        "request",
+        "request_response",
+        "evidence_package",
+        "evidence_receipt",
+        "evidence_resolution",
+        "evidence_resolution_receipt"
+      ],
+      "properties": {
+        "passport": { "type": "integer", "minimum": 0 },
+        "proof_card": { "type": "integer", "minimum": 0 },
+        "request": { "type": "integer", "minimum": 0 },
+        "request_response": { "type": "integer", "minimum": 0 },
+        "evidence_package": { "type": "integer", "minimum": 0 },
+        "evidence_receipt": { "type": "integer", "minimum": 0 },
+        "evidence_resolution": { "type": "integer", "minimum": 0 },
+        "evidence_resolution_receipt": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "statusCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resolved", "mismatch", "incomplete", "requestMore", "disputed"],
+      "properties": {
+        "resolved": { "type": "integer", "minimum": 0 },
+        "mismatch": { "type": "integer", "minimum": 0 },
+        "incomplete": { "type": "integer", "minimum": 0 },
+        "requestMore": { "type": "integer", "minimum": 0 },
+        "disputed": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "version",
+        "domain",
+        "source",
+        "nodes",
+        "edges",
+        "summary",
+        "projectedAt",
+        "assurance",
+        "graphId",
+        "graphDigest"
+      ],
+      "properties": {
+        "format": { "const": "real-world-proof-case-graph" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["passportDigest", "cardDigest"],
+          "properties": {
+            "passportDigest": { "$ref": "#/$defs/bytes32" },
+            "cardDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/node" }
+        },
+        "edges": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/edge" }
+        },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["eventCount", "edgeCount", "counts", "statusCounts", "currentState", "firstEventAt", "lastEventAt"],
+          "properties": {
+            "eventCount": { "type": "integer", "minimum": 2 },
+            "edgeCount": { "type": "integer", "minimum": 1 },
+            "counts": { "$ref": "#/$defs/typeCounts" },
+            "statusCounts": { "$ref": "#/$defs/statusCounts" },
+            "currentState": {
+              "enum": [
+                "proof_available",
+                "awaiting_response",
+                "declined",
+                "action_required",
+                "awaiting_evidence_package",
+                "awaiting_evidence_receipt",
+                "evidence_received",
+                "awaiting_resolution_receipt",
+                "resolved"
+              ]
+            },
+            "firstEventAt": { "type": "string", "format": "date-time" },
+            "lastEventAt": { "type": "string", "format": "date-time" }
+          }
+        },
+        "projectedAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "graphId": { "type": "string", "pattern": "^rwpgraph:[0-9a-f]{16}$" },
+        "graphDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "timelineEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "digest", "at", "status"],
+      "properties": {
+        "type": { "$ref": "#/$defs/node/properties/type" },
+        "digest": { "$ref": "#/$defs/bytes32" },
+        "at": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "minLength": 1, "maxLength": 64 }
+      }
+    },
+    "timelineCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["events", "edges", "requests", "responses", "packages", "receipts", "resolutions", "resolutionReceipts", "resolved", "mismatch", "incomplete", "requestMore"],
+      "properties": {
+        "events": { "type": "integer", "minimum": 2 },
+        "edges": { "type": "integer", "minimum": 1 },
+        "requests": { "type": "integer", "minimum": 0 },
+        "responses": { "type": "integer", "minimum": 0 },
+        "packages": { "type": "integer", "minimum": 0 },
+        "receipts": { "type": "integer", "minimum": 0 },
+        "resolutions": { "type": "integer", "minimum": 0 },
+        "resolutionReceipts": { "type": "integer", "minimum": 0 },
+        "resolved": { "type": "integer", "minimum": 0 },
+        "mismatch": { "type": "integer", "minimum": 0 },
+        "incomplete": { "type": "integer", "minimum": 0 },
+        "requestMore": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "timelineCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "version", "domain", "source", "currentState", "events", "counts", "firstEventAt", "lastEventAt", "assurance", "timelineId", "timelineDigest"],
+      "properties": {
+        "format": { "const": "real-world-proof-timeline-card" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["graphId", "graphDigest", "passportDigest", "cardDigest"],
+          "properties": {
+            "graphId": { "type": "string", "pattern": "^rwpgraph:[0-9a-f]{16}$" },
+            "graphDigest": { "$ref": "#/$defs/bytes32" },
+            "passportDigest": { "$ref": "#/$defs/bytes32" },
+            "cardDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "currentState": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "events": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/timelineEvent" }
+        },
+        "counts": { "$ref": "#/$defs/timelineCounts" },
+        "firstEventAt": { "type": "string", "format": "date-time" },
+        "lastEventAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "timelineId": { "type": "string", "pattern": "^rwptl:[0-9a-f]{16}$" },
+        "timelineDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    }
+  }
+}
