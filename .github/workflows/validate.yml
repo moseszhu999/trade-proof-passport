@@ -124,6 +124,12 @@ jobs:
       - name: Validate public RWP Pool adoption case study surface
         run: node tools/validate-rwp-case-study-page.mjs
 
+      - name: Validate two-unit RWP External Adoption Pilot
+        run: node tools/verify-rwp-external-adoption-pilot.mjs
+
+      - name: Validate local RWP External Adoption Pilot surface
+        run: node tools/validate-rwp-pilot-page.mjs
+
       - name: Validate RWP public narrative, privacy and useful viral surface
         run: node tools/validate-rwp-page.mjs
 
