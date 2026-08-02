@@ -1,0 +1,36 @@
+name: Validate Trade Daily Operations Hub
+
+on:
+  pull_request:
+    paths:
+      - 'docs/operations.html'
+      - 'docs/operations.css'
+      - 'docs/operations.mjs'
+      - 'docs/data/opportunity-radar-latest.json'
+      - 'docs/guides/trade-daily-operations-hub-v0.1.md'
+      - 'tools/verify-trade-operations-hub.mjs'
+      - '.github/workflows/validate-trade-operations-hub.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/operations.html'
+      - 'docs/operations.css'
+      - 'docs/operations.mjs'
+      - 'docs/data/opportunity-radar-latest.json'
+      - 'tools/verify-trade-operations-hub.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Parse live Opportunity snapshot
+        run: node -e "JSON.parse(require('node:fs').readFileSync('docs/data/opportunity-radar-latest.json','utf8'))"
+      - name: Validate Trade Daily Operations Hub
+        run: node tools/verify-trade-operations-hub.mjs

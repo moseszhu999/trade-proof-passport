@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · Trade Daily Operations Hub</title>
+  <meta name="description" content="TradeProof 今日运营：从公开机会到本地案件、待办、Agent、学习与日终收尾。">
+  <link rel="stylesheet" href="./operations.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./index.html">TradeProof</a>
+      <div class="topbar__actions">
+        <span data-load-status>正在加载机会数据</span>
+        <label class="file-button">导入本地 Opportunity JSON<input id="local-collection-file" type="file" accept="application/json"></label>
+        <a class="back-link" href="./rwp.html">协议工具</a>
+      </div>
+    </nav>
+    <section data-trade-operations-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./operations.mjs"></script>
+</body>
+</html>
