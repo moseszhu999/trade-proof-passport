@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moseszhu999.github.io/trade-proof-passport/schema/real-world-proof-pool-adoption.schema.json",
+  "title": "Real-World Proof Pool Adoption v0.1",
+  "oneOf": [
+    { "$ref": "#/$defs/receipt" },
+    { "$ref": "#/$defs/card" }
+  ],
+  "$defs": {
+    "bytes32": {
+      "type": "string",
+      "pattern": "^0x[0-9a-f]{64}$"
+    },
+    "checkStatus": {
+      "type": "string",
+      "enum": ["satisfied", "not_satisfied", "not_observable"]
+    },
+    "valueCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "status"],
+      "properties": {
+        "value": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "status": { "$ref": "#/$defs/checkStatus" }
+      }
+    },
+    "relationCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fromType", "relation", "toType", "status"],
+      "properties": {
+        "fromType": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "relation": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "toType": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "status": { "$ref": "#/$defs/checkStatus" }
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total", "satisfied", "notSatisfied", "notObservable"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "satisfied": { "type": "integer", "minimum": 0 },
+        "notSatisfied": { "type": "integer", "minimum": 0 },
+        "notObservable": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format", "version", "domain", "source", "basis", "evaluation",
+        "createdAt", "assurance", "receiptId", "receiptDigest"
+      ],
+      "properties": {
+        "format": { "const": "real-world-proof-pool-adoption-receipt" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "poolId", "poolDigest", "patternId", "patternDigest", "graphId",
+            "graphDigest", "passportDigest", "cardDigest"
+          ],
+          "properties": {
+            "poolId": { "type": "string", "pattern": "^rwppool:[0-9a-f]{16}$" },
+            "poolDigest": { "$ref": "#/$defs/bytes32" },
+            "patternId": { "type": "string", "pattern": "^rwppat:[0-9a-f]{16}$" },
+            "patternDigest": { "$ref": "#/$defs/bytes32" },
+            "graphId": { "type": "string", "pattern": "^rwpgraph:[0-9a-f]{16}$" },
+            "graphDigest": { "$ref": "#/$defs/bytes32" },
+            "passportDigest": { "$ref": "#/$defs/bytes32" },
+            "cardDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "basis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["observability", "artifactCount", "observedRoles", "observedEvidenceCategories"],
+          "properties": {
+            "observability": { "enum": ["graph_only", "full_artifact_bundle"] },
+            "artifactCount": { "type": "integer", "minimum": 0 },
+            "observedRoles": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": ["exporter", "buyer", "supplier", "manufacturer", "inspection", "logistics", "warehouse", "customs", "insurance", "legal", "funder", "other"]
+              }
+            },
+            "observedEvidenceCategories": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": ["bill_of_lading", "commercial_invoice", "customs_record", "inspection_report", "insurance_record", "logistics_event", "packing_list", "purchase_order", "warehouse_receipt", "other"]
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["workflow", "statusGate", "roles", "evidenceCategories", "adoptionStatus", "proofLiquidityEligible", "checks"],
+          "properties": {
+            "workflow": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["relationCoverage", "requiredNodeTypes", "requiredRelations", "stepSequence", "branching"],
+              "properties": {
+                "relationCoverage": { "enum": ["explicit_graph", "sequence_only"] },
+                "requiredNodeTypes": { "type": "array", "items": { "$ref": "#/$defs/valueCheck" } },
+                "requiredRelations": { "type": "array", "items": { "$ref": "#/$defs/relationCheck" } },
+                "stepSequence": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["status", "requiredSteps", "observedEvents"],
+                  "properties": {
+                    "status": { "$ref": "#/$defs/checkStatus" },
+                    "requiredSteps": { "type": "integer", "minimum": 2 },
+                    "observedEvents": { "type": "integer", "minimum": 2 }
+                  }
+                },
+                "branching": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["status", "required", "observed"],
+                  "properties": {
+                    "status": { "$ref": "#/$defs/checkStatus" },
+                    "required": { "type": "boolean" },
+                    "observed": { "type": "boolean" }
+                  }
+                }
+              }
+            },
+            "statusGate": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "currentState", "acceptedStates"],
+              "properties": {
+                "status": { "$ref": "#/$defs/checkStatus" },
+                "currentState": { "type": "string", "minLength": 1, "maxLength": 64 },
+                "acceptedStates": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 64 } }
+              }
+            },
+            "roles": { "type": "array", "items": { "$ref": "#/$defs/valueCheck" } },
+            "evidenceCategories": { "type": "array", "items": { "$ref": "#/$defs/valueCheck" } },
+            "adoptionStatus": { "enum": ["verified_adoption", "partial_adoption", "not_adopted"] },
+            "proofLiquidityEligible": { "type": "boolean" },
+            "checks": { "$ref": "#/$defs/counts" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "receiptId": { "type": "string", "pattern": "^rwpadopt:[0-9a-f]{16}$" },
+        "receiptDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format", "version", "domain", "source", "pool", "adoptionStatus",
+        "proofLiquidityEligible", "observability", "currentState", "checks",
+        "createdAt", "assurance", "cardId", "cardDigest"
+      ],
+      "properties": {
+        "format": { "const": "real-world-proof-pool-adoption-card" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["receiptId", "receiptDigest", "poolId", "poolDigest", "graphId", "graphDigest", "passportDigest"],
+          "properties": {
+            "receiptId": { "type": "string", "pattern": "^rwpadopt:[0-9a-f]{16}$" },
+            "receiptDigest": { "$ref": "#/$defs/bytes32" },
+            "poolId": { "type": "string", "pattern": "^rwppool:[0-9a-f]{16}$" },
+            "poolDigest": { "$ref": "#/$defs/bytes32" },
+            "graphId": { "type": "string", "pattern": "^rwpgraph:[0-9a-f]{16}$" },
+            "graphDigest": { "$ref": "#/$defs/bytes32" },
+            "passportDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "pool": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "scope", "generation"],
+          "properties": {
+            "label": { "type": "string", "minLength": 1, "maxLength": 96 },
+            "scope": { "enum": ["trade_corridor", "industry", "workflow", "other"] },
+            "generation": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "adoptionStatus": { "enum": ["verified_adoption", "partial_adoption", "not_adopted"] },
+        "proofLiquidityEligible": { "type": "boolean" },
+        "observability": { "enum": ["graph_only", "full_artifact_bundle"] },
+        "currentState": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "checks": { "$ref": "#/$defs/counts" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "cardId": { "type": "string", "pattern": "^rwpadoptcard:[0-9a-f]{16}$" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    }
+  }
+}
