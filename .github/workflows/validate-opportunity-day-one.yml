@@ -1,0 +1,56 @@
+name: Validate Opportunity Radar Day One
+
+on:
+  pull_request:
+    paths:
+      - 'data/opportunity-sources-v0.1.json'
+      - 'schema/trade-opportunity.schema.json'
+      - 'examples/opportunity-day-one/**'
+      - 'tools/opportunity-core.mjs'
+      - 'tools/collect-ted-opportunities.mjs'
+      - 'tools/verify-opportunity-day-one.mjs'
+      - 'docs/guides/opportunity-radar-day-one-v0.1.md'
+      - '.github/workflows/validate-opportunity-day-one.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 2 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Parse source registry and Opportunity schema
+        run: |
+          node -e "JSON.parse(require('node:fs').readFileSync('data/opportunity-sources-v0.1.json'))"
+          node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-opportunity.schema.json'))"
+      - name: Validate day-one deterministic contracts
+        run: node tools/verify-opportunity-day-one.mjs
+
+  live-ted-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Collect five current TED notices
+        run: |
+          node tools/collect-ted-opportunities.mjs \
+            --since "$(date -u -d '14 days ago' +%Y%m%d)" \
+            --limit 5 \
+            --out artifacts/opportunity-day-one/ted-live.json \
+            --report artifacts/opportunity-day-one/ted-live.md
+      - name: Upload day-one live collection
+        uses: actions/upload-artifact@v4
+        with:
+          name: opportunity-radar-day-one
+          path: artifacts/opportunity-day-one/
+          if-no-files-found: error
+          retention-days: 7
