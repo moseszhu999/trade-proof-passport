@@ -46,7 +46,7 @@ for (const phrase of [
   'request_more',
   'priorReceiptDigest',
   'resolutionDigest does not match',
-  'No unresolved issue'
+  'no unresolved issue'
 ]) {
   assert.ok(moduleSource.includes(phrase), `missing Resolution module contract: ${phrase}`);
 }
