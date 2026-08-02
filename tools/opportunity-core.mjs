@@ -55,9 +55,7 @@ function stringList(value) {
   }))].sort();
 }
 
-function noticeUrl(notice, publicationNumber) {
-  const linked = firstScalar(notice.links);
-  if (linked && /^https:\/\//i.test(linked)) return linked;
+function noticeUrl(publicationNumber) {
   return `https://ted.europa.eu/en/notice/-/detail/${encodeURIComponent(publicationNumber)}`;
 }
 
@@ -78,7 +76,7 @@ export function normalizeTedNotice(notice, { observedAt = new Date().toISOString
       sourceId: 'ted-search-api',
       recordId: publicationNumber,
       authorityClass: 'official_public_procurement',
-      url: noticeUrl(notice, publicationNumber)
+      url: noticeUrl(publicationNumber)
     },
     observedAt,
     title: firstScalar(notice['notice-title']),
