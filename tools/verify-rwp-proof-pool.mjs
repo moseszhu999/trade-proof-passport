@@ -140,7 +140,7 @@ assert.equal(fork.proofPattern.patternDigest, pool.proofPattern.patternDigest);
 assert.deepEqual(fork.publicRules.evidenceCategories, ['inspection_report', 'packing_list', 'purchase_order']);
 
 const tamperedPattern = structuredClone(pattern);
-tamperedPattern.declaredRequirements.roles.push('funder');
+tamperedPattern.declaredRequirements.roles = ['buyer', 'exporter', 'funder', 'inspection'];
 assert.ok(validateRwpProofPattern(tamperedPattern).some((error) => error.includes('patternDigest')));
 
 const tamperedPool = structuredClone(pool);
