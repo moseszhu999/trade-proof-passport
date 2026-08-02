@@ -1,0 +1,32 @@
+name: Validate External RWP Adoption Submission
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - 'examples/rwp-adoption-pilots/**'
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  validate-external-submission:
+    if: github.event.pull_request.base.repo.full_name == 'moseszhu999/trade-proof-passport'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out trusted base revision only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate external fork, data-only scope and complete Pilot pack
+        run: node tools/verify-rwp-external-adoption-contribution.mjs --event
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
