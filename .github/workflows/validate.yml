@@ -36,6 +36,7 @@ jobs:
             'schema/real-world-proof-request-response.schema.json',
             'schema/real-world-proof-evidence-package.schema.json',
             'schema/real-world-proof-evidence-receipt.schema.json',
+            'schema/real-world-proof-evidence-resolution.schema.json',
             'tokenomics/tproof-tokenomics-v0.1.json',
             'docs/contracts/base-sepolia-v0.1.json',
             'examples/steel-cabinet-passport.json',
@@ -44,7 +45,7 @@ jobs:
           ]) {
             JSON.parse(readFileSync(file, 'utf8'));
           }
-          console.log('PASS: Passport, RWP request/response/evidence package/receipt, tokenomics, contracts and allocation JSON parse');
+          console.log('PASS: Passport, RWP request/response/evidence package/receipt/resolution, tokenomics, contracts and allocation JSON parse');
           NODE
 
       - name: Validate steel cabinet Trade RWP example
@@ -75,6 +76,12 @@ jobs:
 
       - name: Validate local RWP Evidence Receipt surface
         run: node tools/validate-rwp-receive-page.mjs
+
+      - name: Validate append-only RWP Evidence Resolutions
+        run: node tools/verify-rwp-evidence-resolution.mjs
+
+      - name: Validate local RWP Evidence Resolution surface
+        run: node tools/validate-rwp-resolution-page.mjs
 
       - name: Validate RWP public narrative, privacy and useful viral surface
         run: node tools/validate-rwp-page.mjs
