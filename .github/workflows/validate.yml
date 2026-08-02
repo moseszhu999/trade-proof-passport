@@ -118,6 +118,12 @@ jobs:
       - name: Validate local open Directory and public discovery surface
         run: node tools/validate-rwp-directory-page.mjs
 
+      - name: Validate reproducible RWP Pool Adoption Case Study
+        run: node tools/verify-rwp-pool-adoption-case-study.mjs
+
+      - name: Validate public RWP Pool adoption case study surface
+        run: node tools/validate-rwp-case-study-page.mjs
+
       - name: Validate RWP public narrative, privacy and useful viral surface
         run: node tools/validate-rwp-page.mjs
 
