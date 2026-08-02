@@ -1,0 +1,51 @@
+{
+  "totalNoticeCount": 3,
+  "notices": [
+    {
+      "publication-number": "500001-2026",
+      "publication-date": "2026-08-01",
+      "notice-title": {
+        "eng": "Supply of protective workwear"
+      },
+      "buyer-name": {
+        "eng": "Example Regional Authority"
+      },
+      "buyer-country": ["SWE"],
+      "notice-type": "cn-standard",
+      "classification-cpv": ["18100000"],
+      "deadline-receipt-tender-date-lot": ["2026-09-01"],
+      "links": {
+        "html": {
+          "ENG": "https://ted.europa.eu/en/notice/-/detail/500001-2026"
+        }
+      }
+    },
+    {
+      "publication-number": "500002-2026",
+      "publication-date": "2026-08-01",
+      "notice-title": {
+        "eng": "Software development services"
+      },
+      "buyer-name": {
+        "eng": "Example Digital Agency"
+      },
+      "buyer-country": ["FIN"],
+      "notice-type": "cn-standard",
+      "classification-cpv": ["72262000"],
+      "links": []
+    },
+    {
+      "publication-number": "500001-2026",
+      "publication-date": "2026-08-01",
+      "notice-title": {
+        "eng": "Supply of protective workwear"
+      },
+      "buyer-name": {
+        "eng": "Example Regional Authority"
+      },
+      "buyer-country": ["SWE"],
+      "notice-type": "cn-standard",
+      "classification-cpv": ["18100000"]
+    }
+  ]
+}
