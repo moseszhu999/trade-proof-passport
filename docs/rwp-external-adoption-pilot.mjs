@@ -106,14 +106,19 @@ const defaultAdopterPassport = (basePassport, index) => {
   return passport;
 };
 
-const defaultTimes = (index) => {
-  const day = String(index + 2).padStart(2, '0');
+const workflowTimes = (passport, fallbackAnchor) => {
+  const timestamps = [fallbackAnchor, passport?.createdAt, passport?.updatedAt]
+    .map((value) => Date.parse(value))
+    .filter(Number.isFinite);
+  const anchor = Math.max(...timestamps);
+  const atMinutes = (minutes) => new Date(anchor + minutes * 60_000).toISOString();
   return {
-    request: `2026-08-${day}T01:00:00.000Z`,
-    response: `2026-08-${day}T01:05:00.000Z`,
-    package: `2026-08-${day}T01:10:00.000Z`,
-    receipt: `2026-08-${day}T01:20:00.000Z`,
-    adoption: `2026-08-${day}T01:30:00.000Z`
+    request: atMinutes(1),
+    response: atMinutes(6),
+    package: atMinutes(11),
+    receipt: atMinutes(21),
+    adoption: atMinutes(31),
+    pool: atMinutes(31)
   };
 };
 
@@ -141,12 +146,13 @@ export const buildRwpExternalAdoptionPilot = (
     throw new Error('External Adoption Pilot v0.1 requires exactly two adopter Passports.');
   }
 
-  const source = buildWorkflowChain(clone(sourcePassport), 'External adoption pilot source workflow', {
-    request: '2026-08-01T00:00:00.000Z',
-    response: '2026-08-01T00:05:00.000Z',
-    package: '2026-08-01T00:10:00.000Z',
-    receipt: '2026-08-01T00:20:00.000Z'
-  });
+  const sourcePassportCopy = clone(sourcePassport);
+  const sourceTimes = workflowTimes(sourcePassportCopy, '2026-08-01T00:00:00.000Z');
+  const source = buildWorkflowChain(
+    sourcePassportCopy,
+    'External adoption pilot source workflow',
+    sourceTimes
+  );
   const pattern = buildRwpProofPattern(source.graph, {
     roles: ['buyer', 'exporter'],
     evidenceCategories: ['inspection_report', 'purchase_order'],
@@ -158,7 +164,7 @@ export const buildRwpExternalAdoptionPilot = (
     summary:
       options.poolSummary ??
       'A public workflow requiring matched purchase-order and inspection evidence from independently rooted RWP cases.',
-    createdAt: options.poolCreatedAt ?? '2026-08-01T00:30:00.000Z'
+    createdAt: options.poolCreatedAt ?? sourceTimes.pool
   });
 
   const effectiveAdopters = adopterPassports.length === 2
@@ -166,7 +172,8 @@ export const buildRwpExternalAdoptionPilot = (
     : [defaultAdopterPassport(sourcePassport, 0), defaultAdopterPassport(sourcePassport, 1)];
 
   const adoptions = effectiveAdopters.map((passport, index) => {
-    const times = defaultTimes(index);
+    const fallbackDay = String(index + 2).padStart(2, '0');
+    const times = workflowTimes(passport, `2026-08-${fallbackDay}T00:00:00.000Z`);
     const workflow = buildWorkflowChain(passport, `Independent adopter workflow ${index + 1}`, times);
     const receipt = buildRwpPoolAdoptionReceipt(pool, workflow.graph, {
       artifacts: workflow.artifacts,
@@ -204,13 +211,17 @@ export const buildRwpExternalAdoptionPilot = (
   );
   const directoryCard = buildRwpPoolDirectoryCard(directory);
 
+  const generatedAt = options.generatedAt ?? new Date(
+    Math.max(...adoptions.map((item) => Date.parse(item.receipt.createdAt))) + 30 * 60_000
+  ).toISOString();
+
   return {
     pilot: {
       name: 'RWP External Adoption Pilot Kit',
       version: RWP_EXTERNAL_ADOPTION_PILOT_VERSION,
       syntheticByDefault: adopterPassports.length === 0,
       nonNormative: true,
-      generatedAt: options.generatedAt ?? '2026-08-04T02:00:00.000Z',
+      generatedAt,
       assurance: RWP_EXTERNAL_ADOPTION_PILOT_ASSURANCE,
       boundaries: [...RWP_EXTERNAL_ADOPTION_PILOT_BOUNDARIES]
     },
