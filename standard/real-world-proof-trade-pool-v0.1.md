@@ -78,6 +78,8 @@ The Pattern ID and digest are recomputed during validation.
 
 ## 4. Relation coverage
 
+The machine field is `derivedWorkflow.relationCoverage`.
+
 ### `explicit_graph`
 
 The source is a complete RWP Case Graph. Relation triples are derived from validated graph edges:
