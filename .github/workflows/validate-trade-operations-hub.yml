@@ -6,8 +6,11 @@ on:
       - 'docs/operations.html'
       - 'docs/operations.css'
       - 'docs/operations.mjs'
+      - 'docs/trade-case-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
       - 'docs/guides/trade-daily-operations-hub-v0.1.md'
+      - 'docs/guides/trade-case-intake-v0.2.md'
+      - 'schema/trade-case.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
       - '.github/workflows/validate-trade-operations-hub.yml'
   push:
@@ -16,7 +19,9 @@ on:
       - 'docs/operations.html'
       - 'docs/operations.css'
       - 'docs/operations.mjs'
+      - 'docs/trade-case-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
+      - 'schema/trade-case.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
 
 permissions:
@@ -30,7 +35,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Parse live Opportunity snapshot
-        run: node -e "JSON.parse(require('node:fs').readFileSync('docs/data/opportunity-radar-latest.json','utf8'))"
+      - name: Parse canonical JSON inputs
+        run: |
+          node -e "JSON.parse(require('node:fs').readFileSync('docs/data/opportunity-radar-latest.json','utf8'))"
+          node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-case.schema.json','utf8'))"
+      - name: Syntax-check browser modules
+        run: |
+          node --check docs/trade-case-core.mjs
+          node --check docs/operations.mjs
       - name: Validate Trade Daily Operations Hub
         run: node tools/verify-trade-operations-hub.mjs
