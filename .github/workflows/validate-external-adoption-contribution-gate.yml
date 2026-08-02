@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'tools/verify-rwp-external-adoption-contribution.mjs'
+      - 'tools/validate-rwp-external-adoption-workflow-boundary.mjs'
+      - '.github/workflows/validate.yml'
       - '.github/workflows/validate-external-adoption-contribution-gate.yml'
       - '.github/workflows/validate-external-adoption-submission.yml'
       - 'docs/guides/rwp-external-adoption-contribution-gate-v0.1.md'
@@ -14,6 +16,8 @@ on:
   pull_request:
     paths:
       - 'tools/verify-rwp-external-adoption-contribution.mjs'
+      - 'tools/validate-rwp-external-adoption-workflow-boundary.mjs'
+      - '.github/workflows/validate.yml'
       - '.github/workflows/validate-external-adoption-contribution-gate.yml'
       - '.github/workflows/validate-external-adoption-submission.yml'
       - 'docs/guides/rwp-external-adoption-contribution-gate-v0.1.md'
@@ -38,3 +42,6 @@ jobs:
 
       - name: Validate external-fork contribution gate contracts
         run: node tools/verify-rwp-external-adoption-contribution.mjs --self-test
+
+      - name: Validate trusted-base workflow execution boundary
+        run: node tools/validate-rwp-external-adoption-workflow-boundary.mjs
