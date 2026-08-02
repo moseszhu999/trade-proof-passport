@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Resolve an RWP Evidence Issue · TradeProof</title>
+  <meta name="description" content="Append a redelivery or supplement to an Evidence Receipt and verify whether the issue is resolved without uploading source files.">
+  <meta property="og:title" content="Resolve an RWP Evidence Issue">
+  <meta property="og:description" content="Append-only evidence resolution with local digest verification and a privacy-bounded public result.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://moseszhu999.github.io/trade-proof-passport/rwp-resolve.html">
+  <link rel="canonical" href="https://moseszhu999.github.io/trade-proof-passport/rwp-resolve.html">
+  <style>
+    :root{color-scheme:dark;--bg:#050507;--panel:#10131b;--line:rgba(255,255,255,.12);--text:#f8f9fc;--muted:#a8afbd;--lime:#bcff4d;--cyan:#59ecff;--amber:#ffc66d;--red:#ff788f}
+    *{box-sizing:border-box}body{margin:0;font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -12%,#1a1726 0,var(--bg) 42%);color:var(--text)}a{color:inherit}button,input,textarea,select{font:inherit}.wrap{width:min(1180px,calc(100% - 30px));margin:auto;padding-bottom:72px}.nav{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid var(--line)}.brand{font-weight:950;text-decoration:none}.navlinks{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:13px}.navlinks a{text-decoration:none}.hero{padding:62px 0 30px}.kicker{color:var(--lime);font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.18em}.hero h1{font-size:clamp(43px,6.6vw,80px);line-height:.95;letter-spacing:-.055em;margin:12px 0 16px}.hero p{max-width:850px;color:var(--muted);font-size:18px}.notice{padding:14px 16px;border:1px solid rgba(89,236,255,.25);border-left:3px solid var(--cyan);border-radius:13px;background:rgba(89,236,255,.055);margin-bottom:20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{border:1px solid var(--line);border-radius:21px;background:rgba(16,19,27,.92);padding:21px}.panel h2{margin:0 0 8px;font-size:27px}.panel>p{color:var(--muted)}label{display:grid;gap:6px;margin-top:13px;font-weight:760}textarea,input[type=file],select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#090c12;color:var(--text)}textarea{min-height:105px;resize:vertical;font:11px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.list{display:grid;gap:9px;margin-top:14px}.item{padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)}.item-head{display:flex;gap:9px;align-items:flex-start}.item-head input{margin-top:4px;accent-color:var(--lime)}.item small{display:block;color:var(--muted)}.file-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:9px}.file-state{font-size:12px;color:var(--muted)}.file-state.matched{color:var(--lime)}.file-state.mismatch{color:var(--red)}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}button{min-height:40px;padding:9px 13px;border:1px solid var(--line);border-radius:10px;background:#151a25;color:var(--text);font-weight:800;cursor:pointer}button.primary{background:linear-gradient(100deg,var(--lime),#efffb3);color:#080a0e;border-color:transparent}button:disabled{opacity:.45;cursor:not-allowed}.status{min-height:22px;margin-top:10px;color:var(--muted);font-size:12px}.status.error{color:var(--red)}.warning{color:var(--amber);font-size:12px}.result{display:none;margin-top:16px;padding:14px;border:1px solid rgba(188,255,77,.24);border-radius:14px;background:rgba(188,255,77,.04)}.result.show{display:block}.row{padding:9px 0;border-bottom:1px solid var(--line)}.row span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase}.row strong{display:block;margin-top:3px;overflow-wrap:anywhere}.digest{font:10px/1.5 ui-monospace,monospace;color:var(--cyan)}.boundary{margin-top:24px;padding-top:19px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}@media(max-width:880px){.grid{grid-template-columns:1fr}.file-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav"><a class="brand" href="./">TRADEPROOF</a><div class="navlinks"><a href="./rwp.html">RWP</a><a href="./rwp-evidence.html">Evidence package</a><a href="./rwp-receive.html">Receipt</a><a href="./onchain.html">Anchor & verify</a></div></nav>
+    <section class="hero"><div class="kicker">Evidence Resolution · RWP v0.1</div><h1>Fix the issue.<br>Keep the history.</h1><p>Redeliver a mismatched record or supplement a missing authorized category. The prior Package and Receipt remain unchanged; the resolution appends a new digest-linked object and requires independent recipient verification.</p></section>
+    <div class="notice"><strong>Append-only and local.</strong> Package, Receipt, Passport and files stay in this browser session. The private Resolution Package and Resolution Receipt are downloads only. A public link contains aggregate status and digests, never evidence identifiers or file hashes.</div>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>1. Prepare a Resolution Package</h2>
+        <p>For the holder. Import the prior Package, prior Receipt and matching complete Passport.</p>
+        <label>Prior Evidence Package JSON file<input id="priorPackageFile" type="file" accept="application/json,.json"></label>
+        <label>Prior Package JSON<textarea id="priorPackageText" spellcheck="false"></textarea></label>
+        <label>Prior Evidence Receipt JSON file<input id="priorReceiptFile" type="file" accept="application/json,.json"></label>
+        <label>Prior Receipt JSON<textarea id="priorReceiptText" spellcheck="false"></textarea></label>
+        <label>Complete Passport JSON file<input id="passportFile" type="file" accept="application/json,.json"></label>
+        <label>Complete Passport JSON<textarea id="passportText" spellcheck="false"></textarea></label>
+        <div class="actions"><button class="primary" id="loadIssues" type="button">Verify chain and list resolvable evidence</button></div>
+        <div class="status" id="holderStatus" aria-live="polite"></div>
+        <div class="list" id="holderEvidence"><span class="warning">Import the three matching JSON objects first.</span></div>
+        <label>Optional private resolution note<textarea id="holderNote" maxlength="280" placeholder="No contact endpoint or confidential fact."></textarea></label>
+        <div class="actions"><button class="primary" id="buildResolution" type="button" disabled>Generate Resolution Package</button><button id="downloadResolution" type="button" disabled>Download Resolution JSON</button></div>
+        <section class="result" id="resolutionView"><div class="row"><span>Mode</span><strong id="resolutionMode"></strong></div><div class="row"><span>Issue coverage</span><strong id="resolutionCoverage"></strong></div><div class="row"><span>Resolution ID</span><strong id="resolutionId"></strong></div><div class="row"><span>Resolution digest</span><strong class="digest" id="resolutionDigest"></strong></div></section>
+      </article>
+
+      <article class="panel">
+        <h2>2. Verify the Resolution</h2>
+        <p>For the recipient. Import the delivered Resolution Package and independently select the files received.</p>
+        <label>Resolution Package JSON file<input id="resolutionFile" type="file" accept="application/json,.json"></label>
+        <label>Resolution Package JSON<textarea id="resolutionText" spellcheck="false"></textarea></label>
+        <div class="actions"><button class="primary" id="verifyResolution" type="button">Verify Resolution and list files</button></div>
+        <div class="status" id="recipientStatus" aria-live="polite"></div>
+        <div class="list" id="recipientEvidence"><span class="warning">Import a Resolution Package first.</span></div>
+        <label>Receiver role<select id="receiverRole"><option value="buyer">Buyer</option><option value="exporter">Exporter</option><option value="supplier">Supplier</option><option value="manufacturer">Manufacturer</option><option value="inspection">Inspection</option><option value="logistics">Logistics</option><option value="warehouse">Warehouse</option><option value="customs">Customs</option><option value="insurance">Insurance</option><option value="legal">Legal</option><option value="funder">Funder</option><option value="other">Other</option></select></label>
+        <label>Receipt action<select id="receiptOutcome"><option value="deterministic">Use deterministic resolved / unresolved</option><option value="request_more">Request more</option></select></label>
+        <label>Public note<textarea id="recipientNote" maxlength="280" placeholder="Required for request_more. No endpoints or confidential facts."></textarea></label>
+        <div class="actions"><button class="primary" id="buildReceipt" type="button" disabled>Generate Resolution Receipt</button><button id="downloadReceipt" type="button" disabled>Download private Receipt JSON</button><button id="copyCard" type="button" disabled>Copy public Resolution Card</button></div>
+        <section class="result" id="receiptView"><div class="row"><span>Outcome</span><strong id="receiptResult"></strong></div><div class="row"><span>Matched files</span><strong id="receiptCounts"></strong></div><div class="row"><span>Receipt ID</span><strong id="receiptId"></strong></div><div class="row"><span>Receipt digest</span><strong class="digest" id="receiptDigest"></strong></div></section>
+        <section class="result" id="sharedCardView"><h3>Public Resolution Card</h3><div class="row"><span>Outcome</span><strong id="sharedOutcome"></strong></div><div class="row"><span>Deterministic result</span><strong id="sharedDeterministic"></strong></div><div class="row"><span>Resolution digest</span><strong class="digest" id="sharedResolutionDigest"></strong></div><p class="warning">This card is unsigned and contains aggregate results only.</p></section>
+      </article>
+    </section>
+
+    <p class="boundary">A Resolution records append-only redelivery or supplemental evidence under the original authorization. It does not erase the prior mismatch, authenticate either party, prove legal delivery, validate document content, establish ownership or title, create an RWA, or activate payment, settlement, financing, custody, Token distribution, liquidity or a mainnet action.</p>
+  </main>
+
+  <script type="module">
+    import { computePassportDigest } from './rwp-card.mjs';
+    import { evidenceCategoryForType, validateRwpEvidencePackage } from './rwp-evidence-package.mjs';
+    import { validateRwpEvidenceReceipt } from './rwp-evidence-receipt.mjs';
+    import {
+      buildRwpEvidenceResolution,
+      buildRwpEvidenceResolutionCard,
+      buildRwpEvidenceResolutionCardUrl,
+      buildRwpEvidenceResolutionReceipt,
+      readRwpEvidenceResolutionCardFromHash,
+      validateRwpEvidenceResolution,
+      verifyResolutionEvidenceFileBytes
+    } from './rwp-evidence-resolution.mjs';
+
+    const byId=(id)=>document.getElementById(id);
+    const state={priorPackage:null,priorReceipt:null,passport:null,holderEligible:new Map(),holderChecks:{},resolution:null,recipientChecks:{},receipt:null,cardUrl:null};
+    const setStatus=(id,message,error=false)=>{const element=byId(id);element.textContent=message;element.className=`status${error?' error':''}`;};
+    const downloadJson=(value,filename)=>{const blob=new Blob([`${JSON.stringify(value,null,2)}\n`],{type:'application/json'});const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=filename;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href);};
+    const bindFile=(fileId,textId)=>byId(fileId).addEventListener('change',async()=>{const file=byId(fileId).files?.[0];if(file)byId(textId).value=await file.text();});
+    bindFile('priorPackageFile','priorPackageText');bindFile('priorReceiptFile','priorReceiptText');bindFile('passportFile','passportText');bindFile('resolutionFile','resolutionText');
+
+    const fileState=(holder,evidenceId,result)=>{const checks=holder?state.holderChecks:state.recipientChecks;checks[evidenceId]=result;const target=document.querySelector(`[data-${holder?'holder':'recipient'}-state="${CSS.escape(evidenceId)}"]`);if(!target)return;target.textContent=result.status==='matched'?'Digest matched':result.status==='mismatch'?'Digest mismatch':result.status==='unsupported_algorithm'?'Unsupported algorithm':'Not checked';target.className=`file-state ${result.status}`;};
+
+    const eligibleForPriorIssues=(pkg,receipt,passport)=>{
+      const priorIds=new Set(pkg.evidence.map((item)=>item.evidenceId));
+      const badIds=new Set(receipt.evidenceResults.filter((item)=>item.status!=='matched').map((item)=>item.evidenceId));
+      const missingCategories=new Set(pkg.coverage.missingCategories);
+      const generic=receipt.outcome.status==='request_more'&&badIds.size===0&&missingCategories.size===0;
+      return (passport.evidence||[]).filter((item)=>{
+        const category=evidenceCategoryForType(item.type);
+        if(!pkg.coverage.allowedCategories.includes(category))return false;
+        return badIds.has(item.evidenceId)||(!priorIds.has(item.evidenceId)&&missingCategories.has(category))||(!priorIds.has(item.evidenceId)&&generic);
+      });
+    };
+
+    const renderHolderEvidence=(records)=>{
+      state.holderEligible.clear();state.holderChecks={};state.resolution=null;byId('buildResolution').disabled=true;byId('downloadResolution').disabled=true;byId('resolutionView').classList.remove('show');const holder=byId('holderEvidence');holder.replaceChildren();
+      if(records.length===0){const empty=document.createElement('span');empty.className='warning';empty.textContent='No Passport evidence record can address the recorded issue under the existing authorization.';holder.append(empty);return;}
+      for(const item of records){state.holderEligible.set(item.evidenceId,item);state.holderChecks[item.evidenceId]={status:'not_checked',algorithm:item.digest.algorithm};const article=document.createElement('article');article.className='item';const head=document.createElement('div');head.className='item-head';const select=document.createElement('input');select.type='checkbox';select.value=item.evidenceId;select.checked=true;const text=document.createElement('div');const strong=document.createElement('strong');strong.textContent=item.title||item.evidenceId;const small=document.createElement('small');small.textContent=`${evidenceCategoryForType(item.type)} · ${item.type}`;text.append(strong,small);head.append(select,text);const row=document.createElement('div');row.className='file-row';const file=document.createElement('input');file.type='file';const status=document.createElement('span');status.className='file-state';status.dataset.holderState=item.evidenceId;status.textContent='Not checked';file.addEventListener('change',async()=>{const chosen=file.files?.[0];if(!chosen){fileState(true,item.evidenceId,{status:'not_checked',algorithm:item.digest.algorithm});return;}file.disabled=true;try{fileState(true,item.evidenceId,await verifyResolutionEvidenceFileBytes(item,await chosen.arrayBuffer()));}catch(error){fileState(true,item.evidenceId,{status:'not_checked',algorithm:item.digest.algorithm});setStatus('holderStatus',error?.message||String(error),true);}finally{file.disabled=false;}});row.append(file,status);article.append(head,row);holder.append(article);}
+      byId('buildResolution').disabled=false;
+    };
+
+    byId('loadIssues').addEventListener('click',()=>{try{const pkg=JSON.parse(byId('priorPackageText').value);const receipt=JSON.parse(byId('priorReceiptText').value);const passport=JSON.parse(byId('passportText').value);const packageErrors=validateRwpEvidencePackage(pkg);if(packageErrors.length)throw new Error(packageErrors.join(' '));const receiptErrors=validateRwpEvidenceReceipt(receipt,pkg);if(receiptErrors.length)throw new Error(receiptErrors.join(' '));if(computePassportDigest(passport)!==pkg.source.passportDigest)throw new Error('Imported Passport digest does not match the prior Package source.');if(receipt.outcome.status==='received'&&receipt.outcome.deterministicStatus==='received')throw new Error('This Receipt is already fully received and has no unresolved issue.');state.priorPackage=pkg;state.priorReceipt=receipt;state.passport=passport;const eligible=eligibleForPriorIssues(pkg,receipt,passport);renderHolderEvidence(eligible);setStatus('holderStatus',`Verified append-only source chain. ${eligible.length} eligible evidence record(s).`);}catch(error){setStatus('holderStatus',error?.message||String(error),true);}});
+
+    const selectedHolderIds=()=>[...document.querySelectorAll('#holderEvidence input[type=checkbox]:checked')].map((input)=>input.value);
+    byId('buildResolution').addEventListener('click',()=>{try{const resolution=buildRwpEvidenceResolution(state.priorPackage,state.priorReceipt,state.passport,{evidenceIds:selectedHolderIds(),fileVerifications:state.holderChecks,note:byId('holderNote').value});state.resolution=resolution;byId('resolutionText').value=JSON.stringify(resolution,null,2);byId('resolutionView').classList.add('show');byId('resolutionMode').textContent=resolution.resolution.mode;byId('resolutionCoverage').textContent=resolution.resolution.complete?'All prior issues addressed':`${resolution.resolution.unresolvedIssueKeys.length} issue(s) remain`;byId('resolutionId').textContent=resolution.resolutionId;byId('resolutionDigest').textContent=resolution.resolutionDigest;byId('downloadResolution').disabled=false;setStatus('holderStatus','Resolution Package generated locally. Transfer the JSON and files through the authorized channel.');}catch(error){setStatus('holderStatus',error?.message||String(error),true);}});
+    byId('downloadResolution').addEventListener('click',()=>downloadJson(state.resolution,`${state.resolution.resolutionId}-resolution.json`));
+
+    const renderRecipientEvidence=(resolution)=>{state.recipientChecks={};state.receipt=null;byId('buildReceipt').disabled=false;byId('downloadReceipt').disabled=true;byId('copyCard').disabled=true;byId('receiptView').classList.remove('show');const holder=byId('recipientEvidence');holder.replaceChildren();for(const item of resolution.evidence){state.recipientChecks[item.evidenceId]={status:'missing',algorithm:item.digest.algorithm};const article=document.createElement('article');article.className='item';const strong=document.createElement('strong');strong.textContent=`${item.relation} · ${item.category}`;const small=document.createElement('small');small.textContent=item.type;const row=document.createElement('div');row.className='file-row';const file=document.createElement('input');file.type='file';const status=document.createElement('span');status.className='file-state';status.dataset.recipientState=item.evidenceId;status.textContent='Missing';file.addEventListener('change',async()=>{const chosen=file.files?.[0];if(!chosen){fileState(false,item.evidenceId,{status:'missing',algorithm:item.digest.algorithm});return;}file.disabled=true;try{fileState(false,item.evidenceId,await verifyResolutionEvidenceFileBytes(item,await chosen.arrayBuffer()));}catch(error){fileState(false,item.evidenceId,{status:'not_checked',algorithm:item.digest.algorithm});setStatus('recipientStatus',error?.message||String(error),true);}finally{file.disabled=false;}});row.append(file,status);article.append(strong,small,row);holder.append(article);}};
+
+    byId('verifyResolution').addEventListener('click',()=>{try{const resolution=JSON.parse(byId('resolutionText').value);const errors=validateRwpEvidenceResolution(resolution);if(errors.length)throw new Error(errors.join(' '));state.resolution=resolution;renderRecipientEvidence(resolution);setStatus('recipientStatus',`Resolution verified: ${resolution.resolutionId}. Select the files actually received.`);}catch(error){setStatus('recipientStatus',error?.message||String(error),true);}});
+
+    byId('buildReceipt').addEventListener('click',()=>{try{const outcome=byId('receiptOutcome').value==='request_more'?'request_more':undefined;const receipt=buildRwpEvidenceResolutionReceipt(state.resolution,{receiverRole:byId('receiverRole').value,outcome,evidenceResults:state.recipientChecks,note:byId('recipientNote').value});const card=buildRwpEvidenceResolutionCard(receipt);state.receipt=receipt;state.cardUrl=buildRwpEvidenceResolutionCardUrl(card,location.href);byId('receiptView').classList.add('show');byId('receiptResult').textContent=`${receipt.outcome.status} · deterministic ${receipt.outcome.deterministicStatus}`;byId('receiptCounts').textContent=`${receipt.outcome.counts.matched}/${receipt.outcome.counts.total} matched`;byId('receiptId').textContent=receipt.receiptId;byId('receiptDigest').textContent=receipt.receiptDigest;byId('downloadReceipt').disabled=false;byId('copyCard').disabled=false;setStatus('recipientStatus','Private Resolution Receipt generated locally. Only the aggregate card can enter a public link.');}catch(error){setStatus('recipientStatus',error?.message||String(error),true);}});
+    byId('downloadReceipt').addEventListener('click',()=>downloadJson(state.receipt,`${state.receipt.receiptId}-resolution-receipt.json`));
+    byId('copyCard').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(state.cardUrl);setStatus('recipientStatus','Privacy-bounded Resolution Card link copied.');}catch{setStatus('recipientStatus','Clipboard access failed.',true);}});
+
+    try{const shared=readRwpEvidenceResolutionCardFromHash(location.hash);if(shared){byId('sharedCardView').classList.add('show');byId('sharedOutcome').textContent=shared.receipt.outcome;byId('sharedDeterministic').textContent=shared.receipt.deterministicStatus;byId('sharedResolutionDigest').textContent=shared.source.resolutionDigest;setStatus('recipientStatus','Public Resolution Card verified from its canonical digest.');}}catch(error){setStatus('recipientStatus',`Invalid public Resolution Card: ${error?.message||String(error)}`,true);}
+  </script>
+</body>
+</html>
