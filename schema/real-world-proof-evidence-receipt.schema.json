@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/moseszhu999/trade-proof-passport/schema/real-world-proof-evidence-receipt.schema.json",
+  "title": "Real-World Proof Evidence Receipt v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "domain", "source", "receiver", "outcome", "evidenceResults", "createdAt", "assurance", "receiptId", "receiptDigest"],
+  "properties": {
+    "format": { "const": "real-world-proof-evidence-receipt" },
+    "version": { "const": "0.1" },
+    "domain": { "const": "trade" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageId", "packageDigest", "passportDigest", "cardDigest", "requestId", "requestDigest", "responseId", "responseDigest"],
+      "properties": {
+        "packageId": { "type": "string", "pattern": "^rwpep:[0-9a-f]{16}$" },
+        "packageDigest": { "$ref": "#/$defs/bytes32" },
+        "passportDigest": { "$ref": "#/$defs/bytes32" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" },
+        "requestId": { "type": "string", "pattern": "^rwpr:[0-9a-f]{16}$" },
+        "requestDigest": { "$ref": "#/$defs/bytes32" },
+        "responseId": { "type": "string", "pattern": "^rwprr:[0-9a-f]{16}$" },
+        "responseDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "receiver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role"],
+      "properties": { "role": { "$ref": "#/$defs/role" } }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "deterministicStatus", "packageCoverageComplete", "counts"],
+      "properties": {
+        "status": { "type": "string", "enum": ["received", "incomplete", "mismatch", "request_more"] },
+        "deterministicStatus": { "type": "string", "enum": ["received", "incomplete", "mismatch"] },
+        "packageCoverageComplete": { "type": "boolean" },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["total", "matched", "mismatch", "missing", "notChecked", "unsupportedAlgorithm"],
+          "properties": {
+            "total": { "type": "integer", "minimum": 0 },
+            "matched": { "type": "integer", "minimum": 0 },
+            "mismatch": { "type": "integer", "minimum": 0 },
+            "missing": { "type": "integer", "minimum": 0 },
+            "notChecked": { "type": "integer", "minimum": 0 },
+            "unsupportedAlgorithm": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "evidenceResults": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidenceId", "category", "status", "algorithm"],
+        "properties": {
+          "evidenceId": { "type": "string", "minLength": 1 },
+          "category": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "enum": ["matched", "mismatch", "missing", "not_checked", "unsupported_algorithm"] },
+          "algorithm": { "type": "string", "minLength": 1 },
+          "computedDigest": { "type": "string", "pattern": "^[0-9a-f]+$" }
+        }
+      }
+    },
+    "note": { "type": "string", "minLength": 1, "maxLength": 280 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "assurance": { "type": "string", "minLength": 1 },
+    "receiptId": { "type": "string", "pattern": "^rwper:[0-9a-f]{16}$" },
+    "receiptDigest": { "$ref": "#/$defs/bytes32" }
+  },
+  "$defs": {
+    "bytes32": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+    "role": {
+      "type": "string",
+      "enum": ["exporter", "buyer", "supplier", "manufacturer", "inspection", "logistics", "warehouse", "customs", "insurance", "legal", "funder", "other"]
+    }
+  }
+}
