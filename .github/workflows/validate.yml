@@ -41,6 +41,7 @@ jobs:
             'schema/real-world-proof-trade-pool.schema.json',
             'schema/real-world-proof-pool-adoption.schema.json',
             'schema/real-world-proof-liquidity.schema.json',
+            'schema/real-world-proof-pool-directory.schema.json',
             'tokenomics/tproof-tokenomics-v0.1.json',
             'docs/contracts/base-sepolia-v0.1.json',
             'examples/steel-cabinet-passport.json',
@@ -49,7 +50,7 @@ jobs:
           ]) {
             JSON.parse(readFileSync(file, 'utf8'));
           }
-          console.log('PASS: Passport, RWP request/response/evidence package/receipt/resolution/case graph/trade pool/adoption/liquidity, tokenomics, contracts and allocation JSON parse');
+          console.log('PASS: Passport, RWP request/response/evidence package/receipt/resolution/case graph/trade pool/adoption/liquidity/directory, tokenomics, contracts and allocation JSON parse');
           NODE
 
       - name: Validate steel cabinet Trade RWP example
@@ -110,6 +111,12 @@ jobs:
 
       - name: Validate local Proof Liquidity and public aggregate surface
         run: node tools/validate-rwp-liquidity-page.mjs
+
+      - name: Validate deterministic open RWP Pool Directories
+        run: node tools/verify-rwp-pool-directory.mjs
+
+      - name: Validate local open Directory and public discovery surface
+        run: node tools/validate-rwp-directory-page.mjs
 
       - name: Validate RWP public narrative, privacy and useful viral surface
         run: node tools/validate-rwp-page.mjs

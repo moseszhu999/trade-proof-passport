@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://moseszhu999.github.io/trade-proof-passport/schema/real-world-proof-pool-directory.schema.json",
+  "title": "Real-World Proof Pool Directory v0.1",
+  "oneOf": [
+    { "$ref": "#/$defs/directory" },
+    { "$ref": "#/$defs/directoryCard" }
+  ],
+  "$defs": {
+    "bytes32": {
+      "type": "string",
+      "pattern": "^0x[0-9a-f]{64}$"
+    },
+    "directoryScope": {
+      "enum": ["community", "trade_corridor", "industry", "workflow", "other"]
+    },
+    "poolScope": {
+      "enum": ["trade_corridor", "industry", "workflow", "other"]
+    },
+    "curation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "entriesAreEndorsements", "rankingProvided"],
+      "properties": {
+        "mode": { "const": "open_self_declared" },
+        "entriesAreEndorsements": { "const": false },
+        "rankingProvided": { "const": false }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generation"],
+      "properties": {
+        "generation": { "type": "integer", "minimum": 0 },
+        "forkedFromDirectoryDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "fullEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pool"],
+      "properties": {
+        "pool": {
+          "type": "object",
+          "description": "One complete validated real-world-proof-trade-pool object."
+        },
+        "liquidityCard": {
+          "type": "object",
+          "description": "One optional matching real-world-proof-liquidity-snapshot-card object."
+        },
+        "curatorNote": { "type": "string", "minLength": 1, "maxLength": 160 }
+      }
+    },
+    "scopeCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trade_corridor", "industry", "workflow", "other"],
+      "properties": {
+        "trade_corridor": { "type": "integer", "minimum": 0 },
+        "industry": { "type": "integer", "minimum": 0 },
+        "workflow": { "type": "integer", "minimum": 0 },
+        "other": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entryCount",
+        "poolsWithLiquidity",
+        "poolsWithoutLiquidity",
+        "verifiedAdoptionUnits",
+        "uniqueAdoptionCards",
+        "excludedDuplicates",
+        "partialAdoptions",
+        "notAdopted",
+        "scopes",
+        "firstPoolCreatedAt",
+        "lastObservedAt"
+      ],
+      "properties": {
+        "entryCount": { "type": "integer", "minimum": 1 },
+        "poolsWithLiquidity": { "type": "integer", "minimum": 0 },
+        "poolsWithoutLiquidity": { "type": "integer", "minimum": 0 },
+        "verifiedAdoptionUnits": { "type": "integer", "minimum": 0 },
+        "uniqueAdoptionCards": { "type": "integer", "minimum": 0 },
+        "excludedDuplicates": { "type": "integer", "minimum": 0 },
+        "partialAdoptions": { "type": "integer", "minimum": 0 },
+        "notAdopted": { "type": "integer", "minimum": 0 },
+        "scopes": { "$ref": "#/$defs/scopeCounts" },
+        "firstPoolCreatedAt": { "type": "string", "format": "date-time" },
+        "lastObservedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "directory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "version",
+        "domain",
+        "label",
+        "scope",
+        "curation",
+        "lineage",
+        "entries",
+        "summary",
+        "projectedAt",
+        "assurance",
+        "directoryId",
+        "directoryDigest"
+      ],
+      "properties": {
+        "format": { "const": "real-world-proof-pool-directory" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 96 },
+        "scope": { "$ref": "#/$defs/directoryScope" },
+        "description": { "type": "string", "minLength": 1, "maxLength": 280 },
+        "curation": { "$ref": "#/$defs/curation" },
+        "lineage": { "$ref": "#/$defs/lineage" },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": { "$ref": "#/$defs/fullEntry" }
+        },
+        "summary": { "$ref": "#/$defs/summary" },
+        "projectedAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "directoryId": { "type": "string", "pattern": "^rwpdir:[0-9a-f]{16}$" },
+        "directoryDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "liquidityProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cardId",
+        "cardDigest",
+        "snapshotId",
+        "snapshotDigest",
+        "verifiedAdoptionUnits",
+        "uniqueCards",
+        "excludedDuplicates",
+        "partialAdoptions",
+        "notAdopted",
+        "firstAdoptionAt",
+        "lastAdoptionAt"
+      ],
+      "properties": {
+        "cardId": { "type": "string", "pattern": "^rwpplcard:[0-9a-f]{16}$" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" },
+        "snapshotId": { "type": "string", "pattern": "^rwppls:[0-9a-f]{16}$" },
+        "snapshotDigest": { "$ref": "#/$defs/bytes32" },
+        "verifiedAdoptionUnits": { "type": "integer", "minimum": 0 },
+        "uniqueCards": { "type": "integer", "minimum": 0 },
+        "excludedDuplicates": { "type": "integer", "minimum": 0 },
+        "partialAdoptions": { "type": "integer", "minimum": 0 },
+        "notAdopted": { "type": "integer", "minimum": 0 },
+        "firstAdoptionAt": { "type": "string", "format": "date-time" },
+        "lastAdoptionAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "projectedEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["poolId", "poolDigest", "patternDigest", "label", "scope", "generation"],
+      "properties": {
+        "poolId": { "type": "string", "pattern": "^rwppool:[0-9a-f]{16}$" },
+        "poolDigest": { "$ref": "#/$defs/bytes32" },
+        "patternDigest": { "$ref": "#/$defs/bytes32" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 96 },
+        "scope": { "$ref": "#/$defs/poolScope" },
+        "generation": { "type": "integer", "minimum": 0 },
+        "curatorNote": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "liquidity": { "$ref": "#/$defs/liquidityProjection" }
+      }
+    },
+    "directoryCard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "version",
+        "domain",
+        "source",
+        "directory",
+        "entries",
+        "summary",
+        "projectedAt",
+        "assurance",
+        "cardId",
+        "cardDigest"
+      ],
+      "properties": {
+        "format": { "const": "real-world-proof-pool-directory-card" },
+        "version": { "const": "0.1" },
+        "domain": { "const": "trade" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["directoryId", "directoryDigest"],
+          "properties": {
+            "directoryId": { "type": "string", "pattern": "^rwpdir:[0-9a-f]{16}$" },
+            "directoryDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "directory": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "scope", "generation"],
+          "properties": {
+            "label": { "type": "string", "minLength": 1, "maxLength": 96 },
+            "scope": { "$ref": "#/$defs/directoryScope" },
+            "description": { "type": "string", "minLength": 1, "maxLength": 280 },
+            "generation": { "type": "integer", "minimum": 0 },
+            "forkedFromDirectoryDigest": { "$ref": "#/$defs/bytes32" }
+          }
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": { "$ref": "#/$defs/projectedEntry" }
+        },
+        "summary": { "$ref": "#/$defs/summary" },
+        "projectedAt": { "type": "string", "format": "date-time" },
+        "assurance": { "type": "string", "minLength": 1 },
+        "cardId": { "type": "string", "pattern": "^rwpdircard:[0-9a-f]{16}$" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    }
+  }
+}
