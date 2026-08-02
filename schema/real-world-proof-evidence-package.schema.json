@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/moseszhu999/trade-proof-passport/schema/real-world-proof-evidence-package.schema.json",
+  "title": "Real-World Proof Evidence Package v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["format", "version", "domain", "source", "authorization", "coverage", "evidence", "createdAt", "assurance", "packageId", "packageDigest"],
+  "properties": {
+    "format": { "const": "real-world-proof-evidence-package" },
+    "version": { "const": "0.1" },
+    "domain": { "const": "trade" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passportDigest", "cardDigest", "requestId", "requestDigest", "responseId", "responseDigest"],
+      "properties": {
+        "passportDigest": { "$ref": "#/$defs/bytes32" },
+        "cardDigest": { "$ref": "#/$defs/bytes32" },
+        "requestId": { "type": "string", "pattern": "^rwpr:[0-9a-f]{16}$" },
+        "requestDigest": { "$ref": "#/$defs/bytes32" },
+        "responseId": { "type": "string", "pattern": "^rwprr:[0-9a-f]{16}$" },
+        "responseDigest": { "$ref": "#/$defs/bytes32" }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["responseDecision", "fulfillmentMode", "channelHint", "requesterRole", "responderRole"],
+      "properties": {
+        "responseDecision": { "enum": ["accept", "partially_accept"] },
+        "fulfillmentMode": { "const": "authorized_off_channel" },
+        "channelHint": { "type": "string", "minLength": 1 },
+        "requesterRole": { "$ref": "#/$defs/role" },
+        "responderRole": { "$ref": "#/$defs/role" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedCategories", "includedCategories", "missingCategories", "complete"],
+      "properties": {
+        "allowedCategories": { "$ref": "#/$defs/categories" },
+        "includedCategories": { "$ref": "#/$defs/categories" },
+        "missingCategories": { "$ref": "#/$defs/categories" },
+        "complete": { "type": "boolean" }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["evidenceId", "category", "type", "digest", "disclosure", "fileVerification"],
+        "properties": {
+          "evidenceId": { "type": "string", "minLength": 1 },
+          "category": { "$ref": "#/$defs/category" },
+          "type": { "type": "string", "minLength": 1 },
+          "digest": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["algorithm", "value"],
+            "properties": {
+              "algorithm": { "enum": ["sha256", "sha384", "sha512", "keccak256"] },
+              "value": { "type": "string", "pattern": "^[0-9a-f]+$" }
+            }
+          },
+          "disclosure": { "enum": ["private", "shared", "public_summary"] },
+          "issuedAt": { "type": "string", "format": "date-time" },
+          "issuerRole": { "$ref": "#/$defs/role" },
+          "fileVerification": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "algorithm"],
+            "properties": {
+              "status": { "enum": ["not_checked", "matched", "mismatch", "unsupported_algorithm"] },
+              "algorithm": { "enum": ["sha256", "sha384", "sha512", "keccak256"] },
+              "computedDigest": { "type": "string", "pattern": "^[0-9a-f]+$" }
+            }
+          }
+        }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "assurance": { "type": "string", "minLength": 1 },
+    "packageId": { "type": "string", "pattern": "^rwpep:[0-9a-f]{16}$" },
+    "packageDigest": { "$ref": "#/$defs/bytes32" }
+  },
+  "$defs": {
+    "bytes32": { "type": "string", "pattern": "^0x[0-9a-f]{64}$" },
+    "role": { "enum": ["exporter", "buyer", "supplier", "manufacturer", "inspection", "logistics", "warehouse", "customs", "insurance", "legal", "funder", "other"] },
+    "category": { "enum": ["bill_of_lading", "commercial_invoice", "customs_record", "inspection_report", "insurance_record", "logistics_event", "packing_list", "purchase_order", "warehouse_receipt", "other"] },
+    "categories": { "type": "array", "items": { "$ref": "#/$defs/category" }, "uniqueItems": true }
+  }
+}
