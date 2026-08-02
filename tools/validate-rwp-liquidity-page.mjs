@@ -46,7 +46,7 @@ for (const required of [
   'unique Passport root',
   'Duplicate submissions never increase',
   'does not require a central index',
-  'Snapshot proves only the exact card set',
+  'A Snapshot therefore proves only the exact card set',
   'page view',
   'empty Pool fork',
   'Token balance != Proof Liquidity'
