@@ -62,6 +62,7 @@ function claimCard(claim) {
   return `<article>
     <header><strong>${escapeHtml(claim.claimType)}</strong><span class="badge">未验证</span></header>
     <p>${escapeHtml(claim.text)}</p>
+    <small>${escapeHtml(claim.evidenceClassification)} · verified=${claim.verified}</small><br>
     <a href="${escapeHtml(claim.sourceUrl)}" target="_blank" rel="noreferrer">查看公开来源</a>
   </article>`;
 }
