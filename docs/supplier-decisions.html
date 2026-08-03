@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · Supplier Decision Workspace</title>
+  <meta name="description" content="TradeProof 供应商人工决策工作台：汇总正式要求、未验证回复、证据、外部核验候选结论与沟通时间线，不评分、不排名、不自动形成资格或授标决定。">
+  <link rel="stylesheet" href="./supplier-decisions.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./index.html">TradeProof</a>
+      <div class="topbar__actions">
+        <span data-status>正在加载本地决策上下文</span>
+        <button type="button" data-export-workspace>导出本地决策记录</button>
+        <a class="back-link" href="./evidence-verification.html">外部核验</a>
+        <a class="back-link" href="./supplier-evidence.html">证据审查</a>
+        <a class="back-link" href="./operations.html">今日运营</a>
+      </div>
+    </nav>
+    <section data-supplier-decision-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./supplier-decisions.mjs"></script>
+</body>
+</html>
