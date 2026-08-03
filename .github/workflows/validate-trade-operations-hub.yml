@@ -15,16 +15,23 @@ on:
       - 'docs/suppliers.css'
       - 'docs/suppliers.mjs'
       - 'docs/supplier-candidate-core.mjs'
+      - 'docs/supplier-responses.html'
+      - 'docs/supplier-responses.css'
+      - 'docs/supplier-responses.mjs'
+      - 'docs/supplier-response-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
       - 'docs/data/supplier-candidates-hospital-furniture-v0.4.json'
       - 'docs/guides/trade-daily-operations-hub-v0.1.md'
       - 'docs/guides/trade-case-intake-v0.2.md'
       - 'docs/guides/local-document-intake-v0.3.md'
       - 'docs/guides/supplier-candidate-workspace-v0.4.md'
+      - 'docs/guides/supplier-response-workspace-v0.5.md'
       - 'schema/trade-case.schema.json'
+      - 'schema/supplier-response.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
       - 'tools/verify-local-document-intake.mjs'
       - 'tools/verify-supplier-candidate-workspace.mjs'
+      - 'tools/verify-supplier-response-workspace.mjs'
       - '.github/workflows/validate-trade-operations-hub.yml'
   push:
     branches: [main]
@@ -41,14 +48,21 @@ on:
       - 'docs/suppliers.css'
       - 'docs/suppliers.mjs'
       - 'docs/supplier-candidate-core.mjs'
+      - 'docs/supplier-responses.html'
+      - 'docs/supplier-responses.css'
+      - 'docs/supplier-responses.mjs'
+      - 'docs/supplier-response-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
       - 'docs/data/supplier-candidates-hospital-furniture-v0.4.json'
       - 'docs/guides/local-document-intake-v0.3.md'
       - 'docs/guides/supplier-candidate-workspace-v0.4.md'
+      - 'docs/guides/supplier-response-workspace-v0.5.md'
       - 'schema/trade-case.schema.json'
+      - 'schema/supplier-response.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
       - 'tools/verify-local-document-intake.mjs'
       - 'tools/verify-supplier-candidate-workspace.mjs'
+      - 'tools/verify-supplier-response-workspace.mjs'
 
 permissions:
   contents: read
@@ -66,6 +80,7 @@ jobs:
           node -e "JSON.parse(require('node:fs').readFileSync('docs/data/opportunity-radar-latest.json','utf8'))"
           node -e "JSON.parse(require('node:fs').readFileSync('docs/data/supplier-candidates-hospital-furniture-v0.4.json','utf8'))"
           node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-case.schema.json','utf8'))"
+          node -e "JSON.parse(require('node:fs').readFileSync('schema/supplier-response.schema.json','utf8'))"
       - name: Syntax-check browser modules
         run: |
           node --check docs/trade-case-core.mjs
@@ -74,9 +89,13 @@ jobs:
           node --check docs/document-intake-ui.mjs
           node --check docs/supplier-candidate-core.mjs
           node --check docs/suppliers.mjs
+          node --check docs/supplier-response-core.mjs
+          node --check docs/supplier-responses.mjs
       - name: Validate Trade Daily Operations Hub
         run: node tools/verify-trade-operations-hub.mjs
       - name: Validate controlled local document intake
         run: node tools/verify-local-document-intake.mjs
       - name: Validate supplier candidate workspace
         run: node tools/verify-supplier-candidate-workspace.mjs
+      - name: Validate supplier response workspace
+        run: node tools/verify-supplier-response-workspace.mjs
