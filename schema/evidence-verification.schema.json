@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/evidence-verification-v0.9.json",
+  "title": "TradeProof Evidence External Verification Handoff v0.9",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/task" },
+    { "$ref": "#/$defs/receipt" },
+    { "$ref": "#/$defs/review" },
+    { "$ref": "#/$defs/workspace" }
+  ],
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "outcome": { "enum": ["supported", "contradicted", "inconclusive"] },
+    "task": {
+      "type": "object",
+      "required": ["schemaVersion", "taskId", "evidenceId", "contentDigest", "state", "selectedFindings", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.evidence-verification-task.v0.9" },
+        "taskId": { "type": "string", "minLength": 1 },
+        "evidenceId": { "type": "string", "minLength": 1 },
+        "contentDigest": { "$ref": "#/$defs/sha256" },
+        "state": { "enum": ["holder_local_draft", "holder_export_ready"] },
+        "selectedFindings": { "type": "array", "minItems": 1 },
+        "boundaries": { "type": "object" }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["schemaVersion", "receiptId", "taskId", "evidenceId", "contentDigest", "fieldResults", "receiptClassification", "verifierIdentityVerified", "receiptAuthenticityVerified", "evidenceVerified"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.evidence-verification-receipt.v0.9" },
+        "receiptId": { "type": "string", "minLength": 1 },
+        "taskId": { "type": "string", "minLength": 1 },
+        "evidenceId": { "type": "string", "minLength": 1 },
+        "contentDigest": { "$ref": "#/$defs/sha256" },
+        "fieldResults": { "type": "array", "items": { "type": "object", "required": ["findingId", "field", "outcome"], "properties": { "outcome": { "$ref": "#/$defs/outcome" } } } },
+        "receiptClassification": { "const": "external_verification_receipt_unverified" },
+        "verifierIdentityVerified": { "const": false },
+        "receiptAuthenticityVerified": { "const": false },
+        "evidenceVerified": { "const": false }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["schemaVersion", "reviewId", "assessment", "assessmentClassification", "humanReviewConfirmed", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.evidence-verification-review.v0.9" },
+        "assessment": { "$ref": "#/$defs/outcome" },
+        "assessmentClassification": { "const": "external_receipt_assessment_candidate" },
+        "humanReviewConfirmed": { "type": "boolean" },
+        "boundaries": { "type": "object" }
+      }
+    },
+    "workspace": {
+      "type": "object",
+      "required": ["schemaVersion", "workspaceId", "state", "tasks", "receipts", "reviews", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.evidence-verification-workspace.v0.9" },
+        "state": { "const": "holder_local_private" },
+        "tasks": { "type": "array", "items": { "$ref": "#/$defs/task" } },
+        "receipts": { "type": "array", "items": { "$ref": "#/$defs/receipt" } },
+        "reviews": { "type": "array", "items": { "$ref": "#/$defs/review" } },
+        "boundaries": { "type": "object" }
+      }
+    }
+  }
+}
