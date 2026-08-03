@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TradeProof Inbound Communication Timeline v0.7",
+  "type": "object",
+  "required": ["schemaVersion", "caseId", "events", "state", "serverPersistencePerformed", "externalNetworkAccessPerformed", "automaticReplyPerformed", "formalWritePerformed"],
+  "properties": {
+    "schemaVersion": { "const": "tradeproof.inbound-communication-timeline.v0.7" },
+    "caseId": { "type": ["string", "null"] },
+    "state": { "const": "holder_local_private" },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["schemaVersion", "eventId", "direction", "channel", "state", "evidenceClassification", "association", "boundaries"],
+        "properties": {
+          "schemaVersion": { "const": "tradeproof.inbound-communication-event.v0.7" },
+          "eventId": { "type": "string" },
+          "messageId": { "type": ["string", "null"] },
+          "direction": { "const": "inbound" },
+          "channel": { "const": "email_file_import" },
+          "state": { "const": "holder_imported_unverified" },
+          "evidenceClassification": { "const": "inbound_email_unverified" },
+          "association": {
+            "type": "object",
+            "required": ["associationState", "senderIdentityVerified", "supplierIdentityVerified", "humanReviewRequired"],
+            "properties": {
+              "associationState": { "enum": ["header_bound_unverified", "request_reference_match_unverified", "contact_address_match_unverified", "unmatched_needs_review"] },
+              "senderIdentityVerified": { "const": false },
+              "supplierIdentityVerified": { "const": false },
+              "humanReviewRequired": { "const": true }
+            }
+          },
+          "boundaries": {
+            "type": "object",
+            "required": ["senderIdentityVerified", "supplierIdentityVerified", "attachmentContentRead", "attachmentDownloaded", "externalNetworkAccessPerformed", "automaticReplyPerformed", "formalSubmissionPerformed"],
+            "properties": {
+              "senderIdentityVerified": { "const": false },
+              "supplierIdentityVerified": { "const": false },
+              "attachmentContentRead": { "const": false },
+              "attachmentDownloaded": { "const": false },
+              "externalNetworkAccessPerformed": { "const": false },
+              "automaticReplyPerformed": { "const": false },
+              "formalSubmissionPerformed": { "const": false }
+            }
+          }
+        }
+      }
+    },
+    "serverPersistencePerformed": { "const": false },
+    "externalNetworkAccessPerformed": { "const": false },
+    "automaticReplyPerformed": { "const": false },
+    "formalWritePerformed": { "const": false }
+  }
+}
