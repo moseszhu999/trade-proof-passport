@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/supplier-decision.schema.json",
+  "title": "TradeProof Supplier Decision Workspace v1.0",
+  "oneOf": [
+    { "$ref": "#/$defs/workspace" },
+    { "$ref": "#/$defs/record" }
+  ],
+  "$defs": {
+    "record": {
+      "type": "object",
+      "required": ["schemaVersion", "decisionId", "candidateId", "state", "decision", "decisionClassification", "reason", "humanConfirmed", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.supplier-decision-record.v1.0" },
+        "decisionId": { "type": "string", "minLength": 1 },
+        "candidateId": { "type": "string", "minLength": 1 },
+        "state": { "const": "holder_local_candidate_decision" },
+        "decision": { "enum": ["continue_contact", "pause_pending_information", "exclude_from_current_case", "deeper_verification_required"] },
+        "decisionClassification": { "const": "human_case_progression_candidate" },
+        "reason": { "type": "string", "minLength": 1 },
+        "humanConfirmed": { "const": true },
+        "boundaries": {
+          "type": "object",
+          "required": ["externalActionPerformed", "formalSubmissionPerformed", "formalShortlistCreated", "supplierEligibilityDecided", "awardDecisionCreated", "rankingGenerated", "numericScore", "rank"],
+          "properties": {
+            "externalActionPerformed": { "const": false },
+            "formalSubmissionPerformed": { "const": false },
+            "formalShortlistCreated": { "const": false },
+            "supplierEligibilityDecided": { "const": false },
+            "awardDecisionCreated": { "const": false },
+            "rankingGenerated": { "const": false },
+            "numericScore": { "type": "null" },
+            "rank": { "type": "null" }
+          }
+        }
+      }
+    },
+    "workspace": {
+      "type": "object",
+      "required": ["schemaVersion", "workspaceId", "state", "candidateOrder", "decisions", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.supplier-decision-workspace.v1.0" },
+        "workspaceId": { "type": "string", "minLength": 1 },
+        "state": { "const": "holder_local_private" },
+        "candidateOrder": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "decisions": { "type": "array", "items": { "$ref": "#/$defs/record" } },
+        "boundaries": {
+          "type": "object",
+          "required": ["numericScoreGenerated", "rankingGenerated", "formalShortlistCreated", "supplierEligibilityDecided", "awardDecisionCreated", "externalActionPerformed", "serverPersistencePerformed"],
+          "properties": {
+            "numericScoreGenerated": { "const": false },
+            "rankingGenerated": { "const": false },
+            "formalShortlistCreated": { "const": false },
+            "supplierEligibilityDecided": { "const": false },
+            "awardDecisionCreated": { "const": false },
+            "externalActionPerformed": { "const": false },
+            "serverPersistencePerformed": { "const": false }
+          }
+        }
+      }
+    }
+  }
+}
