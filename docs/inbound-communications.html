@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · 入站通信时间线</title>
+  <meta name="description" content="在浏览器本地导入供应商返回的 EML，候选关联 Trade Case、Request 与 Supplier，登记附件元数据并生成待确认动作。">
+  <link rel="stylesheet" href="./inbound-communications.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./operations.html">TradeProof · 今日运营</a>
+      <div class="topbar__actions">
+        <a href="./supplier-outreach.html">外联准备</a>
+        <a href="./supplier-responses.html">供应商回复</a>
+        <button type="button" data-export-timeline>导出本地时间线</button>
+      </div>
+    </nav>
+    <section class="hero">
+      <p class="eyebrow">Inbound Communication Threading v0.7</p>
+      <h1>把供应商返回的邮件带回同一个 Trade Case</h1>
+      <p>只读取你主动选择的 <code>.eml</code>。发件人身份、供应商身份、附件内容与正式提交状态均不会自动验证。</p>
+      <label class="file-button">选择 EML 文件<input data-eml-files type="file" accept=".eml,message/rfc822" multiple></label>
+      <p data-status aria-live="polite">等待选择本地 EML 文件。</p>
+    </section>
+    <section data-inbound-communication-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./inbound-communications.mjs"></script>
+</body>
+</html>
