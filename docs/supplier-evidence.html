@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · Supplier Evidence Queue</title>
+  <meta name="description" content="TradeProof 供应商证据接入与审查队列：本地哈希、受控文本提取、附件元数据绑定与人工核验。">
+  <link rel="stylesheet" href="./supplier-evidence.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./operations.html">TradeProof · 今日运营</a>
+      <div class="topbar__actions">
+        <button type="button" data-export-queue>导出证据队列</button>
+        <a href="./inbound-communications.html">入站通信</a>
+        <a href="./supplier-responses.html">供应商回复</a>
+      </div>
+    </nav>
+    <header class="hero">
+      <p class="eyebrow">Supplier Evidence Intake & Verification Queue v0.8</p>
+      <h1>把本地证据文件绑定到供应商、问题与邮件附件</h1>
+      <p>文件字节只在当前浏览器用于 SHA-256。允许的文本格式可本地提取候选字段；PDF、Word、Excel 与图片不解析正文。任何结果都不是已验证证据。</p>
+    </header>
+    <section class="panel intake">
+      <h2>选择本地证据文件</h2>
+      <div class="form-grid">
+        <label>供应商<select data-candidate></select></label>
+        <label>问题<select data-question></select></label>
+        <label>邮件附件元数据<select data-attachment></select></label>
+        <label class="file-label">本地文件<input data-evidence-files type="file" multiple></label>
+      </div>
+      <p data-status class="status">等待选择文件。</p>
+    </section>
+    <section data-supplier-evidence-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./supplier-evidence.mjs"></script>
+</body>
+</html>
