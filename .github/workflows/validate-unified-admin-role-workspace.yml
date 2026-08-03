@@ -1,0 +1,38 @@
+name: Validate Unified Admin Role Workspace
+
+on:
+  pull_request:
+    paths:
+      - 'docs/admin.html'
+      - 'docs/admin-shell.css'
+      - 'docs/admin-shell.mjs'
+      - 'docs/operations.html'
+      - 'docs/guides/unified-admin-role-workspace-v1.1.md'
+      - 'tools/verify-unified-admin-role-workspace.mjs'
+      - '.github/workflows/validate-unified-admin-role-workspace.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/admin.html'
+      - 'docs/admin-shell.css'
+      - 'docs/admin-shell.mjs'
+      - 'docs/operations.html'
+      - 'docs/guides/unified-admin-role-workspace-v1.1.md'
+      - 'tools/verify-unified-admin-role-workspace.mjs'
+      - '.github/workflows/validate-unified-admin-role-workspace.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Syntax-check admin workspace
+        run: node --check docs/admin-shell.mjs
+      - name: Verify admin role workspace contract
+        run: node tools/verify-unified-admin-role-workspace.mjs
