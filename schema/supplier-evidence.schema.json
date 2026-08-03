@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TradeProof Supplier Evidence Intake & Verification Queue v0.8",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/evidenceItem" },
+    { "$ref": "#/$defs/evidenceQueue" }
+  ],
+  "$defs": {
+    "boundaryFalse": { "const": false },
+    "finding": {
+      "type": "object",
+      "required": ["findingId", "field", "value", "state", "sourceConfirmed", "evidenceVerified", "externalVerificationPerformed"],
+      "properties": {
+        "findingId": { "type": "string", "minLength": 1 },
+        "field": { "enum": ["legal_entity", "certificate_number", "issuer", "product_scope", "valid_until"] },
+        "value": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "state": { "enum": ["candidate_unconfirmed", "confirmed_in_local_file", "excluded_by_holder"] },
+        "sourceConfirmed": { "type": "boolean" },
+        "evidenceVerified": { "$ref": "#/$defs/boundaryFalse" },
+        "externalVerificationPerformed": { "$ref": "#/$defs/boundaryFalse" }
+      }
+    },
+    "evidenceItem": {
+      "type": "object",
+      "required": ["schemaVersion", "evidenceId", "caseId", "requestId", "candidateId", "state", "evidenceClassification", "source", "contentDigest", "fileBytesHashedLocally", "documentContentParsed", "fullContentStored", "originalFileStored", "extractedFindings", "reviewTasks", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.supplier-evidence-item.v0.8" },
+        "evidenceId": { "type": "string", "minLength": 1 },
+        "caseId": { "type": "string", "minLength": 1 },
+        "requestId": { "type": "string", "minLength": 1 },
+        "candidateId": { "type": "string", "minLength": 1 },
+        "questionId": { "type": ["string", "null"] },
+        "state": { "enum": ["text_candidates_pending_review", "metadata_only_pending_manual_review", "source_fields_reviewed_unverified"] },
+        "evidenceClassification": { "const": "holder_selected_local_file_unverified" },
+        "source": {
+          "type": "object",
+          "required": ["sourceType", "fileName", "mediaType", "size"],
+          "properties": {
+            "sourceType": { "const": "holder_selected_local_file" },
+            "fileName": { "type": "string" },
+            "mediaType": { "type": "string" },
+            "size": { "type": "integer", "minimum": 0, "maximum": 8388608 }
+          }
+        },
+        "contentDigest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "fileBytesHashedLocally": { "const": true },
+        "documentContentParsed": { "type": "boolean" },
+        "fullContentStored": { "$ref": "#/$defs/boundaryFalse" },
+        "originalFileStored": { "$ref": "#/$defs/boundaryFalse" },
+        "extractedFindings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+        "reviewTasks": { "type": "array" },
+        "boundaries": {
+          "type": "object",
+          "required": ["fileUploaded", "serverPersistencePerformed", "externalNetworkAccessPerformed", "externalRegistryLookupPerformed", "certificateValidityVerified", "issuerVerified", "supplierIdentityVerified", "evidenceVerified", "formalSubmissionPerformed", "rankingGenerated", "supplierEligibilityDecided"],
+          "additionalProperties": { "$ref": "#/$defs/boundaryFalse" }
+        }
+      }
+    },
+    "evidenceQueue": {
+      "type": "object",
+      "required": ["schemaVersion", "queueId", "caseId", "requestId", "selectedCandidateIds", "state", "items", "boundaries"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.supplier-evidence-queue.v0.8" },
+        "state": { "const": "holder_local_private" },
+        "items": { "type": "array", "items": { "$ref": "#/$defs/evidenceItem" } },
+        "boundaries": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/boundaryFalse" }
+        }
+      }
+    }
+  }
+}
