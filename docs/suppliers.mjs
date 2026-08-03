@@ -89,7 +89,7 @@ function candidateCard(item) {
       <div><small>${escapeHtml(item.country)} · ${escapeHtml(item.region)} · observed_unclaimed</small><h3>${escapeHtml(item.displayName)}</h3></div>
       <span class="badge ${stateClass(item.state)}">${escapeHtml(stateLabel(item.state))}</span>
     </div>
-    <p class="state-copy">官网公开声明只能用于发现候选。verifiedSupplier=false，eligibleForTender=unknown。</p>
+    <p class="state-copy">官网公开声明只能用于发现候选。evidenceClassification=public_self_asserted，verifiedSupplier=false，eligibleForTender=unknown。</p>
     <div class="scope-tags">${scopeTags}</div>
     <div class="claims"><h4>公开自述与来源</h4>${item.publicClaims.map(claimCard).join('')}</div>
     <div class="assessments"><h4>对照已确认案件要求</h4>${assessments}</div>
