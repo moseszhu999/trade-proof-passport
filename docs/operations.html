@@ -3,32 +3,77 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TradeProof · Trade Daily Operations Hub</title>
-  <meta name="description" content="TradeProof 今日运营：从公开机会到本地 Trade Case、供应商候选、结构化回复、受控外联、入站通信、证据审查、外部核验与人工供应商案件决定、Agent 待办和日终收尾。">
+  <title>TradeOS · Daily Operations Workspace</title>
+  <meta name="description" content="TradeOS 今日运营工作台：机会、Trade Case、供应商、通信、证据、外部核验、人工决定、Agent 提议与日终收尾。">
   <link rel="stylesheet" href="./operations.css">
+  <link rel="stylesheet" href="./enterprise-operations-shell-v1.css">
 </head>
-<body>
-  <main class="shell">
-    <nav class="topbar">
-      <a class="brand" href="./admin.html">TradeOS 统一后台</a>
-      <div class="topbar__actions">
-        <span data-load-status>正在加载机会数据</span>
-        <label class="file-button">导入 Opportunity JSON<input id="local-collection-file" type="file" accept="application/json"></label>
-        <label class="file-button">导入 Trade Case JSON<input id="local-case-file" type="file" accept="application/json"></label>
-        <a class="back-link" href="./admin.html">业务对象菜单</a>
-        <a class="back-link" href="./supplier-decisions.html">人工决策</a>
-        <a class="back-link" href="./evidence-verification.html">外部核验</a>
-        <a class="back-link" href="./supplier-evidence.html">证据审查</a>
-        <a class="back-link" href="./inbound-communications.html">入站通信</a>
-        <a class="back-link" href="./supplier-outreach.html">外联准备</a>
-        <a class="back-link" href="./supplier-responses.html">供应商回复</a>
-        <a class="back-link" href="./suppliers.html">供应商候选</a>
-        <a class="back-link" href="./document-intake.html">本地文件解析</a>
-        <a class="back-link" href="./rwp.html">协议工具</a>
+<body class="trade-ops-app">
+  <div class="trade-ops-layout">
+    <aside class="trade-ops-sidebar" aria-label="TradeOS 主导航">
+      <a class="trade-ops-brand" href="./admin.html"><span>TO</span><strong>TradeOS</strong><small>Proof-driven operations</small></a>
+      <nav>
+        <a class="is-active" href="./operations.html"><i>⌂</i><span>Today</span></a>
+        <a href="./opportunities.html"><i>◎</i><span>Opportunities</span></a>
+        <a href="./operations.html#cases"><i>▦</i><span>Trade Cases</span></a>
+        <a href="./document-intake.html"><i>▤</i><span>Documents</span></a>
+        <a href="./suppliers.html"><i>♙</i><span>Suppliers</span></a>
+        <a href="./inbound-communications.html"><i>✉</i><span>Communications</span></a>
+        <a href="./supplier-evidence.html"><i>◇</i><span>Evidence</span></a>
+        <a href="./evidence-verification.html"><i>✓</i><span>Verification</span></a>
+        <a href="./supplier-decisions.html"><i>◆</i><span>Decisions</span></a>
+        <a href="./rwp.html"><i>⌘</i><span>Protocol tools</span></a>
+      </nav>
+      <footer>
+        <strong>Holder-controlled</strong>
+        <span>Local JSON · no automatic award · no payment or settlement</span>
+      </footer>
+    </aside>
+
+    <section class="trade-ops-main">
+      <header class="trade-ops-header">
+        <div class="trade-ops-context">
+          <button class="trade-ops-menu" type="button" data-trade-menu aria-label="打开导航">☰</button>
+          <div><strong>Today</strong><small>机会 → Case → 证据 → 人工决定</small></div>
+        </div>
+        <div class="trade-ops-header__actions">
+          <span class="trade-ops-runtime" data-load-status>正在加载机会数据</span>
+          <button class="trade-ops-command" type="button" data-trade-agent-open><span>Ask TradeOS</span><kbd>⌘K</kbd></button>
+          <label class="trade-ops-import">导入 Opportunity<input id="local-collection-file" type="file" accept="application/json"></label>
+          <label class="trade-ops-import">导入 Case<input id="local-case-file" type="file" accept="application/json"></label>
+        </div>
+      </header>
+
+      <main class="shell trade-ops-content">
+        <section data-trade-operations-root aria-live="polite"></section>
+      </main>
+    </section>
+  </div>
+
+  <div class="trade-ops-sidebar-mask" data-trade-sidebar-mask></div>
+  <div class="trade-agent-mask" data-trade-agent-mask></div>
+  <aside class="trade-agent-drawer" data-trade-agent-drawer aria-hidden="true">
+    <header>
+      <div><strong>Ask TradeOS</strong><small>意图 → Case 上下文 → proposal → holder confirmation</small></div>
+      <button type="button" data-trade-agent-close aria-label="关闭 Ask TradeOS">×</button>
+    </header>
+    <div class="trade-agent-drawer__body">
+      <div class="trade-agent-shortcuts">
+        <button type="button" data-trade-prompt="找出当前 Case 的证据缺口。">证据缺口</button>
+        <button type="button" data-trade-prompt="准备一份供应商补充材料请求。">材料请求</button>
+        <button type="button" data-trade-prompt="解释哪些结论仍然 not_observable。">可观测性</button>
+        <button type="button" data-trade-prompt="列出需要 holder 决定的事项。">人工决定</button>
       </div>
-    </nav>
-    <section data-trade-operations-root aria-live="polite"></section>
-  </main>
+      <form class="trade-agent-command" data-trade-agent-form>
+        <label for="trade-agent-query"><strong>你现在想完成什么？</strong></label>
+        <textarea id="trade-agent-query" data-trade-agent-query placeholder="例如：检查当前 Case 缺少哪些可验证证据，并准备下一步。"></textarea>
+        <footer><small>只生成结构化提议，不形成 proof 或正式决定。</small><button type="submit">生成提议</button></footer>
+      </form>
+      <div data-trade-agent-output></div>
+    </div>
+  </aside>
+
   <script type="module" src="./operations.mjs"></script>
+  <script type="module" src="./enterprise-operations-shell-v1.mjs"></script>
 </body>
 </html>
