@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · Supplier Response Workspace</title>
+  <meta name="description" content="TradeProof 统一供应商回复工作台：生成本地问题包、导入结构化回复、比较缺失项与冲突，不发送、不排名、不作资格判断。">
+  <link rel="stylesheet" href="./supplier-responses.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./operations.html">TradeProof</a>
+      <div class="topbar__actions">
+        <span data-status>正在读取本地案件与候选名单</span>
+        <label class="file-button">导入供应商回复 JSON<input id="response-file" type="file" accept="application/json" multiple></label>
+        <button id="export-request" type="button">导出统一问题包</button>
+        <a class="back-link" href="./suppliers.html">供应商候选</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <small>SUPPLIER RESPONSE WORKSPACE v0.5</small>
+      <h1>统一提问，结构化回复，人工决策</h1>
+      <p>问题来自已确认案件要求和固定尽调问题。供应商回复与附件元数据均未验证；当前页面不会发邮件、披露联系人、建立正式 Shortlist 或决定投标资格。</p>
+    </header>
+
+    <section class="notice">
+      <strong>当前边界</strong>
+      <span>holder_local_draft · externalSendPerformed=false · supplierStatementClassification=supplier_submitted_unverified · rankingGenerated=false</span>
+    </section>
+
+    <section data-supplier-response-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./supplier-responses.mjs"></script>
+</body>
+</html>
