@@ -1,0 +1,35 @@
+name: Validate Enterprise Operations Shell v1
+
+on:
+  pull_request:
+    paths:
+      - 'docs/operations.html'
+      - 'docs/enterprise-operations-shell-v1.css'
+      - 'docs/enterprise-operations-shell-v1.mjs'
+      - 'tools/verify-enterprise-operations-shell-v1.mjs'
+      - '.github/workflows/validate-enterprise-operations-shell-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/operations.html'
+      - 'docs/enterprise-operations-shell-v1.css'
+      - 'docs/enterprise-operations-shell-v1.mjs'
+      - 'tools/verify-enterprise-operations-shell-v1.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Syntax-check shell module
+        run: node --check docs/enterprise-operations-shell-v1.mjs
+      - name: Validate enterprise operations shell
+        run: node tools/verify-enterprise-operations-shell-v1.mjs
+      - name: Retain canonical operations verification
+        run: node tools/verify-trade-operations-hub.mjs
