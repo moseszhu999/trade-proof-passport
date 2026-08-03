@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · 供应商外联准备</title>
+  <meta name="description" content="TradeProof 供应商外联准备：本地录入联系人、人工批准披露、生成不自动发送的外联草稿与 EML 文件。">
+  <link rel="stylesheet" href="./supplier-outreach.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./index.html">TradeProof</a>
+      <div class="topbar__actions">
+        <span data-status>正在加载本地工作对象</span>
+        <a class="back-link" href="./supplier-responses.html">供应商回复</a>
+        <a class="back-link" href="./suppliers.html">供应商候选</a>
+        <a class="back-link" href="./operations.html">今日运营</a>
+      </div>
+    </nav>
+    <section class="boundary-banner">
+      <strong>不会自动发送</strong>
+      <span>联系人只接受用户本地录入；默认隐藏。只有输入 <code>APPROVE CONTACT DISCLOSURE</code> 后，系统才会在当前浏览器显示完整地址并允许生成本地草稿。导出的 .eml 仍需由用户在自己的邮件客户端检查并发送。</span>
+    </section>
+    <section data-supplier-outreach-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./supplier-outreach.mjs"></script>
+</body>
+</html>
