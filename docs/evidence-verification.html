@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · 外部核验交接</title>
+  <meta name="description" content="将本地证据字段打包为受控核验任务，导入未验证核验回执，并形成 supported、contradicted 或 inconclusive 人工审查候选。">
+  <link rel="stylesheet" href="./evidence-verification.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar"><a class="brand" href="./operations.html">TradeProof</a><div class="topbar__actions"><button type="button" data-export-workspace>导出核验工作区</button><label class="file-button">导入核验回执 JSON<input type="file" accept="application/json" data-receipt-files multiple></label></div></nav>
+    <header class="hero"><p class="eyebrow">Evidence External Verification Handoff v0.9</p><h1>把证据缺口交给外部核验，但不自动相信回执</h1><p>只发送 digest、已确认字段和值；不包含原文件，不连接核验机构，不自动发送，也不产生供应商资格结论。</p><p data-status aria-live="polite">正在读取浏览器本地证据队列。</p></header>
+    <section class="panel">
+      <h2>创建本地核验任务</h2>
+      <div class="form-grid">
+        <label>证据文件<select data-evidence></select></label>
+        <label>核验方名称<input data-verifier-name placeholder="例如：Independent Review Lab"></label>
+        <label>核验方类型<select data-verifier-type><option value="certification_body">认证机构</option><option value="testing_laboratory">检测实验室</option><option value="inspection_provider">检验服务商</option><option value="registry_operator">注册表运营方</option><option value="professional_reviewer">专业审查人</option><option value="other">其他</option></select></label>
+        <label>本地联系人引用<input data-contact-reference placeholder="仅本地备注"></label>
+      </div>
+      <div data-finding-options></div>
+      <button type="button" data-create-task>建立本地核验任务</button>
+    </section>
+    <section data-evidence-verification-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./evidence-verification.mjs"></script>
+</body>
+</html>
