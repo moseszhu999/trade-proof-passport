@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tradeproof.example/schema/supplier-outreach.schema.json",
+  "title": "TradeProof Supplier Outreach Preparation v0.6",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/$defs/contactBook" },
+    { "$ref": "#/$defs/disclosureApproval" },
+    { "$ref": "#/$defs/outreachDraft" }
+  ],
+  "$defs": {
+    "contactBook": {
+      "type": "object",
+      "required": ["schemaVersion", "state", "sourcePolicy", "contacts", "scrapingPerformed", "externalLookupPerformed", "serverPersistencePerformed", "formalWritePerformed"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.supplier-contact-book.v0.6" },
+        "state": { "const": "holder_local_private" },
+        "sourcePolicy": { "const": "holder_supplied_only" },
+        "contacts": { "type": "array", "items": { "$ref": "#/$defs/contact" } },
+        "scrapingPerformed": { "const": false },
+        "externalLookupPerformed": { "const": false },
+        "serverPersistencePerformed": { "const": false },
+        "formalWritePerformed": { "const": false }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "required": ["contactId", "candidateId", "channel", "address", "sourceType", "contactVerified", "state", "scrapingPerformed", "externalLookupPerformed", "externalSendPerformed"],
+      "properties": {
+        "channel": { "const": "email" },
+        "address": { "type": "string", "format": "email" },
+        "sourceType": { "const": "holder_supplied" },
+        "contactVerified": { "const": false },
+        "state": { "const": "holder_local_private" },
+        "scrapingPerformed": { "const": false },
+        "externalLookupPerformed": { "const": false },
+        "externalSendPerformed": { "const": false }
+      }
+    },
+    "disclosureApproval": {
+      "type": "object",
+      "required": ["schemaVersion", "state", "confirmationText", "contactDisclosureApproved", "draftGenerationApproved", "externalSendApproved", "externalSendPerformed", "formalSubmissionPerformed"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.contact-disclosure-approval.v0.6" },
+        "state": { "const": "holder_local_disclosure_approved" },
+        "confirmationText": { "const": "APPROVE CONTACT DISCLOSURE" },
+        "contactDisclosureApproved": { "const": true },
+        "draftGenerationApproved": { "const": true },
+        "externalSendApproved": { "const": false },
+        "externalSendPerformed": { "const": false },
+        "formalSubmissionPerformed": { "const": false }
+      }
+    },
+    "outreachDraft": {
+      "type": "object",
+      "required": ["schemaVersion", "state", "recipient", "subject", "body", "recipientDisclosurePerformed", "externalSendApproved", "externalSendPerformed", "formalSubmissionPerformed", "attachmentUploadPerformed", "rankingGenerated", "supplierEligibilityDecided"],
+      "properties": {
+        "schemaVersion": { "const": "tradeproof.supplier-outreach-draft.v0.6" },
+        "state": { "const": "holder_local_approved_draft" },
+        "recipientDisclosurePerformed": { "const": true },
+        "externalSendApproved": { "const": false },
+        "externalSendPerformed": { "const": false },
+        "formalSubmissionPerformed": { "const": false },
+        "attachmentUploadPerformed": { "const": false },
+        "rankingGenerated": { "const": false },
+        "supplierEligibilityDecided": { "const": false }
+      }
+    }
+  }
+}
