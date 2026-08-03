@@ -32,6 +32,10 @@ on:
       - 'docs/supplier-evidence.css'
       - 'docs/supplier-evidence.mjs'
       - 'docs/supplier-evidence-core.mjs'
+      - 'docs/evidence-verification.html'
+      - 'docs/evidence-verification.css'
+      - 'docs/evidence-verification.mjs'
+      - 'docs/evidence-verification-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
       - 'docs/data/supplier-candidates-hospital-furniture-v0.4.json'
       - 'docs/guides/trade-daily-operations-hub-v0.1.md'
@@ -42,11 +46,13 @@ on:
       - 'docs/guides/supplier-outreach-preparation-v0.6.md'
       - 'docs/guides/inbound-communication-threading-v0.7.md'
       - 'docs/guides/supplier-evidence-verification-queue-v0.8.md'
+      - 'docs/guides/evidence-external-verification-handoff-v0.9.md'
       - 'schema/trade-case.schema.json'
       - 'schema/supplier-response.schema.json'
       - 'schema/supplier-outreach.schema.json'
       - 'schema/inbound-communication.schema.json'
       - 'schema/supplier-evidence.schema.json'
+      - 'schema/evidence-verification.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
       - 'tools/verify-local-document-intake.mjs'
       - 'tools/verify-supplier-candidate-workspace.mjs'
@@ -54,6 +60,7 @@ on:
       - 'tools/verify-supplier-outreach-workspace.mjs'
       - 'tools/verify-inbound-communication-threading.mjs'
       - 'tools/verify-supplier-evidence-workspace.mjs'
+      - 'tools/verify-evidence-verification-handoff.mjs'
       - '.github/workflows/validate-trade-operations-hub.yml'
   push:
     branches: [main]
@@ -87,6 +94,10 @@ on:
       - 'docs/supplier-evidence.css'
       - 'docs/supplier-evidence.mjs'
       - 'docs/supplier-evidence-core.mjs'
+      - 'docs/evidence-verification.html'
+      - 'docs/evidence-verification.css'
+      - 'docs/evidence-verification.mjs'
+      - 'docs/evidence-verification-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
       - 'docs/data/supplier-candidates-hospital-furniture-v0.4.json'
       - 'docs/guides/local-document-intake-v0.3.md'
@@ -95,11 +106,13 @@ on:
       - 'docs/guides/supplier-outreach-preparation-v0.6.md'
       - 'docs/guides/inbound-communication-threading-v0.7.md'
       - 'docs/guides/supplier-evidence-verification-queue-v0.8.md'
+      - 'docs/guides/evidence-external-verification-handoff-v0.9.md'
       - 'schema/trade-case.schema.json'
       - 'schema/supplier-response.schema.json'
       - 'schema/supplier-outreach.schema.json'
       - 'schema/inbound-communication.schema.json'
       - 'schema/supplier-evidence.schema.json'
+      - 'schema/evidence-verification.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
       - 'tools/verify-local-document-intake.mjs'
       - 'tools/verify-supplier-candidate-workspace.mjs'
@@ -107,6 +120,7 @@ on:
       - 'tools/verify-supplier-outreach-workspace.mjs'
       - 'tools/verify-inbound-communication-threading.mjs'
       - 'tools/verify-supplier-evidence-workspace.mjs'
+      - 'tools/verify-evidence-verification-handoff.mjs'
 
 permissions:
   contents: read
@@ -128,6 +142,7 @@ jobs:
           node -e "JSON.parse(require('node:fs').readFileSync('schema/supplier-outreach.schema.json','utf8'))"
           node -e "JSON.parse(require('node:fs').readFileSync('schema/inbound-communication.schema.json','utf8'))"
           node -e "JSON.parse(require('node:fs').readFileSync('schema/supplier-evidence.schema.json','utf8'))"
+          node -e "JSON.parse(require('node:fs').readFileSync('schema/evidence-verification.schema.json','utf8'))"
       - name: Syntax-check browser modules
         run: |
           node --check docs/trade-case-core.mjs
@@ -145,6 +160,8 @@ jobs:
           node --check docs/inbound-communications.mjs
           node --check docs/supplier-evidence-core.mjs
           node --check docs/supplier-evidence.mjs
+          node --check docs/evidence-verification-core.mjs
+          node --check docs/evidence-verification.mjs
       - name: Validate Trade Daily Operations Hub
         run: node tools/verify-trade-operations-hub.mjs
       - name: Validate controlled local document intake
@@ -159,3 +176,5 @@ jobs:
         run: node tools/verify-inbound-communication-threading.mjs
       - name: Validate supplier evidence verification queue
         run: node tools/verify-supplier-evidence-workspace.mjs
+      - name: Validate evidence external verification handoff
+        run: node tools/verify-evidence-verification-handoff.mjs
