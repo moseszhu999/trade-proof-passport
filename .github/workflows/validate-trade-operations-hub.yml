@@ -11,13 +11,20 @@ on:
       - 'docs/document-intake.css'
       - 'docs/document-intake-ui.mjs'
       - 'docs/local-document-intake.mjs'
+      - 'docs/suppliers.html'
+      - 'docs/suppliers.css'
+      - 'docs/suppliers.mjs'
+      - 'docs/supplier-candidate-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
+      - 'docs/data/supplier-candidates-hospital-furniture-v0.4.json'
       - 'docs/guides/trade-daily-operations-hub-v0.1.md'
       - 'docs/guides/trade-case-intake-v0.2.md'
       - 'docs/guides/local-document-intake-v0.3.md'
+      - 'docs/guides/supplier-candidate-workspace-v0.4.md'
       - 'schema/trade-case.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
       - 'tools/verify-local-document-intake.mjs'
+      - 'tools/verify-supplier-candidate-workspace.mjs'
       - '.github/workflows/validate-trade-operations-hub.yml'
   push:
     branches: [main]
@@ -30,11 +37,18 @@ on:
       - 'docs/document-intake.css'
       - 'docs/document-intake-ui.mjs'
       - 'docs/local-document-intake.mjs'
+      - 'docs/suppliers.html'
+      - 'docs/suppliers.css'
+      - 'docs/suppliers.mjs'
+      - 'docs/supplier-candidate-core.mjs'
       - 'docs/data/opportunity-radar-latest.json'
+      - 'docs/data/supplier-candidates-hospital-furniture-v0.4.json'
       - 'docs/guides/local-document-intake-v0.3.md'
+      - 'docs/guides/supplier-candidate-workspace-v0.4.md'
       - 'schema/trade-case.schema.json'
       - 'tools/verify-trade-operations-hub.mjs'
       - 'tools/verify-local-document-intake.mjs'
+      - 'tools/verify-supplier-candidate-workspace.mjs'
 
 permissions:
   contents: read
@@ -50,6 +64,7 @@ jobs:
       - name: Parse canonical JSON inputs
         run: |
           node -e "JSON.parse(require('node:fs').readFileSync('docs/data/opportunity-radar-latest.json','utf8'))"
+          node -e "JSON.parse(require('node:fs').readFileSync('docs/data/supplier-candidates-hospital-furniture-v0.4.json','utf8'))"
           node -e "JSON.parse(require('node:fs').readFileSync('schema/trade-case.schema.json','utf8'))"
       - name: Syntax-check browser modules
         run: |
@@ -57,7 +72,11 @@ jobs:
           node --check docs/operations.mjs
           node --check docs/local-document-intake.mjs
           node --check docs/document-intake-ui.mjs
+          node --check docs/supplier-candidate-core.mjs
+          node --check docs/suppliers.mjs
       - name: Validate Trade Daily Operations Hub
         run: node tools/verify-trade-operations-hub.mjs
       - name: Validate controlled local document intake
         run: node tools/verify-local-document-intake.mjs
+      - name: Validate supplier candidate workspace
+        run: node tools/verify-supplier-candidate-workspace.mjs
