@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TradeProof · 中国供应商候选工作台</title>
+  <meta name="description" content="从 Trade Case 已确认要求出发，比较公开观察到的中国供应商候选、官网自述与证据缺口。">
+  <link rel="stylesheet" href="./suppliers.css">
+</head>
+<body>
+  <main class="shell">
+    <nav class="topbar">
+      <a class="brand" href="./index.html">TradeProof</a>
+      <div class="nav-actions">
+        <span data-status>正在加载候选数据</span>
+        <button id="export-review" type="button">导出本地候选名单</button>
+        <a href="./operations.html">今日运营</a>
+        <a href="./document-intake.html">本地文件解析</a>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div>
+        <p>SUPPLIER CANDIDATE WORKSPACE · v0.4</p>
+        <h1>从案件要求<br>反向找供应商</h1>
+        <span>公开官网只提供候选线索。资格、产能、证书、报价和履约能力必须继续核验。</span>
+      </div>
+      <aside>
+        <strong>第一批目标案件</strong>
+        <span>TED 519243-2026 · 波兰医院家具采购</span>
+        <small>候选来自企业官网公开自述，不代表企业已认领、已验证或获得买方认可。</small>
+      </aside>
+    </header>
+
+    <section data-supplier-workspace-root aria-live="polite"></section>
+  </main>
+  <script type="module" src="./suppliers.mjs"></script>
+</body>
+</html>

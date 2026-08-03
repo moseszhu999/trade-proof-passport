@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "tradeproof.supplier-candidate-collection.v0.4",
+  "generatedAt": "2026-08-03T00:10:00.000Z",
+  "targetOpportunityId": "opportunity:ted:519243-2026",
+  "targetOpportunityRecordId": "519243-2026",
+  "targetProductFamily": "hospital_furniture",
+  "sourcePolicy": {
+    "authorityClass": "public_company_self_assertion",
+    "verificationState": "unverified",
+    "contactDisclosureIncluded": false,
+    "rankingGenerated": false,
+    "eligibilityDecisionGenerated": false
+  },
+  "candidates": [
+    {
+      "candidateId": "supplier-candidate:cn:china-loong-furniture",
+      "displayName": "China Loong Furniture Co., Ltd.",
+      "country": "CHN",
+      "region": "Guangdong",
+      "website": "https://www.china-hospitalfurniture.com/",
+      "observedAt": "2026-08-03T00:10:00.000Z",
+      "state": "observed_unclaimed",
+      "productFamilies": ["hospital_beds", "bedside_cabinets", "waiting_chairs", "medical_trolleys", "treatment_tables", "nurse_station_desks", "medical_cabinets", "storage_cabinets"],
+      "publicClaims": [
+        {"claimId":"cl-loong-1","claimType":"manufacturer_scope","text":"Describes itself as a manufacturer and supplier of medical and healthcare furniture and equipment.","sourceUrl":"https://www.china-hospitalfurniture.com/about-us/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-loong-2","claimType":"product_scope","text":"Lists hospital beds, bedside cabinets, waiting chairs, trolleys, treatment tables, nurse station desks, medicine cabinets and storage cabinets.","sourceUrl":"https://www.china-hospitalfurniture.com/about-us/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-loong-3","claimType":"service_scope","text":"States that it provides design, production, delivery and installation services.","sourceUrl":"https://www.china-hospitalfurniture.com/","evidenceClassification":"public_self_asserted","verified":false}
+      ]
+    },
+    {
+      "candidateId": "supplier-candidate:cn:hebei-zhaofa",
+      "displayName": "Hebei Zhaofa Technology Co., Ltd.",
+      "country": "CHN",
+      "region": "Hebei",
+      "website": "https://www.zhaofamedical.com/",
+      "observedAt": "2026-08-03T00:10:00.000Z",
+      "state": "observed_unclaimed",
+      "productFamilies": ["hospital_beds", "bedside_cabinets", "wheelchairs", "walkers", "crutches", "patient_room_accessories"],
+      "publicClaims": [
+        {"claimId":"cl-zhaofa-1","claimType":"manufacturer_scope","text":"Describes itself as a manufacturer and exporter of hospital beds, medical furniture and rehabilitation equipment.","sourceUrl":"https://www.zhaofamedical.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-zhaofa-2","claimType":"product_scope","text":"Lists hospital beds, bedside cabinets, wheelchairs, walkers, crutches and related products.","sourceUrl":"https://www.zhaofamedical.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-zhaofa-3","claimType":"certification_claim","text":"States that most products have ISO9001, ISO13485 and CE certification.","sourceUrl":"https://www.zhaofamedical.com/","evidenceClassification":"public_self_asserted","verified":false}
+      ]
+    },
+    {
+      "candidateId": "supplier-candidate:cn:tianjin-kangli",
+      "displayName": "Tianjin Kangli Medical Equipment Co., Ltd.",
+      "country": "CHN",
+      "region": "Tianjin",
+      "website": "https://www.klmedbed.com/",
+      "observedAt": "2026-08-03T00:10:00.000Z",
+      "state": "observed_unclaimed",
+      "productFamilies": ["hospital_beds", "nursing_beds", "emergency_trolleys", "transfer_trolleys", "medical_carts", "medical_cabinets", "wheelchairs"],
+      "publicClaims": [
+        {"claimId":"cl-kangli-1","claimType":"manufacturer_scope","text":"Describes itself as an ISO and CE certified manufacturer of hospital furniture and mobility solutions.","sourceUrl":"https://www.klmedbed.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-kangli-2","claimType":"product_scope","text":"Lists hospital beds, nursing beds, emergency and transfer trolleys, stainless-steel carts and cabinets, and wheelchairs.","sourceUrl":"https://www.klmedbed.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-kangli-3","claimType":"commercial_capability","text":"States that OEM, ODM and private-label support are available.","sourceUrl":"https://www.klmedbed.com/","evidenceClassification":"public_self_asserted","verified":false}
+      ]
+    },
+    {
+      "candidateId": "supplier-candidate:cn:hengshui-zhukang",
+      "displayName": "Hengshui Zhukang Medical Instrument Co., Ltd.",
+      "country": "CHN",
+      "region": "Hebei",
+      "website": "https://www.zhukangmedical.com/",
+      "observedAt": "2026-08-03T00:10:00.000Z",
+      "state": "observed_unclaimed",
+      "productFamilies": ["hospital_beds", "nursing_beds", "home_care_beds", "medical_vehicles", "wheelchairs", "other_hospital_furniture"],
+      "publicClaims": [
+        {"claimId":"cl-zhukang-1","claimType":"manufacturer_scope","text":"Describes itself as a hospital bed manufacturer offering OEM and ODM solutions.","sourceUrl":"https://www.zhukangmedical.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-zhukang-2","claimType":"capacity_claim","text":"States that it has a 40,000 square metre workshop, more than 200 employees and capacity for 500 medical beds daily.","sourceUrl":"https://www.zhukangmedical.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-zhukang-3","claimType":"certification_claim","text":"States that products have ISO9001, ISO13485 and CE certification.","sourceUrl":"https://www.zhukangmedical.com/","evidenceClassification":"public_self_asserted","verified":false}
+      ]
+    },
+    {
+      "candidateId": "supplier-candidate:cn:jiangsu-yongfa",
+      "displayName": "Jiangsu Yongfa Medical Equipment Technology Co., Ltd.",
+      "country": "CHN",
+      "region": "Jiangsu",
+      "website": "https://chinayongfa.com/",
+      "observedAt": "2026-08-03T00:10:00.000Z",
+      "state": "observed_unclaimed",
+      "productFamilies": ["hospital_beds", "patient_stretchers", "bedside_cabinets", "hospital_furniture"],
+      "publicClaims": [
+        {"claimId":"cl-yongfa-1","claimType":"manufacturer_scope","text":"Describes itself as a professional hospital furniture manufacturer established in 1985.","sourceUrl":"https://chinayongfa.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-yongfa-2","claimType":"product_scope","text":"Lists electric ICU beds, patient stretchers, bedside cabinets and a broader hospital furniture range.","sourceUrl":"https://chinayongfa.com/","evidenceClassification":"public_self_asserted","verified":false},
+        {"claimId":"cl-yongfa-3","claimType":"export_scope","text":"States that it offers more than 300 hospital furniture items for export markets.","sourceUrl":"https://chinayongfa.com/","evidenceClassification":"public_self_asserted","verified":false}
+      ]
+    }
+  ]
+}
