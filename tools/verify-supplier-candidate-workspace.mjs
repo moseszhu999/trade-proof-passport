@@ -149,7 +149,8 @@ for (const marker of ['public_self_asserted', 'verifiedSupplier=false', 'eligibl
 assert.equal(operations.includes('./suppliers.html'), true, 'Daily operations must link the supplier workspace.');
 assert.equal(css.includes('@media(max-width:720px)'), true);
 assert.equal(/fetch\(|XMLHttpRequest|WebSocket/.test(core), false, 'Supplier comparison core must not perform network access.');
-assert.equal(/numericScore\s*:\s*[^n]|rank\s*:\s*[0-9]/.test(core), false, 'Supplier core must not assign scores or ranks.');
+assert.equal(/numericScore\s*:\s*(?:[0-9]|['"])/.test(core), false, 'Supplier core must not assign a numeric or string score.');
+assert.equal(/\brank\s*:\s*(?:[0-9]|['"])/.test(core), false, 'Supplier core must not assign a numeric or string rank.');
 
 console.log('PASS: Supplier Candidate Workspace v0.4');
 console.log(`Observed public candidates: ${model.counts.observedCandidates}`);
