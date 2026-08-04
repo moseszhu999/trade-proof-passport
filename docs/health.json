@@ -1,0 +1,8 @@
+{
+  "site": "trade-proof-passport",
+  "status": "ok",
+  "entrypoints": [
+    "index.html",
+    "operations.html"
+  ]
+}
