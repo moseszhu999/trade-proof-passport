@@ -6,13 +6,17 @@ on:
     paths:
       - 'docs/**'
       - '.github/workflows/verify-live-pages.yml'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/verify-live-pages.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: verify-live-pages
+  group: verify-live-pages-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
