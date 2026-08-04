@@ -1,0 +1,43 @@
+name: Validate GitHub Pages Recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/.nojekyll'
+      - 'docs/404.html'
+      - 'docs/health.json'
+      - 'docs/operations.html'
+      - 'docs/pages-runtime-guard.mjs'
+      - 'tools/verify-pages-recovery.mjs'
+      - '.github/workflows/validate-pages-recovery.yml'
+  pull_request:
+    paths:
+      - 'docs/.nojekyll'
+      - 'docs/404.html'
+      - 'docs/health.json'
+      - 'docs/operations.html'
+      - 'docs/pages-runtime-guard.mjs'
+      - 'tools/verify-pages-recovery.mjs'
+      - '.github/workflows/validate-pages-recovery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check runtime guard syntax
+        run: node --check docs/pages-runtime-guard.mjs
+
+      - name: Verify Pages recovery contract
+        run: node tools/verify-pages-recovery.mjs
