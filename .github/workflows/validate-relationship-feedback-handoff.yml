@@ -1,0 +1,36 @@
+name: Validate Relationship Feedback Handoff
+
+on:
+  pull_request:
+    paths:
+      - 'docs/relationship-feedback-handoff.mjs'
+      - 'docs/guides/relationship-feedback-handoff-v0.1.md'
+      - 'tools/verify-relationship-feedback-handoff.mjs'
+      - '.github/workflows/validate-relationship-feedback-handoff.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/relationship-feedback-handoff.mjs'
+      - 'docs/guides/relationship-feedback-handoff-v0.1.md'
+      - 'tools/verify-relationship-feedback-handoff.mjs'
+      - '.github/workflows/validate-relationship-feedback-handoff.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify deterministic relationship feedback handoff
+        run: node tools/verify-relationship-feedback-handoff.mjs
+      - name: Enforce no Registry or chain integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -R -E "anchorPassport|anchorResponse|walletClient|eth_sendTransaction|registry\.write|chain\.submit" \
+            docs/relationship-feedback-handoff.mjs tools/verify-relationship-feedback-handoff.mjs
